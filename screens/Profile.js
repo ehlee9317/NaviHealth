@@ -14,7 +14,7 @@ import { loggingOut } from "../api/firebaseMethods";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 export default function Profile({ navigation }) {
-  const db = firebase.firestore()
+  const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [firstName, setFirstName] = useState("");
   const [height, setHeight] = useState("");
@@ -23,9 +23,7 @@ export default function Profile({ navigation }) {
   useEffect(() => {
     async function getUserInfo() {
       try {
-        let doc = await db.collection("users")
-          .doc(currentUserUID)
-          .get();
+        let doc = await db.collection("users").doc(currentUserUID).get();
 
         if (!doc.exists) {
           Alert.alert("No user data found!");
@@ -36,7 +34,7 @@ export default function Profile({ navigation }) {
           setWeight(dataObj.weight);
         }
       } catch (error) {
-        console.log('something went wrong')
+        console.log("something went wrong");
       }
     }
     getUserInfo();
@@ -48,10 +46,10 @@ export default function Profile({ navigation }) {
   };
 
   const bmiCalculator = (height, weight) => {
-    const weightKg = weight / 2.205
-    const heightM = height / 100
-    return (weightKg / (heightM**2)).toFixed(2)
-  }
+    const weightKg = weight / 2.205;
+    const heightM = height / 100;
+    return (weightKg / heightM ** 2).toFixed(2);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,7 +58,7 @@ export default function Profile({ navigation }) {
       <View style={styles.imageContainer}>
         <View style={styles.profileImage}>
           <Image
-            source={require("../assets/profilePic.jpg")}
+            source={require("../assets/defaultProfile.png")}
             style={styles.image}
             resizeMode="center"
           ></Image>
@@ -86,16 +84,26 @@ export default function Profile({ navigation }) {
         <View style={styles.statsBox}>
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
             27
-          </Text >
+          </Text>
           <Text style={[styles.text, styles.subText]}>Age</Text>
         </View>
-        <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
+        <View
+          style={[
+            styles.statsBox,
+            { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 },
+          ]}
+        >
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
             {bmiCalculator(height, weight)}
           </Text>
           <Text style={[styles.text, styles.subText]}>BMI</Text>
         </View>
-        <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderRightWidth: 1 }]}>
+        <View
+          style={[
+            styles.statsBox,
+            { borderColor: "#DFD8C8", borderRightWidth: 1 },
+          ]}
+        >
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
             {height}
           </Text>
@@ -122,26 +130,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  greeting: {
-    top: "20%",
-    fontSize: 40,
-  },
   logOutButton: {
-    fontSize: 20,
-    right: "-38%",
-    top: "-2400%",
+    // fontSize: 20,
+    // right: "-38%",
+    // top: "-2400%",
   },
   logoutText: {
     fontSize: 16,
   },
   imageContainer: {
     alignSelf: "center",
-    top: "-27%",
+    top: "-25%",
   },
   profileImage: {
     width: 195,
     height: 195,
-    borderRadius: 100,
+    // borderRadius: 100,
     overflow: "hidden",
   },
   image: {
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     alignSelf: "center",
     alignItems: "center",
-    top: "-24%",
+    top: "-21%",
   },
   text: {
     fontFamily: "HelveticaNeue",
@@ -182,12 +186,12 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 14,
     color: "#AEB5BC",
-    fontWeight: "600"
+    fontWeight: "600",
   },
   statsContainer: {
     flexDirection: "row",
     alignSelf: "center",
-    top: "-32%"
+    top: "-30%",
   },
   statsBox: {
     alignItems: "center",
