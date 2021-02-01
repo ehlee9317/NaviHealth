@@ -21,7 +21,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name={"Loading"}
           component={LoadingScreen}
           options={{ headerShown: false }}
@@ -45,12 +45,12 @@ export default function App() {
           name={"Profile"}
           component={Profile}
           options={{ headerShown: false }}
-        />
-        {/* <Stack.Screen
+        /> */}
+        <Stack.Screen
           name={"Map"}
           component={Map}
           options={{ headerShown: false }}
-        /> */}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

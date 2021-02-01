@@ -65,9 +65,6 @@ export default function Profile({ navigation }) {
             resizeMode="center"
           ></Image>
         </View>
-        <View style={styles.dm}>
-          <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-        </View>
         <View style={styles.active}></View>
         <View style={styles.camera}>
           <Ionicons
@@ -151,16 +148,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: undefined,
     width: undefined,
-  },
-  dm: {
-    backgroundColor: "#41444B",
-    position: "absolute",
-    top: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
   },
   active: {
     backgroundColor: "#34FFB9",
