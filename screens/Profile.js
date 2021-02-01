@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Alert,
   Image,
+  Button,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as firebase from "firebase";
@@ -13,22 +14,29 @@ import { loggingOut } from "../api/firebaseMethods";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 export default function Profile({ navigation }) {
+  const db = firebase.firestore()
   let currentUserUID = firebase.auth().currentUser.uid;
   const [firstName, setFirstName] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
 
   useEffect(() => {
     async function getUserInfo() {
-      let doc = await firebase
-        .firestore()
-        .collection("users")
-        .doc(currentUserUID)
-        .get();
+      try {
+        let doc = await db.collection("users")
+          .doc(currentUserUID)
+          .get();
 
-      if (!doc.exists) {
-        Alert.alert("No user data found!");
-      } else {
-        let dataObj = doc.data();
-        setFirstName(dataObj.firstName);
+        if (!doc.exists) {
+          Alert.alert("No user data found!");
+        } else {
+          let dataObj = doc.data();
+          setFirstName(dataObj.firstName);
+          setHeight(dataObj.height);
+          setWeight(dataObj.weight);
+        }
+      } catch (error) {
+        console.log('something went wrong')
       }
     }
     getUserInfo();
@@ -38,6 +46,12 @@ export default function Profile({ navigation }) {
     loggingOut();
     navigation.replace("Home");
   };
+
+  const bmiCalculator = (height, weight) => {
+    const weightKg = weight / 2.205
+    const heightM = height / 100
+    return (weightKg / (heightM**2)).toFixed(2)
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,27 +94,27 @@ export default function Profile({ navigation }) {
         </View>
         <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
-            00
+            {bmiCalculator(height, weight)}
           </Text>
           <Text style={[styles.text, styles.subText]}>BMI</Text>
         </View>
         <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderRightWidth: 1 }]}>
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
-            000
+            {height}
           </Text>
           <Text style={[styles.text, styles.subText]}>Height</Text>
         </View>
         <View style={styles.statsBox}>
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
-            000
+            {weight}
           </Text>
           <Text style={[styles.text, styles.subText]}>Weight</Text>
         </View>
       </View>
 
-      <TouchableOpacity style={styles.logOutButton} onPress={handlePress}>
+      <Button title="logout" style={styles.logOutButton} onPress={handlePress}>
         <Text style={styles.logoutText}>Log Out</Text>
-      </TouchableOpacity>
+      </Button>
     </SafeAreaView>
   );
 }
