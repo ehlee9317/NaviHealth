@@ -6,9 +6,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import Profile from "./Profile";
-import HomeScreen from "./HomeScreen";
+import Map from "./Map";
 import SettingScreen from "./SettingScreen";
-import DetailScreen from "./DetailScreen";
+import DashboardScreen from "./DashboardScreen";
 
 const HomeStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -16,8 +16,8 @@ const Tab = createMaterialBottomTabNavigator();
 const MainTabScreen = () => (
   <Tab.Navigator initialRouteName="Home" activeColor="#fff">
     <Tab.Screen
-      name="Home"
-      component={HomeScreen}
+      name="Map"
+      component={Map}
       options={{
         tabBarLabel: "MAP",
         tabBarColor: "#49BEAA",
@@ -28,7 +28,7 @@ const MainTabScreen = () => (
     />
     <Tab.Screen
       name="Profile"
-      component={ProfileStackScreen}
+      component={Profile}
       options={{
         tabBarLabel: "PROFILE",
         tabBarColor: "#EF767A",
@@ -38,8 +38,8 @@ const MainTabScreen = () => (
       }}
     />
     <Tab.Screen
-      name="Notifications"
-      component={DetailScreen}
+      name="Dashboard"
+      component={DashboardScreen}
       options={{
         tabBarLabel: "DASHBOARD",
         tabBarColor: "#456990",
@@ -64,32 +64,32 @@ const MainTabScreen = () => (
 
 export default MainTabScreen;
 
-const ProfileStackScreen = ({ navigation }) => (
-  <HomeStack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#EF767A",
-      },
-      headerTintColor: "#fff",
-      headerTitleStyle: {
-        fontWeight: "bold",
-      },
-    }}
-  >
-    <HomeStack.Screen
-      name="Profile"
-      component={Profile}
-      options={{
-        title: "PROFILE",
-        headerLeft: () => (
-          <Icon.Button
-            name="ios-menu"
-            size={25}
-            backgroundColor="#EF767A"
-            onPress={() => navigation.openDrawer()}
-          ></Icon.Button>
-        ),
-      }}
-    />
-  </HomeStack.Navigator>
-);
+// const ProfileStackScreen = ({ navigation }) => (
+//   <HomeStack.Navigator
+//     screenOptions={{
+//       headerStyle: {
+//         backgroundColor: "#EF767A",
+//       },
+//       headerTintColor: "#fff",
+//       headerTitleStyle: {
+//         fontWeight: "bold",
+//       },
+//     }}
+//   >
+//     <HomeStack.Screen
+//       name="Profile"
+//       component={Profile}
+//       options={{
+//         title: "PROFILE",
+//         headerLeft: () => (
+//           <Icon.Button
+//             name="ios-menu"
+//             size={25}
+//             backgroundColor="#EF767A"
+//             onPress={() => navigation.openDrawer()}
+//           ></Icon.Button>
+//         ),
+//       }}
+//     />
+//   </HomeStack.Navigator>
+// );

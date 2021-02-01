@@ -14,7 +14,7 @@ import { loggingOut } from "../api/firebaseMethods";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 export default function Profile({ navigation }) {
-  const db = firebase.firestore()
+  const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [firstName, setFirstName] = useState("");
   const [height, setHeight] = useState("");
@@ -23,9 +23,7 @@ export default function Profile({ navigation }) {
   useEffect(() => {
     async function getUserInfo() {
       try {
-        let doc = await db.collection("users")
-          .doc(currentUserUID)
-          .get();
+        let doc = await db.collection("users").doc(currentUserUID).get();
 
         if (!doc.exists) {
           Alert.alert("No user data found!");
@@ -36,7 +34,7 @@ export default function Profile({ navigation }) {
           setWeight(dataObj.weight);
         }
       } catch (error) {
-        console.log('something went wrong')
+        console.log("something went wrong");
       }
     }
     getUserInfo();
@@ -48,10 +46,10 @@ export default function Profile({ navigation }) {
   };
 
   const bmiCalculator = (height, weight) => {
-    const weightKg = weight / 2.205
-    const heightM = height / 100
-    return (weightKg / (heightM**2)).toFixed(2)
-  }
+    const weightKg = weight / 2.205;
+    const heightM = height / 100;
+    return (weightKg / heightM ** 2).toFixed(2);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,14 +58,12 @@ export default function Profile({ navigation }) {
       <View style={styles.imageContainer}>
         <View style={styles.profileImage}>
           <Image
-            source={require("../assets/profilePic.jpg")}
+            source={require("../assets/defaultProfile.png")}
             style={styles.image}
             resizeMode="center"
           ></Image>
         </View>
-        <View style={styles.dm}>
-          <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-        </View>
+
         <View style={styles.active}></View>
         <View style={styles.camera}>
           <Ionicons
@@ -135,10 +131,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  greeting: {
-    top: "20%",
-    fontSize: 40,
-  },
   logOutButton: {
     // fontSize: 20,
     // right: "-38%",
@@ -149,28 +141,18 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: "center",
-    top: "-27%",
+    top: "-25%",
   },
   profileImage: {
     width: 195,
     height: 195,
-    borderRadius: 100,
+    // borderRadius: 100,
     overflow: "hidden",
   },
   image: {
     flex: 1,
     height: undefined,
     width: undefined,
-  },
-  dm: {
-    backgroundColor: "#41444B",
-    position: "absolute",
-    top: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
   },
   active: {
     backgroundColor: "#34FFB9",
@@ -196,7 +178,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     alignSelf: "center",
     alignItems: "center",
-    top: "-24%",
+    top: "-21%",
   },
   text: {
     fontFamily: "HelveticaNeue",
@@ -210,7 +192,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: "row",
     alignSelf: "center",
-    top: "-32%",
+    top: "-30%",
   },
   statsBox: {
     alignItems: "center",

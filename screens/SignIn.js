@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, Alert, SafeAreaView } from "react-na
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { signIn } from "../api/firebaseMethods";
 
-export default function SignIn() {
+export default function SignIn({navigation}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -19,6 +19,7 @@ export default function SignIn() {
     signIn(email, password);
     setEmail("");
     setPassword("");
+    navigation.navigate("Loading");
   };
 
   return (
