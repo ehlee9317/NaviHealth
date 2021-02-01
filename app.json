@@ -1,0 +1,12 @@
+{
+  "name": "navihealth",
+  "displayName": "navihealth",
+  "expo": {
+    "name": "navihealth",
+    "slug": "navihealth",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
