@@ -63,7 +63,6 @@ export default function Profile({ navigation }) {
             resizeMode="center"
           ></Image>
         </View>
-
         <View style={styles.active}></View>
         <View style={styles.camera}>
           <Ionicons
