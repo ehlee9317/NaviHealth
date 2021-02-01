@@ -75,16 +75,26 @@ export default function Profile({ navigation }) {
         <View style={styles.statsBox}>
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
             27
-          </Text >
+          </Text>
           <Text style={[styles.text, styles.subText]}>Age</Text>
         </View>
-        <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
+        <View
+          style={[
+            styles.statsBox,
+            { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 },
+          ]}
+        >
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
             00
           </Text>
           <Text style={[styles.text, styles.subText]}>BMI</Text>
         </View>
-        <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderRightWidth: 1 }]}>
+        <View
+          style={[
+            styles.statsBox,
+            { borderColor: "#DFD8C8", borderRightWidth: 1 },
+          ]}
+        >
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
             000
           </Text>
@@ -116,9 +126,9 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
   logOutButton: {
-    fontSize: 20,
-    right: "-38%",
-    top: "-2400%",
+    // fontSize: 20,
+    // right: "-38%",
+    // top: "-2400%",
   },
   logoutText: {
     fontSize: 16,
@@ -181,12 +191,12 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 14,
     color: "#AEB5BC",
-    fontWeight: "600"
+    fontWeight: "600",
   },
   statsContainer: {
     flexDirection: "row",
     alignSelf: "center",
-    top: "-32%"
+    top: "-32%",
   },
   statsBox: {
     alignItems: "center",

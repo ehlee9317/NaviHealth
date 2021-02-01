@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert, SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { signIn } from "../api/firebaseMethods";
 
@@ -22,7 +22,7 @@ export default function SignIn() {
   };
 
   return (
-    <View>
+    <SafeAreaView>
       <Text>Sign in to your account:</Text>
 
       <TextInput
@@ -41,6 +41,6 @@ export default function SignIn() {
       <TouchableOpacity onPress={handlePress}>
         <Text>Submit</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
