@@ -7,8 +7,7 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import SignUp from "./screens/SignUp";
 import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
-import Profile from "./screens/Profile";
-import Map from "./screens/Map";
+import MainTabScreen from "./screens/MainTabScreen";
 
 const Stack = createStackNavigator();
 
@@ -22,13 +21,13 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name={"Loading"}
-          component={LoadingScreen}
+          name="Home"
+          component={WelcomeScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Home"
-          component={WelcomeScreen}
+          name={"Loading"}
+          component={LoadingScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -42,15 +41,10 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name={"Profile"}
-          component={Profile}
+          name={"MainTab"}
+          component={MainTabScreen}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
-          name={"Map"}
-          component={Map}
-          options={{ headerShown: false }}
-        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
