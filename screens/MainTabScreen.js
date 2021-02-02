@@ -41,7 +41,7 @@ const MainTabScreen = () => (
       name="HealthStats"
       component={HealthStatsScreen}
       options={{
-        tabBarLabel: "Health Stats",
+        tabBarLabel: "HEALTH",
         tabBarColor: "#456990",
         tabBarIcon: ({ color }) => (
           <Icon name="ios-stats-chart" color={color} size={26} />
