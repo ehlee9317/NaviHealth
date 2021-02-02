@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 
-const DashboardScreen = ({ navigation }) => {
+const HealthStatsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text>Dashboard Screen</Text>
@@ -10,7 +10,7 @@ const DashboardScreen = ({ navigation }) => {
   );
 };
 
-export default DashboardScreen;
+export default HealthStatsScreen;
 
 const styles = StyleSheet.create({
   container: {
