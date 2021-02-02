@@ -8,7 +8,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Profile from "./Profile";
 import Map from "./Map";
 import SettingScreen from "./SettingScreen";
-import DashboardScreen from "./DashboardScreen";
+import HealthStatsScreen from "./HealthStatsScreen";
 
 const HomeStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -38,10 +38,10 @@ const MainTabScreen = () => (
       }}
     />
     <Tab.Screen
-      name="Dashboard"
-      component={DashboardScreen}
+      name="HealthStats"
+      component={HealthStatsScreen}
       options={{
-        tabBarLabel: "DASHBOARD",
+        tabBarLabel: "HEALTH",
         tabBarColor: "#456990",
         tabBarIcon: ({ color }) => (
           <Icon name="ios-stats-chart" color={color} size={26} />
