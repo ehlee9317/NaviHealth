@@ -119,21 +119,23 @@ export default class Map extends React.Component {
 
   render() {
     const predictions = this.state.predictions.map((prediction) => (
-      <TouchableHighlight
-        onPress={() =>
-          this.getRouteDirections(
-            prediction.place_id,
-            prediction.structured_formatting.main_text
-          )
-        }
-        key={prediction.id}
-      >
-        <View>
-          <Text style={styles.suggestions}>
-            {prediction.structured_formatting.main_text}
-          </Text>
-        </View>
-      </TouchableHighlight>
+      <SafeAreaView>
+        <TouchableHighlight
+          onPress={() =>
+            this.getRouteDirections(
+              prediction.place_id,
+              prediction.structured_formatting.main_text
+            )
+          }
+          key={prediction.id}
+        >
+          <View>
+            <Text style={styles.suggestions}>
+              {prediction.structured_formatting.main_text}
+            </Text>
+          </View>
+        </TouchableHighlight>
+      </SafeAreaView>
     ));
 
 
