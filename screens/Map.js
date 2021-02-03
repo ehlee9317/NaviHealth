@@ -7,6 +7,7 @@ import {
   View,
   Keyboard,
   TouchableHighlight,
+  Button
 } from "react-native";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { GOOGLE_API_KEY } from '../config/keys';
@@ -23,6 +24,7 @@ export default class Map extends Component {
       destination: "",
       predictions: [],
       pointCoords: [],
+      isFollowing: false,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -83,6 +85,27 @@ export default class Map extends Component {
     }
   }
 
+  gotToMyLocation() {
+    console.log("gotToMyLocation is called");
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        console.log("curent location: ", coords);
+        console.log(this.map);
+        if (this.map) {
+          console.log("curent location: ", coords);
+          this.map.animateToRegion({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          });
+        }
+      },
+      (error) => alert("Error: Are location services on?"),
+      { enableHighAccuracy: true }
+    );
+  }
+
   render() {
     let marker = null;
 
@@ -105,9 +128,7 @@ export default class Map extends Component {
         key={prediction.id}
       >
         <View>
-          <Text style={styles.suggestions}>
-            {prediction.description}
-          </Text>
+          <Text style={styles.suggestions}>{prediction.description}</Text>
         </View>
       </TouchableHighlight>
     ));
@@ -126,6 +147,7 @@ export default class Map extends Component {
             longitudeDelta: 0.0121,
           }}
           showsUserLocation={true}
+          followUserLocation={this.state.isFollowing ? true : false}
         >
           <Polyline
             coordinates={this.state.pointCoords}
@@ -146,6 +168,7 @@ export default class Map extends Component {
           }}
         />
         {predictions}
+        <Button title="Relocate User" onPress={() => this.gotToMyLocation()} />
       </View>
     );
   }
