@@ -13,7 +13,7 @@ import { GOOGLE_API_KEY } from '../config/keys';
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
 
-export default class App extends Component {
+export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -106,7 +106,7 @@ export default class App extends Component {
       >
         <View>
           <Text style={styles.suggestions}>
-            {prediction.structured_formatting.main_text}
+            {prediction.description}
           </Text>
         </View>
       </TouchableHighlight>
