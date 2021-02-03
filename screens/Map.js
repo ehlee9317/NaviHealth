@@ -7,6 +7,7 @@ import {
   Text,
   SafeAreaView,
   TextInput,
+  TouchableHighlight
 } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Polyline from '@mapbox/polyline';
@@ -52,9 +53,9 @@ export default class Map extends React.Component {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           },
-          // error: null,
-          // locationPredictions: [],
-          // pointCoords: [],
+          error: null,
+          locationPredictions: [],
+          pointCoords: [],
         });
       },
       (error) => this.setState({ error: error.message }),
@@ -102,7 +103,7 @@ export default class Map extends React.Component {
   }
   // function renders places autocomplete
   async onChangeDestination(destination) {
-    // console.log('destination----->', destination)
+    console.log('destination----->', destination)
     this.setState({ destination });
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}&input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
     try {
@@ -117,13 +118,24 @@ export default class Map extends React.Component {
   }
 
   render() {
-    // const predictions = this.state.predictions.map((prediction) => {
-    //   return (
-    //     <Text style={styles.suggestions} key={prediction.place_id}>
-    //       {prediction.description}
-    //     </Text>
-    //   );
-    // });
+    const predictions = this.state.predictions.map((prediction) => (
+      <TouchableHighlight
+        onPress={() =>
+          this.getRouteDirections(
+            prediction.place_id,
+            prediction.structured_formatting.main_text
+          )
+        }
+        key={prediction.id}
+      >
+        <View>
+          <Text style={styles.suggestions}>
+            {prediction.structured_formatting.main_text}
+          </Text>
+        </View>
+      </TouchableHighlight>
+    ));
+
 
     return (
       <MapView
