@@ -37,7 +37,7 @@ export default class Map extends React.Component {
       predictions: [],
     };
     // waits 1 sec after user types in input field before pinging API:
-    this.onChangeDestinationDebounced = _.debounce(this.onChangeDestination, 1000)
+    this.onChangeDestinationDebounced = _.debounce(this.onChangeDestination, 5000)
   }
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
@@ -49,9 +49,9 @@ export default class Map extends React.Component {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           },
-          error: null,
-          locationPredictions: [],
-          pointCoords: [],
+          // error: null,
+          // locationPredictions: [],
+          // pointCoords: [],
         });
       },
       (error) => this.setState({ error: error.message }),
@@ -77,6 +77,7 @@ export default class Map extends React.Component {
   }
   // function renders places autocomplete
   async onChangeDestination(destination) {
+    console.log('destination----->', destination)
     this.setState({ destination });
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}&input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
 
@@ -84,6 +85,7 @@ export default class Map extends React.Component {
       const result = await fetch(apiUrl);
       const json = await result.json();
       console.log(json);
+      console.log(destination)
       this.setState({
         predictions: json.predictions,
       });
@@ -95,14 +97,15 @@ export default class Map extends React.Component {
   render() {
     const predictions = this.state.predictions.map((prediction) => {
       return (
-        <Text style={styles.suggestions} key={prediction.id}>
+        <Text style={styles.suggestions} key={prediction.place_id}>
           {prediction.description}
         </Text>
       );
     });
+
     return (
       <MapView
-        provider={PROVIDER_GOOGLE}
+        // provider={PROVIDER_GOOGLE}
         style={styles.container}
         showsUserLocation={true}
         region={this.state.region}
@@ -117,7 +120,7 @@ export default class Map extends React.Component {
           placeholder='Enter destination'
           style={styles.destinationInput}
           value={this.state.destination}
-          onChangeText={(destination) => this.onChangeDestinationDebounced(destination)}
+          onChangeText={destination => this.onChangeDestinationDebounced(destination)}
         ></TextInput>
         {predictions}
       </MapView>
@@ -150,25 +153,13 @@ const styles = StyleSheet.create({
   }
 });
 
-// import React from 'react';
-// import {
-//   AppRegistry,
-//   StyleSheet,
-//   View,
-//   Dimensions,
-//   Text,
-//   SafeAreaView,
-// } from 'react-native';
-// import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-// import Polyline from '@mapbox/polyline';
-// import {GOOGLE_API_KEY} from '../config/keys'
 
-// let { width, height } = Dimensions.get('window');
-// const ASPECT_RATIO = width / height;
-// const LATITUDE = 0;
-// const LONGITUDE = 0;
-// const LATITUDE_DELTA = 0.007;
-// const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+
+
+
+
+// ORIGINAL CODE W/ WATCHID AND COMPONENT WILL UNMOUNT
 
 // export default class Map extends React.Component {
 //   constructor() {
