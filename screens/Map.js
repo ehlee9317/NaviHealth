@@ -32,12 +32,15 @@ export default class Map extends React.Component {
         longitudeDelta: LONGITUDE_DELTA,
       },
       error: null,
-      destination: '',
+      destination: "",
       pointCoords: [],
       predictions: [],
     };
     // waits 1 sec after user types in input field before pinging API:
-    this.onChangeDestinationDebounced = _.debounce(this.onChangeDestination, 5000)
+    this.onChangeDestinationDebounced = _.debounce(
+      this.onChangeDestination,
+      5000
+    );
   }
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
@@ -59,6 +62,28 @@ export default class Map extends React.Component {
     );
     this.getDirections();
   }
+  async getRouteDirections(destinationPlaceId, destinationName) {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&key=${GOOGLE_API_KEY}`
+      );
+      const json = await response.json();
+      console.log(json);
+      const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+      const pointCoords = points.map((point) => {
+        return { latitude: point[0], longitude: point[1] };
+      });
+      this.setState({
+        pointCoords,
+        predictions: [],
+        destination: destinationName,
+      });
+      Keyboard.dismiss();
+      this.map.fitToCoordinates(pointCoords);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async getDirections(startLoc, destinationLoc) {
     try {
@@ -77,15 +102,12 @@ export default class Map extends React.Component {
   }
   // function renders places autocomplete
   async onChangeDestination(destination) {
-    console.log('destination----->', destination)
+    // console.log('destination----->', destination)
     this.setState({ destination });
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}&input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
-
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
-      console.log(json);
-      console.log(destination)
       this.setState({
         predictions: json.predictions,
       });
@@ -95,13 +117,13 @@ export default class Map extends React.Component {
   }
 
   render() {
-    const predictions = this.state.predictions.map((prediction) => {
-      return (
-        <Text style={styles.suggestions} key={prediction.place_id}>
-          {prediction.description}
-        </Text>
-      );
-    });
+    // const predictions = this.state.predictions.map((prediction) => {
+    //   return (
+    //     <Text style={styles.suggestions} key={prediction.place_id}>
+    //       {prediction.description}
+    //     </Text>
+    //   );
+    // });
 
     return (
       <MapView
@@ -114,13 +136,14 @@ export default class Map extends React.Component {
         <MapView.Polyline
           coordinates={this.state.pointCoords}
           strokeWidth={2}
-          strokeColor='red'
+          strokeColor="red"
         />
         <TextInput
           placeholder='Enter destination'
           style={styles.destinationInput}
           value={this.state.destination}
-          onChangeText={destination => this.onChangeDestinationDebounced(destination)}
+          onChangeText={destination => {this.setState({ destination });
+          this.onChangeDestinationDebounced(destination)}}
         ></TextInput>
         {predictions}
       </MapView>
