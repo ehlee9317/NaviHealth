@@ -27,7 +27,10 @@ export default class App extends Component {
 
       // Sample START
       displayMainSearchBar: true,
-      yourLocation: "",
+      yourLocation: {
+        yourLatitude: "",
+        yourLongitude: "",
+      },
       // Sample END
     };
     this.onChangeDestinationDebounced = _.debounce(
@@ -95,7 +98,7 @@ export default class App extends Component {
 
   async onChangeYourLocation(yourLocation) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
-    &input=${yourLocation}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
+    &input=${yourLocation}&location=${this.state.yourLocation.latitude},${this.state.yourLocation.longitude}&radius=2000`;
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
