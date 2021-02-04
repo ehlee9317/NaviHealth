@@ -24,6 +24,8 @@ export default class Map extends Component {
       destination: "",
       predictions: [],
       pointCoords: [],
+      totalDistance: "",
+      totalDuration: "",
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -48,10 +50,14 @@ export default class Map extends Component {
   async getRouteDirections(destinationPlaceId, destinationName) {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&key=${GOOGLE_API_KEY}`
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
       );
       const json = await response.json();
-      console.log(json);
+      // console.log(json);
+      console.log(json.routes[0].legs[0].distance.text)
+      console.log(json.routes[0].legs[0].duration.text)
+      const totalDistance = json.routes[0].legs[0].distance.text
+      const totalDuration = json.routes[0].legs[0].duration.text
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -60,9 +66,14 @@ export default class Map extends Component {
         pointCoords,
         predictions: [],
         destination: destinationName,
+        totalDistance: totalDistance, 
+        totalDuration: totalDuration, 
       });
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords);
+      console.log(this.state.totalDistance)
+      console.log(this.state.totalDuration)
+      
     } catch (error) {
       console.error(error);
     }
@@ -71,14 +82,14 @@ export default class Map extends Component {
   async onChangeDestination(destination) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
     &input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
-    console.log(apiUrl);
+    // console.log(apiUrl);
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
       this.setState({
         predictions: json.predictions,
       });
-      console.log(json);
+      // console.log(json);
     } catch (err) {
       console.error(err);
     }
@@ -124,7 +135,7 @@ export default class Map extends Component {
             prediction.structured_formatting.main_text
           )
         }
-        key={prediction.id}
+        key={prediction.place_id}
       >
         <View>
           <Text style={styles.suggestions}>{prediction.description}</Text>
