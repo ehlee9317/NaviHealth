@@ -139,12 +139,14 @@ export default class Map extends Component {
     );
   }
   startNaviHandler(){
-    this.state.routingMode = true
-    console.log('routingMode---->',this.state.routingMode)
+    this.setState({
+      routingMode : true,
+    })
   }
   stopNaviHandler(){
-    this.state.routingMode = false
-    console.log('routingMode---->', this.state.routingMode)
+    this.setState({
+      routingMode : false,
+    })
   }
   render() {
     console.log('this.state.routingMode in render--->', this.state.routingMode)
@@ -195,7 +197,7 @@ export default class Map extends Component {
             longitudeDelta: 0.0121,
           }}
           showsUserLocation={true}
-          followsUserLocation={this.state.routingMode === true ? true : false}
+          followsUserLocation={this.state.routingMode}
         >
           <Polyline
             coordinates={this.state.pointCoords}
@@ -269,8 +271,8 @@ export default class Map extends Component {
         )}
         {predictions}
         <Button title="Relocate User" onPress={() => this.gotToMyLocation()} />
-          <Button title="Start Navigation" onPress={() => {this.startNaviHandler()}}/>
-          <Button title="End Navigation" onPress={() => {this.stopNaviHandler()}}/>
+        <Button title="Start Navigation" onPress={() => {this.startNaviHandler()}}/>
+        <Button title="End Navigation" onPress={() => {this.stopNaviHandler()}}/>
       </View>
     );
   }
