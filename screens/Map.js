@@ -14,6 +14,7 @@ import { GOOGLE_API_KEY } from "../config/keys";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
+import {stopNaviFirebaseHandler} from '../api/firebaseMethods'
 
 export default class Map extends Component {
   constructor(props) {
@@ -26,7 +27,6 @@ export default class Map extends Component {
       predictions: [],
       pointCoords: [],
       routingMode: false,
-
       displayMainSearchBar: true,
       yourLocation: {
         yourLatitude: "",
@@ -303,7 +303,8 @@ export default class Map extends Component {
             )
           }
         />
-        {this.state.routingMode === true ? (
+        
+        {this.state.totalDistance.length > 0 ? this.state.routingMode === true ? (
           <Button
             title="End Navigation"
             onPress={() => {
@@ -317,7 +318,7 @@ export default class Map extends Component {
               this.startNaviHandler();
             }}
           />
-        )}
+        ): (<Button title="input a destination"/>)}
       </View>
     );
   }
