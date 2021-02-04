@@ -25,6 +25,8 @@ export default class Map extends Component {
       destination: "",
       predictions: [],
       pointCoords: [],
+      followUser: false,
+      routingMode: false,
 
       displayMainSearchBar: true,
       yourLocation: {
@@ -136,8 +138,18 @@ export default class Map extends Component {
       { enableHighAccuracy: true }
     );
   }
-
+  startNaviHandler(){
+    this.setState({
+      routingMode : true,
+    })
+  }
+  stopNaviHandler(){
+    this.setState({
+      routingMode : false,
+    })
+  }
   render() {
+    console.log('this.state.routingMode in render--->', this.state.routingMode)
     let marker = null;
 
     if (this.state.pointCoords.length > 1) {
@@ -170,7 +182,7 @@ export default class Map extends Component {
     console.log("111 this.state.latitute", this.state.latitude);
     console.log("222 this.state.longitude", this.state.longitude);
     console.log("333 this.state.pointCoords", this.state.pointCoords);
-
+    console.log('this.state.routingMode', this.state.routingMode)
     return (
       <View style={styles.container}>
         <MapView
@@ -185,6 +197,7 @@ export default class Map extends Component {
             longitudeDelta: 0.0121,
           }}
           showsUserLocation={true}
+          followsUserLocation={this.state.routingMode}
         >
           <Polyline
             coordinates={this.state.pointCoords}
@@ -257,7 +270,34 @@ export default class Map extends Component {
           </View>
         )}
         {predictions}
-        <Button title="Relocate User" onPress={() => this.gotToMyLocation()} />
+        <Button
+          title="Relocate User"
+          onPress={() =>
+            this.gotToMyLocation(
+              <Button
+                title="End Navigation"
+                onPress={() => {
+                  this.stopNaviHandler();
+                }}
+              />
+            )
+          }
+        />
+        {this.state.routingMode === true ? (
+          <Button
+            title="End Navigation"
+            onPress={() => {
+              this.stopNaviHandler();
+            }}
+          />
+        ) : (
+          <Button
+            title="Start Navigation"
+            onPress={() => {
+              this.startNaviHandler();
+            }}
+          />
+        )}
       </View>
     );
   }
