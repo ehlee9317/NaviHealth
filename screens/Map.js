@@ -177,6 +177,8 @@ export default class Map extends Component {
         />
         {predictions}
         <Button title="Relocate User" onPress={() => this.gotToMyLocation()} />
+        <Button title="Start Navigation" />
+        <Button title="End Navigation" />
       </View>
     );
   }
