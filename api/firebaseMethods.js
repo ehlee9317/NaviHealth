@@ -37,13 +37,13 @@ export async function loggingOut() {
 }
 
 
-export async function stopNaviFirebaseHandler(distance) {
+export async function stopNaviFirebaseHandler(distance, duration) {
    try {
      const currentUser = firebase.auth().currentUser;
      const db = firebase.firestore();
-     const key = firebase.newId();
-     db.collection("users").doc(currentUser.uid).collection("routes").doc(key).set({
-       distance: distance
+     db.collection("routes").doc(currentUser.uid).set({
+       distance: distance,
+       duration: duration
      });
    } catch (err) {
      Alert.alert("There is something wrong!!!!", err.message);

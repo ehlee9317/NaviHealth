@@ -14,7 +14,7 @@ import { GOOGLE_API_KEY } from "../config/keys";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
-import stopNaviFirebaseHandler from '../api/firebaseMethods'
+import {stopNaviFirebaseHandler} from '../api/firebaseMethods'
 
 export default class Map extends Component {
   constructor(props) {
@@ -148,9 +148,13 @@ export default class Map extends Component {
     this.setState({
       routingMode : false,
     })
+    stopNaviFirebaseHandler(this.state.totalDistance,this.state.totalDuration)
   }
   render() {
-    console.log('this.state.routingMode in render--->', this.state.routingMode)
+    console.log('this.state.totalDistance in state--->', this.state.totalDistance)
+    console.log('this.state.totalDuration in state--->', this.state.totalDuration)
+
+    // console.log('this.state.routingMode in render--->', this.state.routingMode)
     let marker = null;
 
     if (this.state.pointCoords.length > 1) {
@@ -180,10 +184,10 @@ export default class Map extends Component {
       </TouchableHighlight>
     ));
 
-    console.log("111 this.state.latitute", this.state.latitude);
-    console.log("222 this.state.longitude", this.state.longitude);
-    console.log("333 this.state.pointCoords", this.state.pointCoords);
-    console.log('this.state.routingMode', this.state.routingMode)
+    // console.log("111 this.state.latitute", this.state.latitude);
+    // console.log("222 this.state.longitude", this.state.longitude);
+    // console.log("333 this.state.pointCoords", this.state.pointCoords);
+    // console.log('this.state.routingMode', this.state.routingMode)
     return (
       <View style={styles.container}>
         <MapView
