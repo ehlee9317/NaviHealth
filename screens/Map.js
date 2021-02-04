@@ -71,10 +71,7 @@ export default class Map extends Component {
       });
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords);
-      console.log(this.state.totalDistance)
-      console.log(this.state.totalDuration)
-      
-    } catch (error) {
+     } catch (error) {
       console.error(error);
     }
   }
