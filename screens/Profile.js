@@ -38,7 +38,7 @@ export default function Profile({ navigation }) {
       }
     }
     getUserInfo();
-  });
+  }, []);
 
   const handlePress = () => {
     loggingOut();
@@ -50,6 +50,8 @@ export default function Profile({ navigation }) {
     const heightM = height / 100;
     return (weightKg / heightM ** 2).toFixed(2);
   };
+
+  console.log('firstname------>', firstName)
 
   return (
     <SafeAreaView style={styles.container}>

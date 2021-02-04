@@ -1,20 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, Button, StyleSheet } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
+import * as firebase from 'firebase';
 
-const data = [
-  { week: 1, calories: 100 },
-  { week: 2, calories: 300 },
-  { week: 3, calories: 500 },
-  { week: 4, calories: 400 },
-];
+// const data = [
+//   { week: 1, calories: 100 },
+//   { week: 2, calories: 300 },
+//   { week: 3, calories: 500 },
+//   { week: 4, calories: 400 },
+// ];
 
-const HealthStatsScreen = ({ navigation }) => {
+
+export default function HealthStatsScreen ({ navigation }) {
+  const db = firebase.firestore();
+  let currentUserUID = firebase.auth().currentUser.uid;
+  const [calorieData, setCalorieData] = useState([])
+
+  useEffect(() => {
+    const getCalorieData = async () => {
+      let userCalories = []
+      try {
+        await db.collection("fakeHealthData").where("userId", "==", currentUserUID).get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const dataObj = doc.data();
+            console.log('dataObj----->', dataObj)
+            const caloriesOverTime = {
+              day: dataObj.timestamp.toDate().toString().slice(0,10),
+              calories: dataObj.calories
+            }
+            userCalories.push(caloriesOverTime)
+          })
+        })
+        setCalorieData(userCalories)
+        console.log('calorieData array--->', userCalories)
+      } catch (error) {
+        console.log("Error getting documents", error);
+      }
+    }
+    getCalorieData();
+  }, []);
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <VictoryChart width={350} theme={VictoryTheme.material}>
-          <VictoryBar data={data} x='week' y='calories' />
+        <Text>Calories Burned</Text>
+        <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30}>
+          <VictoryBar data={calorieData} x='day' y='calories' />
         </VictoryChart>
       </View>
       <View>
@@ -25,7 +57,6 @@ const HealthStatsScreen = ({ navigation }) => {
   );
 };
 
-export default HealthStatsScreen;
 
 const styles = StyleSheet.create({
   container: {
