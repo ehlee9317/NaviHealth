@@ -156,6 +156,7 @@ export default class Map extends Component {
       (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
+    stopNaviFirebaseHandler(this.state.totalDistance, this.state.totalDuration)
   }
   startNaviHandler(){
     this.setState({
