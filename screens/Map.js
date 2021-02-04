@@ -24,6 +24,7 @@ export default class Map extends Component {
       destination: "",
       predictions: [],
       pointCoords: [],
+      followUser: false,
       totalDistance: "",
       totalDuration: "",
     };
@@ -154,6 +155,7 @@ export default class Map extends Component {
             longitudeDelta: 0.0121,
           }}
           showsUserLocation={true}
+          followsUserLocation={this.state.followUser}
         >
           <Polyline
             coordinates={this.state.pointCoords}
