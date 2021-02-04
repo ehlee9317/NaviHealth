@@ -14,6 +14,7 @@ import { GOOGLE_API_KEY } from "../config/keys";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
+import stopNaviFirebaseHandler from '../api/firebaseMethods'
 
 export default class Map extends Component {
   constructor(props) {

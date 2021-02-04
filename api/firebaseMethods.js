@@ -35,3 +35,17 @@ export async function loggingOut() {
     Alert.alert("There is something wrong!", err.message);
   }
 }
+
+
+export async function stopNaviFirebaseHandler(distance) {
+   try {
+     const currentUser = firebase.auth().currentUser;
+     const db = firebase.firestore();
+     const key = firebase.newId();
+     db.collection("users").doc(currentUser.uid).collection("routes").doc(key).set({
+       distance: distance
+     });
+   } catch (err) {
+     Alert.alert("There is something wrong!!!!", err.message);
+   }
+}
