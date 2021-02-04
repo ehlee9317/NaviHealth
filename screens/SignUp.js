@@ -29,7 +29,7 @@ export default function SignUp({ navigation }) {
     setConfirmPassword("");
     setWeight("");
     setHeight("");
-    
+
   };
 
   const handlePress = () => {
@@ -40,7 +40,7 @@ export default function SignUp({ navigation }) {
     } else if (!weight) {
       Alert.alert("Weight is required.");
     } else if (!height) {
-      Alert.alert("Height is required.");  
+      Alert.alert("Height is required.");
     } else if (!password) {
       Alert.alert("Password field is required.");
     } else if (!confirmPassword) {
@@ -55,7 +55,7 @@ export default function SignUp({ navigation }) {
     }
   };
 
-  return ( 
+  return (
     <SafeAreaView style={styles.container}>
       <View>
         <Text style= {styles.text}>Create an Account </Text>
@@ -80,7 +80,7 @@ export default function SignUp({ navigation }) {
           <View style={{padding:10}}>
            <TextInput
             style = {{padding:15, fontSize:20, borderColor:"#456990", borderWidth:1, backgroundColor:"#f7fff7"}}
-            placeholder="Enter your weight in kgs"
+            placeholder="Enter your weight in lbs"
             value={weight}
             onChangeText={(weight)=>setWeight(weight)}
             keyboardType = "numeric"
@@ -95,7 +95,7 @@ export default function SignUp({ navigation }) {
             keyboardType = "numeric"
             />
             </View>
-          <View style={{padding:10}}> 
+          <View style={{padding:10}}>
           <TextInput
             style = {{padding:15, fontSize:20, borderColor:"#456990", borderWidth:1, backgroundColor:"#f7fff7"}}
             placeholder="Enter your email"
@@ -114,7 +114,7 @@ export default function SignUp({ navigation }) {
             secureTextEntry={true}
           />
           </View>
-         
+
           <View style= {{padding:10}}>
           <TextInput
             style = {{padding:15, fontSize:20, borderColor:"#456990", borderWidth:1, backgroundColor:"#f7fff7"}}
@@ -137,7 +137,7 @@ export default function SignUp({ navigation }) {
             <Text style = {{padding:20, fontSize:20, backgroundColor:"#49BEAA", textAlign:"center"}}>Sign In</Text>
           </TouchableOpacity>
           </View>
-         
+
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -146,7 +146,7 @@ export default function SignUp({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex:1, 
+    flex:1,
     backgroundColor: "#f7fff7",
     alignItems: "center",
     justifyContent:"center"
@@ -155,5 +155,5 @@ const styles = StyleSheet.create({
     padding: 60,
     fontSize: 30,
   }
-  
+
 })
