@@ -25,6 +25,7 @@ export default class Map extends Component {
       predictions: [],
       pointCoords: [],
       followUser: false,
+      routingMode: false,
       totalDistance: "",
       totalDuration: "",
     };
@@ -113,7 +114,14 @@ export default class Map extends Component {
       { enableHighAccuracy: true }
     );
   }
-
+  startNaviHandler(){
+    this.state.routingMode = true
+    console.log('routingMode---->',this.state.routingMode)
+  }
+  stopNaviHandler(){
+    this.state.routingMode = false
+    console.log('routingMode---->', this.state.routingMode)
+  }
   render() {
     let marker = null;
 
@@ -177,8 +185,11 @@ export default class Map extends Component {
         />
         {predictions}
         <Button title="Relocate User" onPress={() => this.gotToMyLocation()} />
-        <Button title="Start Navigation" />
-        <Button title="End Navigation" />
+        {this.state.routingMode === false ? (
+          <Button title="Start Navigation" onPress={() => {this.startNaviHandler()}}/>
+        ) : (
+          <Button title="End Navigation" onPress={() => {this.stopNaviHandler()}}/>
+        )}
       </View>
     );
   }
