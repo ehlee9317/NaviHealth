@@ -28,7 +28,6 @@ export default class Map extends Component {
       pointCoords: [],
       followUser: false,
       routingMode: false,
-
       displayMainSearchBar: true,
       yourLocation: {
         yourLatitude: "",
@@ -288,7 +287,8 @@ export default class Map extends Component {
             )
           }
         />
-        {this.state.routingMode === true ? (
+        
+        {this.state.totalDistance.length > 0 ? this.state.routingMode === true ? (
           <Button
             title="End Navigation"
             onPress={() => {
@@ -302,7 +302,7 @@ export default class Map extends Component {
               this.startNaviHandler();
             }}
           />
-        )}
+        ): (<Button title="input a destination"/>)}
       </View>
     );
   }

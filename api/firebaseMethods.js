@@ -41,7 +41,7 @@ export async function stopNaviFirebaseHandler(distance, duration) {
    try {
      const currentUser = firebase.auth().currentUser;
      const db = firebase.firestore();
-     db.collection("routes").doc(currentUser.uid).set({
+     db.collection("routes").doc(currentUser.uid).collection("sessions").doc().set({
        distance: distance,
        duration: duration
      });
