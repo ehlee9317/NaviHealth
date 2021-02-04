@@ -26,7 +26,6 @@ export default class Map extends Component {
       destination: "",
       predictions: [],
       pointCoords: [],
-      followUser: false,
       routingMode: false,
       displayMainSearchBar: true,
       yourLocation: {
@@ -129,8 +128,28 @@ export default class Map extends Component {
           this.map.animateToRegion({
             latitude: coords.latitude,
             longitude: coords.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.015,
+          });
+        }
+      },
+      (error) => alert("Error: Are location services on?"),
+      { enableHighAccuracy: true }
+    );
+  }
+  stopNaviHelper(){
+    console.log("stopNaviHelper is called");
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        // console.log("curent location: ", coords);
+        // console.log(this.map);
+        if (this.map) {
+          // console.log("curent location: ", coords);
+          this.map.animateToRegion({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.015,
           });
         }
       },
@@ -147,12 +166,9 @@ export default class Map extends Component {
     this.setState({
       routingMode : false,
     })
-    stopNaviFirebaseHandler(this.state.totalDistance,this.state.totalDuration)
+    this.stopNaviHelper()
   }
   render() {
-    console.log('this.state.totalDistance in state--->', this.state.totalDistance)
-    console.log('this.state.totalDuration in state--->', this.state.totalDuration)
-
     // console.log('this.state.routingMode in render--->', this.state.routingMode)
     let marker = null;
 

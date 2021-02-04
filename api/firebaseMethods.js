@@ -14,6 +14,7 @@ export async function registration(email, password, lastName, firstName, weight,
       firstName: firstName,
       weight: weight,
       height: height,
+      created: firebase.firestore.FieldValue.serverTimestamp()
     });
   } catch (err) {
     Alert.alert("There is something wrong!!!!", err.message);
