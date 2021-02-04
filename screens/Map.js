@@ -7,6 +7,7 @@ import {
   Keyboard,
   TouchableHighlight,
   SafeAreaView,
+  Button
 } from "react-native";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { GOOGLE_API_KEY } from "../config/keys";
@@ -14,7 +15,7 @@ import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
 
-export default class App extends Component {
+export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,13 +26,14 @@ export default class App extends Component {
       predictions: [],
       pointCoords: [],
 
-      // Sample START
       displayMainSearchBar: true,
       yourLocation: {
         yourLatitude: "",
         yourLongitude: "",
       },
-      // Sample END
+
+      totalDistance: "",
+      totalDuration: "",
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -60,10 +62,14 @@ export default class App extends Component {
   async getRouteDirections(destinationPlaceId, destinationName) {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&key=${GOOGLE_API_KEY}`
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
       );
       const json = await response.json();
       // console.log(json);
+      console.log(json.routes[0].legs[0].distance.text)
+      console.log(json.routes[0].legs[0].duration.text)
+      const totalDistance = json.routes[0].legs[0].distance.text
+      const totalDuration = json.routes[0].legs[0].duration.text
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -72,10 +78,12 @@ export default class App extends Component {
         pointCoords,
         predictions: [],
         destination: destinationName,
+        totalDistance: totalDistance,
+        totalDuration: totalDuration,
       });
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords);
-    } catch (error) {
+     } catch (error) {
       console.error(error);
     }
   }
@@ -83,14 +91,12 @@ export default class App extends Component {
   async onChangeDestination(destination) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
     &input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
-    // console.log(apiUrl);
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
       this.setState({
         predictions: json.predictions,
       });
-      // console.log(json);
     } catch (err) {
       console.error(err);
     }
@@ -108,6 +114,27 @@ export default class App extends Component {
     } catch (err) {
       console.error(err);
     }
+  }
+
+  gotToMyLocation() {
+    console.log("gotToMyLocation is called");
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        // console.log("curent location: ", coords);
+        // console.log(this.map);
+        if (this.map) {
+          // console.log("curent location: ", coords);
+          this.map.animateToRegion({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          });
+        }
+      },
+      (error) => alert("Error: Are location services on?"),
+      { enableHighAccuracy: true }
+    );
   }
 
   render() {
@@ -131,12 +158,11 @@ export default class App extends Component {
 
           this.setState({ displayMainSearchBar: false });
         }}
-        key={prediction.id}
+    
+        key={prediction.place_id}
       >
         <View>
-          <Text style={styles.suggestions}>
-            {prediction.structured_formatting.main_text}
-          </Text>
+          <Text style={styles.suggestions}>{prediction.description}</Text>
         </View>
       </TouchableHighlight>
     ));
@@ -231,6 +257,7 @@ export default class App extends Component {
           </View>
         )}
         {predictions}
+        <Button title="Relocate User" onPress={() => this.gotToMyLocation()} />
       </View>
     );
   }
