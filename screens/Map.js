@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import {
   TextInput,
@@ -7,11 +6,13 @@ import {
   View,
   Keyboard,
   TouchableHighlight,
+  SafeAreaView,
 } from "react-native";
 import MapView, { Polyline, Marker } from "react-native-maps";
-import { GOOGLE_API_KEY } from '../config/keys';
+import { GOOGLE_API_KEY } from "../config/keys";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export default class App extends Component {
   constructor(props) {
@@ -23,9 +24,18 @@ export default class App extends Component {
       destination: "",
       predictions: [],
       pointCoords: [],
+
+      // Sample START
+      displayMainSearchBar: true,
+      yourLocation: "",
+      // Sample END
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
+      1000
+    );
+    this.onChangeYourLocationDebounced = _.debounce(
+      this.onChangeYourLocation,
       1000
     );
   }
@@ -50,7 +60,7 @@ export default class App extends Component {
         `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&key=${GOOGLE_API_KEY}`
       );
       const json = await response.json();
-      console.log(json);
+      // console.log(json);
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -70,14 +80,28 @@ export default class App extends Component {
   async onChangeDestination(destination) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
     &input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
-    console.log(apiUrl);
+    // console.log(apiUrl);
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
       this.setState({
         predictions: json.predictions,
       });
-      console.log(json);
+      // console.log(json);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async onChangeYourLocation(yourLocation) {
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
+    &input=${yourLocation}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
+    try {
+      const result = await fetch(apiUrl);
+      const json = await result.json();
+      this.setState({
+        predictions: json.predictions,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -96,12 +120,14 @@ export default class App extends Component {
 
     const predictions = this.state.predictions.map((prediction) => (
       <TouchableHighlight
-        onPress={() =>
+        onPress={() => {
           this.getRouteDirections(
             prediction.place_id,
             prediction.structured_formatting.main_text
-          )
-        }
+          );
+
+          this.setState({ displayMainSearchBar: false });
+        }}
         key={prediction.id}
       >
         <View>
@@ -111,6 +137,10 @@ export default class App extends Component {
         </View>
       </TouchableHighlight>
     ));
+
+    console.log("111 this.state.latitute", this.state.latitude);
+    console.log("222 this.state.longitude", this.state.longitude);
+    console.log("333 this.state.pointCoords", this.state.pointCoords);
 
     return (
       <View style={styles.container}>
@@ -134,17 +164,69 @@ export default class App extends Component {
           />
           {marker}
         </MapView>
-        <TextInput
-          placeholder="Enter destination..."
-          style={styles.destinationInput}
-          value={this.state.destination}
-          clearButtonMode="always"
-          onChangeText={(destination) => {
-            console.log(destination);
-            this.setState({ destination });
-            this.onChangeDestinationDebounced(destination);
-          }}
-        />
+
+        {/* Main Search Bar */}
+        {this.state.displayMainSearchBar ? (
+          <TextInput
+            placeholder="Enter destination..."
+            style={styles.destinationInput}
+            value={this.state.destination}
+            clearButtonMode="always"
+            onChangeText={(destination) => {
+              this.setState({ destination });
+              this.onChangeDestinationDebounced(destination);
+            }}
+          />
+        ) : (
+          <View style={styles.searchContainer}>
+            <SafeAreaView style={styles.inputContainer}>
+              <View style={{ flex: 1 }}>
+                <Icon
+                  name="ios-radio-button-on-outline"
+                  size={22}
+                  style={styles.icon}
+                  color={"#2452F9"}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  placeholder="Your location"
+                  style={styles.yourLocationInput}
+                  value={this.state.yourLocation}
+                  clearButtonMode="always"
+                  onChangeText={(yourLocation) => {
+                    this.setState({ yourLocation });
+                    this.onChangeYourLocationDebounced(yourLocation);
+                  }}
+                />
+              </View>
+            </SafeAreaView>
+
+            <SafeAreaView style={styles.inputContainer}>
+              <View style={{ flex: 1 }}>
+                <Icon
+                  name="ios-location"
+                  size={22}
+                  style={styles.icon}
+                  color={"#EA484E"}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  placeholder="Enter destination..."
+                  style={styles.destinationChangeInput}
+                  value={this.state.destination}
+                  clearButtonMode="always"
+                  onChangeText={(destination) => {
+                    // console.log(destination);
+                    this.setState({ destination });
+                    this.onChangeDestinationDebounced(destination);
+                  }}
+                />
+              </View>
+            </SafeAreaView>
+          </View>
+        )}
         {predictions}
       </View>
     );
@@ -168,6 +250,37 @@ const styles = StyleSheet.create({
     marginRight: 5,
     padding: 5,
     backgroundColor: "white",
+  },
+  yourLocationInput: {
+    height: 40,
+    borderWidth: 0.5,
+    marginLeft: "-76%",
+    padding: 5,
+    backgroundColor: "white",
+    width: 330,
+    justifyContent: "flex-end",
+  },
+  destinationChangeInput: {
+    height: 40,
+    borderWidth: 0.5,
+    marginLeft: "-76%",
+    padding: 5,
+    backgroundColor: "white",
+    width: 330,
+  },
+  searchContainer: {
+    backgroundColor: "white",
+    paddingBottom: "10%",
+  },
+  icon: {
+    justifyContent: "flex-start",
+    marginLeft: "8%",
+    marginTop: "4%",
+  },
+
+  inputContainer: {
+    flexDirection: "row",
+    marginTop: "2%",
   },
   container: {
     ...StyleSheet.absoluteFillObject,
