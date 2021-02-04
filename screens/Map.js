@@ -185,11 +185,8 @@ export default class Map extends Component {
         />
         {predictions}
         <Button title="Relocate User" onPress={() => this.gotToMyLocation()} />
-        {this.state.routingMode === false ? (
           <Button title="Start Navigation" onPress={() => {this.startNaviHandler()}}/>
-        ) : (
           <Button title="End Navigation" onPress={() => {this.stopNaviHandler()}}/>
-        )}
       </View>
     );
   }
