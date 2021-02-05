@@ -2,32 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, Button, StyleSheet } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
 import * as firebase from 'firebase';
-
 // const data = [
 //   { week: 1, calories: 100 },
 //   { week: 2, calories: 300 },
 //   { week: 3, calories: 500 },
 //   { week: 4, calories: 400 },
 // ];
-
-
 export default function HealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [calorieData, setCalorieData] = useState([])
-
+  // totalCalories (calorieData) {
+  //   return calorieData.reduce((acc, currentVal) => {
+  //     return acc +
+  //   }, 0)
+  // }
   useEffect(() => {
     const getCalorieData = async () => {
       let userCalories = []
       try {
-        await db.collection("fakeHealthData").where("userId", "==", currentUserUID).get()
+        await db.collection("routes").doc(currentUserUID).collection("sessions").get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             const dataObj = doc.data();
-            console.log('dataObj----->', dataObj)
+            // console.log('dataObj----->', dataObj)
             const caloriesOverTime = {
-              day: dataObj.timestamp.toDate().toString().slice(0,10),
-              calories: dataObj.calories
+              day: dataObj.created.toDate().toString().slice(0,10),
+              calories: Math.round(dataObj.estCaloriesBurned)
             }
             userCalories.push(caloriesOverTime)
           })
@@ -40,7 +41,6 @@ export default function HealthStatsScreen ({ navigation }) {
     }
     getCalorieData();
   }, []);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -56,8 +56,6 @@ export default function HealthStatsScreen ({ navigation }) {
     </SafeAreaView>
   );
 };
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
