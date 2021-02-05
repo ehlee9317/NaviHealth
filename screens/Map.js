@@ -70,10 +70,10 @@ export default class Map extends Component {
       const response = await fetch(apiUrl);
       const json = await response.json();
 
-      console.log(json.routes[0].legs[0].distance.text)
-      console.log(json.routes[0].legs[0].duration.text)
-      const totalDistance = json.routes[0].legs[0].distance.text
-      const totalDuration = json.routes[0].legs[0].duration.text
+      console.log(json.routes[0].legs[0].distance.value)
+      console.log(json.routes[0].legs[0].duration.value)
+      const totalDistance = (json.routes[0].legs[0].distance.value)/1000
+      const totalDuration = (json.routes[0].legs[0].duration.value)/60
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };

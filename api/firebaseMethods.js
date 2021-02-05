@@ -51,10 +51,10 @@ export async function stopNaviFirebaseHandler(distance, duration) {
      await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
        distance: distance,
        duration: duration,
-       estCaloriesBurned: estCaloriesBurnedPerMinute * Number(duration.slice(0, -5)),
+       estCaloriesBurned: estCaloriesBurnedPerMinute * duration,
        created: firebase.firestore.FieldValue.serverTimestamp(),
      })
-     console.log('duration ------->', duration.slice(0, -5))
+     console.log('duration ------->', duration)
      console.log('estCaloriesBurned ------->', estCaloriesBurnedPerMinute)
    } catch (err) {
      Alert.alert("There is something wrong!!!!", err.message);
