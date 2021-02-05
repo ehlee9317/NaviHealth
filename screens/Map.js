@@ -31,8 +31,8 @@ export default class Map extends Component {
       displayMainSearchBar: true,
       yourLocation: "",
       yourLocationPredictions: [],
-      totalDistance: "",
-      totalDuration: "",
+      totalDistance: 0,
+      totalDuration: 0,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -58,11 +58,7 @@ export default class Map extends Component {
     );
   }
 
-  async getRouteDirections(
-    yourStartingPlaceId,
-    destinationPlaceId,
-    destinationName
-  ) {
+  async getRouteDirections(yourStartingPlaceId, destinationPlaceId, startingName, destinationName) {
     try {
       let apiUrl;
       if (yourStartingPlaceId) {
@@ -73,9 +69,11 @@ export default class Map extends Component {
       console.log("apiUrl----->", apiUrl);
       const response = await fetch(apiUrl);
       const json = await response.json();
-      // console.log("json --->", json.routes[0]);
-      const totalDistance = json.routes[0].legs[0].distance.text;
-      const totalDuration = json.routes[0].legs[0].duration.text;
+
+      console.log(json.routes[0].legs[0].distance.value)
+      console.log(json.routes[0].legs[0].duration.value)
+      const totalDistance = (json.routes[0].legs[0].distance.value)/1000
+      const totalDuration = (json.routes[0].legs[0].duration.value)/60
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -83,7 +81,8 @@ export default class Map extends Component {
       this.setState({
         pointCoords,
         predictions: [],
-        // destination: destinationName,
+        destination: destinationName,
+        yourLocation: startingName, 
         yourLocationPredictions: [],
         totalDistance: totalDistance,
         totalDuration: totalDuration,
@@ -187,14 +186,16 @@ export default class Map extends Component {
         onPress={() => {
           this.getRouteDirections(
             null,
-            prediction.place_id
-            // prediction.structured_formatting.main_text
+            prediction.place_id,
+            null,
+            prediction.structured_formatting.main_text,
           );
 
-          this.setState({
-            displayMainSearchBar: false,
-            destinationPlaceId: prediction.place_id,
-          });
+            this.setState({
+              displayMainSearchBar: false,
+              destinationPlaceId: prediction.place_id,
+              // destination:  prediction.structured_formatting.main_text,
+            });
         }}
       >
         <View>
@@ -203,17 +204,19 @@ export default class Map extends Component {
       </TouchableHighlight>
     ));
 
-    const yourLocationPredictions = this.state.yourLocationPredictions.map(
-      (prediction) => (
-        <TouchableHighlight
-          key={prediction.place_id}
-          onPress={() => {
-            this.getRouteDirections(
-              prediction.place_id,
-              this.state.destinationPlaceId
-            );
+    const yourLocationPredictions = this.state.yourLocationPredictions.map((prediction) => (
+      <TouchableHighlight
+        key={prediction.place_id}
+        onPress={() => {
+          this.getRouteDirections(
+            prediction.place_id,
+            this.state.destinationPlaceId,
+            prediction.structured_formatting.main_text,
+            this.state.destinationName,
+          );
             this.setState({
               displayMainSearchBar: false,
+              // yourLocation: prediction.structured_formatting.main_text,
             });
           }}
         >
@@ -330,7 +333,7 @@ export default class Map extends Component {
           }
         /> */}
 
-        {this.state.totalDistance.length > 0 ? (
+        {this.state.totalDistance > 0 ? (
           this.state.routingMode === true ? (
             <Button
               title="End Navigation"
