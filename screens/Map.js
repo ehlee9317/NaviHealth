@@ -24,15 +24,13 @@ export default class Map extends Component {
       latitude: 0,
       longitude: 0,
       destination: "",
+      destinationPlaceId: "",
       predictions: [],
       pointCoords: [],
       routingMode: false,
       displayMainSearchBar: true,
-      yourLocation: {
-        yourLatitude: "",
-        yourLongitude: "",
-      },
-
+      yourLocation: "",
+      yourLocationPredictions: [],
       totalDistance: "",
       totalDuration: "",
     };
@@ -60,13 +58,18 @@ export default class Map extends Component {
     );
   }
 
-  async getRouteDirections(destinationPlaceId, destinationName) {
+  async getRouteDirections(yourStartingPlaceId, destinationPlaceId) {
     try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
-      );
+      let apiUrl
+      if (yourStartingPlaceId) {
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
+      } else {
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
+      }
+      console.log('apiUrl----->', apiUrl)
+      const response = await fetch(apiUrl);
       const json = await response.json();
-      // console.log(json);
+
       console.log(json.routes[0].legs[0].distance.text)
       console.log(json.routes[0].legs[0].duration.text)
       const totalDistance = json.routes[0].legs[0].distance.text
@@ -78,7 +81,8 @@ export default class Map extends Component {
       this.setState({
         pointCoords,
         predictions: [],
-        destination: destinationName,
+        // destination: destinationName,
+        yourLocationPredictions: [],
         totalDistance: totalDistance,
         totalDuration: totalDuration,
       });
@@ -105,12 +109,12 @@ export default class Map extends Component {
 
   async onChangeYourLocation(yourLocation) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
-    &input=${yourLocation}&location=${this.state.yourLocation.latitude},${this.state.yourLocation.longitude}&radius=2000`;
+    &input=${yourLocation}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
       this.setState({
-        predictions: json.predictions,
+        yourLocationPredictions: json.predictions,
       });
     } catch (err) {
       console.error(err);
@@ -121,10 +125,7 @@ export default class Map extends Component {
     console.log("gotToMyLocation is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        // console.log("curent location: ", coords);
-        // console.log(this.map);
         if (this.map) {
-          // console.log("curent location: ", coords);
           this.map.animateToRegion({
             latitude: coords.latitude,
             longitude: coords.longitude,
@@ -141,10 +142,7 @@ export default class Map extends Component {
     console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        // console.log("curent location: ", coords);
-        // console.log(this.map);
         if (this.map) {
-          // console.log("curent location: ", coords);
           this.map.animateToRegion({
             latitude: coords.latitude,
             longitude: coords.longitude,
@@ -170,7 +168,6 @@ export default class Map extends Component {
     this.stopNaviHelper()
   }
   render() {
-    // console.log('this.state.routingMode in render--->', this.state.routingMode)
     let marker = null;
 
     if (this.state.pointCoords.length > 1) {
@@ -183,16 +180,19 @@ export default class Map extends Component {
 
     const predictions = this.state.predictions.map((prediction) => (
       <TouchableHighlight
+        key={prediction.place_id}
         onPress={() => {
           this.getRouteDirections(
-            prediction.place_id,
-            prediction.structured_formatting.main_text
+            null,
+            prediction.place_id
+            // prediction.structured_formatting.main_text
           );
 
-          this.setState({ displayMainSearchBar: false });
+            this.setState({
+              displayMainSearchBar: false,
+              destinationPlaceId: prediction.place_id
+            });
         }}
-    
-        key={prediction.place_id}
       >
         <View>
           <Text style={styles.suggestions}>{prediction.description}</Text>
@@ -200,10 +200,26 @@ export default class Map extends Component {
       </TouchableHighlight>
     ));
 
-    // console.log("111 this.state.latitute", this.state.latitude);
-    // console.log("222 this.state.longitude", this.state.longitude);
-    // console.log("333 this.state.pointCoords", this.state.pointCoords);
-    // console.log('this.state.routingMode', this.state.routingMode)
+    const yourLocationPredictions = this.state.yourLocationPredictions.map((prediction) => (
+      <TouchableHighlight
+        key={prediction.place_id}
+        onPress={() => {
+          this.getRouteDirections(
+            prediction.place_id,
+            this.state.destinationPlaceId
+          );
+            this.setState({
+              displayMainSearchBar: false,
+            });
+
+        }}
+      >
+        <View>
+          <Text style={styles.suggestions}>{prediction.description}</Text>
+        </View>
+      </TouchableHighlight>
+    ));
+
     return (
       <View style={styles.container}>
         <MapView
@@ -291,6 +307,7 @@ export default class Map extends Component {
           </View>
         )}
         {predictions}
+        {yourLocationPredictions}
         <Button
           title="Relocate User"
           onPress={() =>
@@ -304,7 +321,7 @@ export default class Map extends Component {
             )
           }
         />
-        
+
         {this.state.totalDistance.length > 0 ? this.state.routingMode === true ? (
           <Button
             title="End Navigation"
