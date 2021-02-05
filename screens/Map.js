@@ -58,12 +58,7 @@ export default class Map extends Component {
     );
   }
 
-  async getRouteDirections(
-    yourStartingPlaceId,
-    destinationPlaceId,
-    startingName,
-    destinationName
-  ) {
+  async getRouteDirections(yourStartingPlaceId, destinationPlaceId, startingName, destinationName) {
     try {
       let apiUrl;
       if (yourStartingPlaceId) {
@@ -75,10 +70,10 @@ export default class Map extends Component {
       const response = await fetch(apiUrl);
       const json = await response.json();
 
-      console.log(json.routes[0].legs[0].distance.value);
-      console.log(json.routes[0].legs[0].duration.value);
-      const totalDistance = json.routes[0].legs[0].distance.value / 1000;
-      const totalDuration = json.routes[0].legs[0].duration.value / 60;
+      console.log(json.routes[0].legs[0].distance.value)
+      console.log(json.routes[0].legs[0].duration.value)
+      const totalDistance = (json.routes[0].legs[0].distance.value)/1000
+      const totalDuration = (json.routes[0].legs[0].duration.value)/60
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -182,7 +177,7 @@ export default class Map extends Component {
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
         />
       );
-      locationMarker = <Marker coordinate={this.state.pointCoords[0]} />;
+      locationMarker = (<Marker coordinate={this.state.pointCoords[0]} />)
     }
 
     const predictions = this.state.predictions.map((prediction) => (
@@ -193,14 +188,14 @@ export default class Map extends Component {
             null,
             prediction.place_id,
             null,
-            prediction.structured_formatting.main_text
+            prediction.structured_formatting.main_text,
           );
 
-          this.setState({
-            displayMainSearchBar: false,
-            destinationPlaceId: prediction.place_id,
-            // destination:  prediction.structured_formatting.main_text,
-          });
+            this.setState({
+              displayMainSearchBar: false,
+              destinationPlaceId: prediction.place_id,
+              // destination:  prediction.structured_formatting.main_text,
+            });
         }}
       >
         <View>
@@ -209,17 +204,16 @@ export default class Map extends Component {
       </TouchableHighlight>
     ));
 
-    const yourLocationPredictions = this.state.yourLocationPredictions.map(
-      (prediction) => (
-        <TouchableHighlight
-          key={prediction.place_id}
-          onPress={() => {
-            this.getRouteDirections(
-              prediction.place_id,
-              this.state.destinationPlaceId,
-              prediction.structured_formatting.main_text,
-              this.state.destinationName
-            );
+    const yourLocationPredictions = this.state.yourLocationPredictions.map((prediction) => (
+      <TouchableHighlight
+        key={prediction.place_id}
+        onPress={() => {
+          this.getRouteDirections(
+            prediction.place_id,
+            this.state.destinationPlaceId,
+            prediction.structured_formatting.main_text,
+            this.state.destinationName,
+          );
             this.setState({
               displayMainSearchBar: false,
               // yourLocation: prediction.structured_formatting.main_text,
@@ -358,24 +352,23 @@ export default class Map extends Component {
         ) : (
           <Button title="input a destination" />
         )}
-        <View>
-          <Icon
-            style={styles.locateIcon}
-            name="ios-locate"
-            size={50}
-            color={"lightgrey"}
-            onPress={() =>
-              this.gotToMyLocation(
-                <Button
-                  title="End Navigation"
-                  onPress={() => {
-                    this.stopNaviHandler();
-                  }}
-                />
-              )
-            }
-          />
-        </View>
+
+        <Icon
+          style={styles.locateIcon}
+          name="ios-locate"
+          size={50}
+          color={"lightgrey"}
+          onPress={() =>
+            this.gotToMyLocation(
+              <Button
+                title="End Navigation"
+                onPress={() => {
+                  this.stopNaviHandler();
+                }}
+              />
+            )
+          }
+        />
       </View>
     );
   }
@@ -425,12 +418,11 @@ const styles = StyleSheet.create({
     marginLeft: "8%",
     marginTop: "4%",
   },
-  locateIcon: {
-    justifyContent: "flex-end",
-    marginLeft: "82%",
-    marginTop: "125%",
-    // marginBottom:"-120%"
-  },
+  // locateIcon: {
+  //   justifyContent: "flex-end",
+  //   marginLeft: "82%",
+  //   marginTop: "145%",
+  // },
   inputContainer: {
     flexDirection: "row",
     marginTop: "2%",
