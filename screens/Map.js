@@ -7,14 +7,14 @@ import {
   Keyboard,
   TouchableHighlight,
   SafeAreaView,
-  Button
+  Button,
 } from "react-native";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { GOOGLE_API_KEY } from "../config/keys";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
-import {stopNaviFirebaseHandler} from '../api/firebaseMethods'
+import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 
 export default class Map extends Component {
   constructor(props) {
@@ -60,13 +60,13 @@ export default class Map extends Component {
 
   async getRouteDirections(yourStartingPlaceId, destinationPlaceId, startingName, destinationName) {
     try {
-      let apiUrl
+      let apiUrl;
       if (yourStartingPlaceId) {
-        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
       } else {
-        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
       }
-      console.log('apiUrl----->', apiUrl)
+      console.log("apiUrl----->", apiUrl);
       const response = await fetch(apiUrl);
       const json = await response.json();
 
@@ -89,7 +89,7 @@ export default class Map extends Component {
       });
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords);
-     } catch (error) {
+    } catch (error) {
       console.error(error);
     }
   }
@@ -139,7 +139,7 @@ export default class Map extends Component {
       { enableHighAccuracy: true }
     );
   }
-  stopNaviHelper(){
+  stopNaviHelper() {
     console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
@@ -155,28 +155,29 @@ export default class Map extends Component {
       (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
-    stopNaviFirebaseHandler(this.state.totalDistance, this.state.totalDuration)
+    stopNaviFirebaseHandler(this.state.totalDistance, this.state.totalDuration);
   }
-  startNaviHandler(){
+  startNaviHandler() {
     this.setState({
-      routingMode : true,
-    })
+      routingMode: true,
+    });
   }
-  stopNaviHandler(){
+  stopNaviHandler() {
     this.setState({
-      routingMode : false,
-    })
-    this.stopNaviHelper()
+      routingMode: false,
+    });
+    this.stopNaviHelper();
   }
   render() {
     let marker = null;
-
+    let locationMarker = null;
     if (this.state.pointCoords.length > 1) {
       marker = (
         <Marker
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
         />
       );
+      locationMarker = (<Marker coordinate={this.state.pointCoords[0]} />)
     }
 
     const predictions = this.state.predictions.map((prediction) => (
@@ -217,14 +218,17 @@ export default class Map extends Component {
               displayMainSearchBar: false,
               // yourLocation: prediction.structured_formatting.main_text,
             });
+          }}
+        >
+          <View>
+            <Text style={styles.suggestions}>{prediction.description}</Text>
+          </View>
+        </TouchableHighlight>
+      )
+    );
 
-        }}
-      >
-        <View>
-          <Text style={styles.suggestions}>{prediction.description}</Text>
-        </View>
-      </TouchableHighlight>
-    ));
+    console.log("11111 latitude", this.state.latitude);
+    console.log("22222 longitude", this.state.longitude);
 
     return (
       <View style={styles.container}>
@@ -248,6 +252,7 @@ export default class Map extends Component {
             strokeColor="#49BEAA"
           />
           {marker}
+          {locationMarker}
         </MapView>
 
         {/* Main Search Bar */}
@@ -314,7 +319,7 @@ export default class Map extends Component {
         )}
         {predictions}
         {yourLocationPredictions}
-        <Button
+        {/* <Button
           title="Relocate User"
           onPress={() =>
             this.gotToMyLocation(
@@ -326,23 +331,44 @@ export default class Map extends Component {
               />
             )
           }
-        />
+        /> */}
 
-        {this.state.totalDistance > 0 ? this.state.routingMode === true ? (
-          <Button
-            title="End Navigation"
-            onPress={() => {
-              this.stopNaviHandler();
-            }}
-          />
+        {this.state.totalDistance > 0 ? (
+          this.state.routingMode === true ? (
+            <Button
+              title="End Navigation"
+              onPress={() => {
+                this.stopNaviHandler();
+              }}
+            />
+          ) : (
+            <Button
+              title="Start Navigation"
+              onPress={() => {
+                this.startNaviHandler();
+              }}
+            />
+          )
         ) : (
-          <Button
-            title="Start Navigation"
-            onPress={() => {
-              this.startNaviHandler();
-            }}
-          />
-        ): (<Button title="input a destination"/>)}
+          <Button title="input a destination" />
+        )}
+
+        <Icon
+          style={styles.locateIcon}
+          name="ios-locate"
+          size={50}
+          color={"lightgrey"}
+          onPress={() =>
+            this.gotToMyLocation(
+              <Button
+                title="End Navigation"
+                onPress={() => {
+                  this.stopNaviHandler();
+                }}
+              />
+            )
+          }
+        />
       </View>
     );
   }
@@ -392,7 +418,11 @@ const styles = StyleSheet.create({
     marginLeft: "8%",
     marginTop: "4%",
   },
-
+  locateIcon: {
+    justifyContent: "flex-end",
+    marginLeft: "82%",
+    marginTop: "145%",
+  },
   inputContainer: {
     flexDirection: "row",
     marginTop: "2%",
