@@ -24,15 +24,17 @@ export default class Map extends Component {
       latitude: 0,
       longitude: 0,
       destination: "",
+      destinationPlaceId: "",
       predictions: [],
       pointCoords: [],
       routingMode: false,
       displayMainSearchBar: true,
-      yourLocation: {
-        yourLatitude: "",
-        yourLongitude: "",
-      },
-
+      // yourLocation: {
+      //   yourLatitude: "",
+      //   yourLongitude: "",
+      // },
+      yourLocation: "",
+      yourLocationPredictions: [],
       totalDistance: "",
       totalDuration: "",
     };
@@ -60,11 +62,16 @@ export default class Map extends Component {
     );
   }
 
-  async getRouteDirections(destinationPlaceId, destinationName) {
+  async getRouteDirections(yourStartingPlaceId, destinationPlaceId) {
     try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
-      );
+      let apiUrl
+      if (yourStartingPlaceId) {
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
+      } else {
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`
+      }
+      console.log('apiUrl----->', apiUrl)
+      const response = await fetch(apiUrl);
       const json = await response.json();
       // console.log(json);
       console.log(json.routes[0].legs[0].distance.text)
@@ -78,7 +85,8 @@ export default class Map extends Component {
       this.setState({
         pointCoords,
         predictions: [],
-        destination: destinationName,
+        // destination: destinationName,
+        yourLocationPredictions: [],
         totalDistance: totalDistance,
         totalDuration: totalDuration,
       });
@@ -105,12 +113,13 @@ export default class Map extends Component {
 
   async onChangeYourLocation(yourLocation) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
-    &input=${yourLocation}&location=${this.state.yourLocation.latitude},${this.state.yourLocation.longitude}&radius=2000`;
+    &input=${yourLocation}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
+      // console.log('changeyourlocationjson----->', json)
       this.setState({
-        predictions: json.predictions,
+        yourLocationPredictions: json.predictions,
       });
     } catch (err) {
       console.error(err);
@@ -183,16 +192,39 @@ export default class Map extends Component {
 
     const predictions = this.state.predictions.map((prediction) => (
       <TouchableHighlight
+        key={prediction.place_id}
+        onPress={() => {
+          this.getRouteDirections(
+            null,
+            prediction.place_id
+            // prediction.structured_formatting.main_text
+          );
+
+            this.setState({
+              displayMainSearchBar: false,
+              destinationPlaceId: prediction.place_id
+            });
+        }}
+      >
+        <View>
+          <Text style={styles.suggestions}>{prediction.description}</Text>
+        </View>
+      </TouchableHighlight>
+    ));
+
+    const yourLocationPredictions = this.state.yourLocationPredictions.map((prediction) => (
+      <TouchableHighlight
+        key={prediction.place_id}
         onPress={() => {
           this.getRouteDirections(
             prediction.place_id,
-            prediction.structured_formatting.main_text
+            this.state.destinationPlaceId
           );
+            this.setState({
+              displayMainSearchBar: false,
+            });
 
-          this.setState({ displayMainSearchBar: false });
         }}
-    
-        key={prediction.place_id}
       >
         <View>
           <Text style={styles.suggestions}>{prediction.description}</Text>
@@ -291,6 +323,7 @@ export default class Map extends Component {
           </View>
         )}
         {predictions}
+        {yourLocationPredictions}
         <Button
           title="Relocate User"
           onPress={() =>
@@ -304,7 +337,7 @@ export default class Map extends Component {
             )
           }
         />
-        
+
         {this.state.totalDistance.length > 0 ? this.state.routingMode === true ? (
           <Button
             title="End Navigation"
