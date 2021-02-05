@@ -1,19 +1,22 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 import { Alert } from "react-native";
+import {caloriesBurnedPerMinute} from "../api/caloriesFunction"
 
 export async function registration(email, password, lastName, firstName, weight, height) {
+  let velocityMilesPerHour = 3
   try {
     await firebase.auth().createUserWithEmailAndPassword(email, password);
     const currentUser = firebase.auth().currentUser;
 
     const db = firebase.firestore();
-    db.collection("users").doc(currentUser.uid).set({
+    await db.collection("users").doc(currentUser.uid).set({
       email: currentUser.email,
       lastName: lastName,
       firstName: firstName,
       weight: weight,
       height: height,
+      estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(weight, height, velocityMilesPerHour).toFixed(2),
       created: firebase.firestore.FieldValue.serverTimestamp()
     });
   } catch (err) {
@@ -40,11 +43,15 @@ export async function loggingOut() {
 
 export async function stopNaviFirebaseHandler(distance, duration) {
    try {
-     const currentUser = firebase.auth().currentUser;
+     const currentUserUID = await firebase.auth().currentUser.uid;
      const db = firebase.firestore();
-     db.collection("routes").doc(currentUser.uid).collection("sessions").doc().set({
+     const userData = await db.collection("users").doc(currentUserUID).get()
+     const estCaloriesBurnedPerMinute = userData.estCaloriesBurnedPerMinute
+     await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
        distance: distance,
-       duration: duration
+       duration: duration,
+       estCaloriesBurned: estCaloriesBurnedPerMinute * duration,
+       created: firebase.firestore.FieldValue.serverTimestamp(),
      });
    } catch (err) {
      Alert.alert("There is something wrong!!!!", err.message);
