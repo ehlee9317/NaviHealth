@@ -29,10 +29,6 @@ export default class Map extends Component {
       pointCoords: [],
       routingMode: false,
       displayMainSearchBar: true,
-      // yourLocation: {
-      //   yourLatitude: "",
-      //   yourLongitude: "",
-      // },
       yourLocation: "",
       yourLocationPredictions: [],
       totalDistance: "",
@@ -73,7 +69,7 @@ export default class Map extends Component {
       console.log('apiUrl----->', apiUrl)
       const response = await fetch(apiUrl);
       const json = await response.json();
-      // console.log(json);
+
       console.log(json.routes[0].legs[0].distance.text)
       console.log(json.routes[0].legs[0].duration.text)
       const totalDistance = json.routes[0].legs[0].distance.text
@@ -117,7 +113,6 @@ export default class Map extends Component {
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
-      // console.log('changeyourlocationjson----->', json)
       this.setState({
         yourLocationPredictions: json.predictions,
       });
@@ -130,10 +125,7 @@ export default class Map extends Component {
     console.log("gotToMyLocation is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        // console.log("curent location: ", coords);
-        // console.log(this.map);
         if (this.map) {
-          // console.log("curent location: ", coords);
           this.map.animateToRegion({
             latitude: coords.latitude,
             longitude: coords.longitude,
@@ -150,10 +142,7 @@ export default class Map extends Component {
     console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        // console.log("curent location: ", coords);
-        // console.log(this.map);
         if (this.map) {
-          // console.log("curent location: ", coords);
           this.map.animateToRegion({
             latitude: coords.latitude,
             longitude: coords.longitude,
@@ -179,7 +168,6 @@ export default class Map extends Component {
     this.stopNaviHelper()
   }
   render() {
-    // console.log('this.state.routingMode in render--->', this.state.routingMode)
     let marker = null;
 
     if (this.state.pointCoords.length > 1) {
@@ -232,10 +220,6 @@ export default class Map extends Component {
       </TouchableHighlight>
     ));
 
-    // console.log("111 this.state.latitute", this.state.latitude);
-    // console.log("222 this.state.longitude", this.state.longitude);
-    // console.log("333 this.state.pointCoords", this.state.pointCoords);
-    // console.log('this.state.routingMode', this.state.routingMode)
     return (
       <View style={styles.container}>
         <MapView

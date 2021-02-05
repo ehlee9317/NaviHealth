@@ -45,14 +45,17 @@ export async function stopNaviFirebaseHandler(distance, duration) {
    try {
      const currentUserUID = await firebase.auth().currentUser.uid;
      const db = firebase.firestore();
-     const userData = await db.collection("users").doc(currentUserUID).get()
+     const userData = await (await db.collection("users").doc(currentUserUID).get()).data()
+     console.log('userdata------>', userData)
      const estCaloriesBurnedPerMinute = userData.estCaloriesBurnedPerMinute
      await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
        distance: distance,
        duration: duration,
-       estCaloriesBurned: estCaloriesBurnedPerMinute * duration,
+       estCaloriesBurned: estCaloriesBurnedPerMinute * Number(duration.slice(0, -5)),
        created: firebase.firestore.FieldValue.serverTimestamp(),
-     });
+     })
+     console.log('duration ------->', duration.slice(0, -5))
+     console.log('estCaloriesBurned ------->', estCaloriesBurnedPerMinute)
    } catch (err) {
      Alert.alert("There is something wrong!!!!", err.message);
    }
