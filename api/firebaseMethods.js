@@ -49,9 +49,9 @@ export async function stopNaviFirebaseHandler(distance, duration) {
      console.log('userdata------>', userData)
      const estCaloriesBurnedPerMinute = userData.estCaloriesBurnedPerMinute
      await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
-       distance: distance,
-       duration: duration,
-       estCaloriesBurned: estCaloriesBurnedPerMinute * duration,
+       distanceKm: distance.toFixed(2),
+       durationMin: duration.toFixed(2),
+       estCaloriesBurned: (estCaloriesBurnedPerMinute * duration).toFixed(2),
        created: firebase.firestore.FieldValue.serverTimestamp(),
      })
      console.log('duration ------->', duration)

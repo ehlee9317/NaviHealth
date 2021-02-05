@@ -31,8 +31,8 @@ export default class Map extends Component {
       displayMainSearchBar: true,
       yourLocation: "",
       yourLocationPredictions: [],
-      totalDistance: "",
-      totalDuration: "",
+      totalDistance: 0,
+      totalDuration: 0,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -58,7 +58,7 @@ export default class Map extends Component {
     );
   }
 
-  async getRouteDirections(yourStartingPlaceId, destinationPlaceId) {
+  async getRouteDirections(yourStartingPlaceId, destinationPlaceId, startingName, destinationName) {
     try {
       let apiUrl
       if (yourStartingPlaceId) {
@@ -81,7 +81,8 @@ export default class Map extends Component {
       this.setState({
         pointCoords,
         predictions: [],
-        // destination: destinationName,
+        destination: destinationName,
+        yourLocation: startingName, 
         yourLocationPredictions: [],
         totalDistance: totalDistance,
         totalDuration: totalDuration,
@@ -184,13 +185,15 @@ export default class Map extends Component {
         onPress={() => {
           this.getRouteDirections(
             null,
-            prediction.place_id
-            // prediction.structured_formatting.main_text
+            prediction.place_id,
+            null,
+            prediction.structured_formatting.main_text,
           );
 
             this.setState({
               displayMainSearchBar: false,
-              destinationPlaceId: prediction.place_id
+              destinationPlaceId: prediction.place_id,
+              // destination:  prediction.structured_formatting.main_text,
             });
         }}
       >
@@ -206,10 +209,13 @@ export default class Map extends Component {
         onPress={() => {
           this.getRouteDirections(
             prediction.place_id,
-            this.state.destinationPlaceId
+            this.state.destinationPlaceId,
+            prediction.structured_formatting.main_text,
+            this.state.destinationName,
           );
             this.setState({
               displayMainSearchBar: false,
+              // yourLocation: prediction.structured_formatting.main_text,
             });
 
         }}
@@ -322,7 +328,7 @@ export default class Map extends Component {
           }
         />
 
-        {this.state.totalDistance.length > 0 ? this.state.routingMode === true ? (
+        {this.state.totalDistance > 0 ? this.state.routingMode === true ? (
           <Button
             title="End Navigation"
             onPress={() => {
