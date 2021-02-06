@@ -33,6 +33,8 @@ export default class Map extends Component {
       yourLocationPredictions: [],
       totalDistance: 0,
       totalDuration: 0,
+      destinationInputName: "",
+      yourLocationInputName: "",
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -78,15 +80,15 @@ export default class Map extends Component {
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
       });
-      this.setState({
-        pointCoords,
-        predictions: [],
-        destination: destinationName,
-        yourLocation: startingName,
-        yourLocationPredictions: [],
-        totalDistance: totalDistance,
-        totalDuration: totalDuration,
-      });
+         this.setState({
+           pointCoords,
+           predictions: [],
+           // destination: destinationName,
+          //  yourLocation: startingName,
+           yourLocationPredictions: [],
+           totalDistance: totalDistance,
+           totalDuration: totalDuration,
+         });
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords);
     } catch (error) {
@@ -291,7 +293,6 @@ export default class Map extends Component {
                 />
               </View>
             </SafeAreaView>
-
             <SafeAreaView style={styles.inputContainer}>
               <View style={{ flex: 1 }}>
                 <Icon
@@ -309,7 +310,9 @@ export default class Map extends Component {
                   clearButtonMode="always"
                   onChangeText={(destination) => {
                     // console.log(destination);
-                    this.setState({ destination });
+                    this.setState({ 
+                      destination
+                     });
                     this.onChangeDestinationDebounced(destination);
                   }}
                 />
