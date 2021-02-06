@@ -230,7 +230,7 @@ export default class Map extends Component {
     // console.log("11111 latitude", this.state.latitude);
     // console.log("22222 longitude", this.state.longitude);
 
-    // return (
+    return (
       <View style={styles.container}>
         <MapView
           ref={(map) => {
