@@ -83,8 +83,6 @@ export default class Map extends Component {
          this.setState({
            pointCoords,
            predictions: [],
-           // destination: destinationName,
-          //  yourLocation: startingName,
            yourLocationPredictions: [],
            totalDistance: totalDistance,
            totalDuration: totalDuration,
