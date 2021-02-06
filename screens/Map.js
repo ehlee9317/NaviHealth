@@ -33,6 +33,8 @@ export default class Map extends Component {
       yourLocationPredictions: [],
       totalDistance: 0,
       totalDuration: 0,
+      destinationInputName: "",
+      yourLocationInputName: "",
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -78,15 +80,13 @@ export default class Map extends Component {
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
       });
-      this.setState({
-        pointCoords,
-        predictions: [],
-        destination: destinationName,
-        yourLocation: startingName,
-        yourLocationPredictions: [],
-        totalDistance: totalDistance,
-        totalDuration: totalDuration,
-      });
+         this.setState({
+           pointCoords,
+           predictions: [],
+           yourLocationPredictions: [],
+           totalDistance: totalDistance,
+           totalDuration: totalDuration,
+         });
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords);
     } catch (error) {
@@ -227,8 +227,8 @@ export default class Map extends Component {
       )
     );
 
-    console.log("11111 latitude", this.state.latitude);
-    console.log("22222 longitude", this.state.longitude);
+    // console.log("11111 latitude", this.state.latitude);
+    // console.log("22222 longitude", this.state.longitude);
 
     return (
       <View style={styles.container}>
@@ -291,7 +291,6 @@ export default class Map extends Component {
                 />
               </View>
             </SafeAreaView>
-
             <SafeAreaView style={styles.inputContainer}>
               <View style={{ flex: 1 }}>
                 <Icon
@@ -309,7 +308,9 @@ export default class Map extends Component {
                   clearButtonMode="always"
                   onChangeText={(destination) => {
                     // console.log(destination);
-                    this.setState({ destination });
+                    this.setState({ 
+                      destination
+                     });
                     this.onChangeDestinationDebounced(destination);
                   }}
                 />
@@ -357,7 +358,7 @@ export default class Map extends Component {
           style={styles.locateIcon}
           name="ios-locate"
           size={50}
-          color={"lightgrey"}
+          color={"#49BEAA"}
           onPress={() =>
             this.gotToMyLocation(
               <Button
