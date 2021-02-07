@@ -33,8 +33,8 @@ export default class Map extends Component {
       yourLocationPredictions: [],
       totalDistance: 0,
       totalDuration: 0,
-      destinationInputName: "",
-      yourLocationInputName: "",
+      selectedDestinationName: "",
+      selectedYourLocationName: "",
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -71,7 +71,8 @@ export default class Map extends Component {
       console.log("apiUrl----->", apiUrl);
       const response = await fetch(apiUrl);
       const json = await response.json();
-
+      // console.log('startingName in getRouteDirection---->', startingName)
+      // console.log("destinationName in getRouteDirection---->", destinationName);
       console.log(json.routes[0].legs[0].distance.value)
       console.log(json.routes[0].legs[0].duration.value)
       const totalDistance = (json.routes[0].legs[0].distance.value)/1000
@@ -87,6 +88,13 @@ export default class Map extends Component {
            totalDistance: totalDistance,
            totalDuration: totalDuration,
          });
+         destinationName ? this.setState({
+           destination: destinationName
+         }) : this.setState({
+           yourLocation: startingName 
+         })
+        //  console.log('destination in getRoute ---->', this.state.destination)
+        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords);
     } catch (error) {
