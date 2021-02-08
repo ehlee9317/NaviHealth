@@ -35,6 +35,7 @@ export default class Map extends Component {
       totalDuration: 0,
       selectedDestinationName: "",
       selectedYourLocationName: "",
+      subwayMode: false, 
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -61,6 +62,7 @@ export default class Map extends Component {
   }
 
   async getRouteDirections(yourStartingPlaceId, destinationPlaceId, startingName, destinationName) {
+    if(!this.state.subwayMode){
     try {
       let apiUrl;
       if (yourStartingPlaceId) {
@@ -73,8 +75,11 @@ export default class Map extends Component {
       const json = await response.json();
       // console.log('startingName in getRouteDirection---->', startingName)
       // console.log("destinationName in getRouteDirection---->", destinationName);
+      
       console.log(json.routes[0].legs[0].distance.value)
       console.log(json.routes[0].legs[0].duration.value)
+      console.log(json.routes[0].legs[0].steps)
+      
       const totalDistance = (json.routes[0].legs[0].distance.value)/1000
       const totalDuration = (json.routes[0].legs[0].duration.value)/60
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -99,6 +104,50 @@ export default class Map extends Component {
       this.map.fitToCoordinates(pointCoords);
     } catch (error) {
       console.error(error);
+    }
+    } else {
+      try {
+        let apiUrl;
+        if (yourStartingPlaceId) {
+          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+        } else {
+          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+        }
+        console.log("apiUrl----->", apiUrl);
+        const response = await fetch(apiUrl);
+        const json = await response.json();
+        // console.log('startingName in getRouteDirection---->', startingName)
+        // console.log("destinationName in getRouteDirection---->", destinationName);
+        
+        console.log(json.routes[0].legs[0].distance.value)
+        console.log(json.routes[0].legs[0].duration.value)
+        console.log(json.routes[0].legs[0].steps)
+        
+        const totalDistance = (json.routes[0].legs[0].distance.value)/1000
+        const totalDuration = (json.routes[0].legs[0].duration.value)/60
+        const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+        const pointCoords = points.map((point) => {
+          return { latitude: point[0], longitude: point[1] };
+        });
+           this.setState({
+             pointCoords,
+             predictions: [],
+             yourLocationPredictions: [],
+             totalDistance: totalDistance,
+             totalDuration: totalDuration,
+           });
+           destinationName ? this.setState({
+             destination: destinationName
+           }) : this.setState({
+             yourLocation: startingName 
+           })
+          //  console.log('destination in getRoute ---->', this.state.destination)
+          //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+        Keyboard.dismiss();
+        this.map.fitToCoordinates(pointCoords);
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -378,6 +427,11 @@ export default class Map extends Component {
             )
           }
         />
+        <Button title="Subway" onPress={()=>{
+          console.log('before setState ---->', this.state.subwayMode)
+          this.setState({subwayMode: !this.state.subwayMode})
+          console.log("after setState ----->", this.state.subwayMode)
+        }}/>
       </View>
     );
   }
