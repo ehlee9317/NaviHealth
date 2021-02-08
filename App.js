@@ -8,6 +8,7 @@ import SignUp from "./screens/SignUp";
 import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MainTabScreen from "./screens/MainTabScreen";
+import WeeklyHealthStatsScreen from './screens/HealthStatsWeeklyScreen'
 
 const Stack = createStackNavigator();
 
@@ -43,6 +44,11 @@ export default function App() {
         <Stack.Screen
           name={"MainTab"}
           component={MainTabScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"WeeklyHealthStats"}
+          component={WeeklyHealthStatsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
