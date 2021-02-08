@@ -2,21 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, Button, StyleSheet } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryLabel, VictoryTheme } from 'victory-native';
 import * as firebase from 'firebase';
-import { totalCalories, daysView, totalCaloriesWeekly } from '../api/healthStatsMethods'
-
+import { totalCalories, totalCaloriesWeekly, convertWeekToChart } from '../api/healthStatsMethods'
+// const data = [
+//   { week: 1, calories: 100 },
+//   { week: 2, calories: 300 },
+//   { week: 3, calories: 500 },
+//   { week: 4, calories: 400 },
+// ];
 export default function HealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [calorieData, setCalorieData] = useState([])
-  const [caloriesByWeek, setWeekTotals] = useState({})
   const [weekCalorieData, setWeekCalorieData] = useState({})
 
   useEffect(() => {
-    const getTodaysCalories = async () => {
+    const getWeeksCalories = async () => {
       let userCalories = []
 
-      // sets beginning date to current day at midnight:
-      let beginningDate = (new Date()).setHours(0,0,0,0)
+      // sets beginning date to last week:
+      let beginningDate = Date.now() - 604800000
       let beginningDateObject = new Date(beginningDate)
       console.log('beginningDateObj----->', beginningDateObject)
       try {
@@ -26,8 +30,7 @@ export default function HealthStatsScreen ({ navigation }) {
             const dataObj = doc.data();
             console.log('dataObj----->', dataObj)
             const caloriesOverTime = {
-              // day: dataObj.created.toDate().toString().slice(0,10),
-              date: dataObj.created.toDate().toLocaleTimeString(),
+              day: dataObj.created.toDate().toString().slice(0,10),
               calories: Math.round(dataObj.estCaloriesBurned)
             }
             userCalories.push(caloriesOverTime)
@@ -35,11 +38,17 @@ export default function HealthStatsScreen ({ navigation }) {
         })
         setCalorieData(userCalories)
         console.log('calorieData array--->', userCalories)
+        // aggregate calorie count for each day in the week:
+        const weekTotals = totalCaloriesWeekly(userCalories)
+        console.log('weekTotals', weekTotals)
+        const weeklyChartData = convertWeekToChart(weekTotals)
+        setWeekCalorieData(weeklyChartData)
+        console.log('weekly chart data====>', weekCalorieData)
       } catch (error) {
         console.log("Error getting documents", error);
       }
     }
-    getTodaysCalories();
+    getWeeksCalories();
   }, []);
 
   return (
@@ -54,7 +63,7 @@ export default function HealthStatsScreen ({ navigation }) {
         </View>
         <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
         <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} >
-          <VictoryBar data={calorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
+          <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
 
         </VictoryChart>
       </View>
@@ -70,4 +79,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
