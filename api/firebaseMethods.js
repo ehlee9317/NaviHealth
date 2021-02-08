@@ -3,7 +3,7 @@ import "firebase/firestore";
 import { Alert } from "react-native";
 import {caloriesBurnedPerMinute} from "../api/caloriesFunction"
 
-export async function registration(email, password, lastName, firstName, weight, height) {
+export async function registration(email, password, lastName, dateOfBirth, firstName, weight, height) {
   let velocityMilesPerHour = 3
   try {
     await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -14,6 +14,7 @@ export async function registration(email, password, lastName, firstName, weight,
       email: currentUser.email,
       lastName: lastName,
       firstName: firstName,
+      dateOfBirth: dateOfBirth,
       weight: weight,
       height: height,
       estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(weight, height, velocityMilesPerHour).toFixed(2),

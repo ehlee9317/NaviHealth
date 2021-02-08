@@ -19,6 +19,7 @@ export default function Profile({ navigation }) {
   const [firstName, setFirstName] = useState("");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
 
   useEffect(() => {
     async function getUserInfo() {
@@ -32,6 +33,7 @@ export default function Profile({ navigation }) {
           setFirstName(dataObj.firstName);
           setHeight(dataObj.height);
           setWeight(dataObj.weight);
+          setDateOfBirth(dataObj.dateOfBirth);
         }
       } catch (error) {
         console.log("something went wrong");
@@ -51,7 +53,30 @@ export default function Profile({ navigation }) {
     return (weightKg / heightM ** 2).toFixed(2);
   };
 
-  console.log('firstname------>', firstName)
+  const ageCalculator = (dateOfBirth) => {
+    //User Date of Birth
+    const dateOfBirthArray = dateOfBirth.split("-");
+    const userYear = dateOfBirthArray.pop();
+    const userMonth = parseInt(dateOfBirthArray.slice(0, 1));
+    const userDay = parseInt(dateOfBirthArray.slice(1, 2));
+
+    //Today's Date
+    const today = new Date();
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth() + 1;
+    const todayDay = today.getDate();
+
+    const age = todayYear - userYear;
+    const monthDifference = userMonth - todayMonth;
+    const dayDifference = userDay - todayDay;
+
+    if (monthDifference >= 1) {
+      return age - 1;
+    } else if (dayDifference >= 1) {
+      return age - 1;
+    }
+    return age;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -85,7 +110,7 @@ export default function Profile({ navigation }) {
       <View style={styles.statsContainer}>
         <View style={styles.statsBox}>
           <Text style={[styles.text, { fontWeight: "300", fontSize: 34 }]}>
-            27
+            {ageCalculator(dateOfBirth)}
           </Text>
           <Text style={[styles.text, styles.subText]}>Age</Text>
         </View>
