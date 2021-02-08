@@ -3,6 +3,7 @@ import { SafeAreaView, View, Text, Button, StyleSheet } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryLabel, VictoryTheme } from 'victory-native';
 import * as firebase from 'firebase';
 import { totalCalories, totalCaloriesWeekly, convertWeekToChart } from '../api/healthStatsMethods'
+import HealthStatsScreen from './HealthStatsScreen'
 // const data = [
 //   { week: 1, calories: 100 },
 //   { week: 2, calories: 300 },
@@ -51,28 +52,65 @@ export default function WeeklyHealthStatsScreen ({ navigation }) {
     getWeeksCalories();
   }, []);
 
+  console.log('weekCalorieData----->', weekCalorieData)
+
   return (
-    <SafeAreaView style={styles.container}>
+    (!weekCalorieData && !calorieData) ?
+    (
+      <SafeAreaView>
+        <Text>Loading</Text>
+      </SafeAreaView>
+    ) :
+    (
+      <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <View style={{ flexDirection: "row" }}>
-          <Button title="Day"/>
-          <Button title="Week"
-            // onPress={()}
+          <Button title="Day"
+            onPress={() => {
+              console.log('button pressed')
+              navigation.navigate("DailyHealthStats")
+            }}
           />
+          <Button title="Week"/>
           <Button title="Month"/>
         </View>
         <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
-        <Text>AVERAGE CALORIES BURNED: {totalCalories(calorieData)}</Text>
-        <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} >
+        <Text>AVERAGE DAILY CALORIES BURNED: {Math.round(totalCalories(calorieData) / 7)}</Text>
+        {/* {weekCalorieData && (
+        <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} standalone={false}>
           <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
 
         </VictoryChart>
+        )} */}
       </View>
 
       <Button title='Go back' onPress={() => navigation.goBack()} />
     </SafeAreaView>
-  );
+    ))
+  // return (
+  //   <SafeAreaView style={styles.container}>
+  //     <View style={styles.container}>
+  //       <View style={{ flexDirection: "row" }}>
+  //         <Button title="Day"/>
+  //         <Button title="Week"
+  //           // onPress={()}
+  //         />
+  //         <Button title="Month"/>
+  //       </View>
+  //       <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
+  //       <Text>AVERAGE DAILY CALORIES BURNED: {Math.round(totalCalories(calorieData) / 7)}</Text>
+  //       <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} >
+  //         <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
+
+  //       </VictoryChart>
+  //     </View>
+
+  //     <Button title='Go back' onPress={() => navigation.goBack()} />
+  //   </SafeAreaView>
+  // );
 };
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
