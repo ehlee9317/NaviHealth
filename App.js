@@ -8,6 +8,7 @@ import SignUp from "./screens/SignUp";
 import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MainTabScreen from "./screens/MainTabScreen";
+import HealthStatsScreen from "./screens/HealthStatsScreen"
 import WeeklyHealthStatsScreen from './screens/HealthStatsWeeklyScreen'
 import Directions from './screens/Directions'
 
@@ -48,15 +49,21 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name={"DailyHealthStats"}
+          component={HealthStatsScreen}
+          options={{ headerShown: false }}
+        />
+        {/* <Stack.Screen
           name={"WeeklyHealthStats"}
           component={WeeklyHealthStatsScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+        */}
+         <Stack.Screen
           name={"Directions"}
           component={Directions}
           options={{ headerShown: false }}
-        />
+        /> 
       </Stack.Navigator>
     </NavigationContainer>
   );

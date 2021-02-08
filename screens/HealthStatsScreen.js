@@ -5,6 +5,8 @@ import * as firebase from 'firebase';
 import { totalCalories, daysView, totalCaloriesWeekly } from '../api/healthStatsMethods'
 import WeeklyHealthStatsScreen from './HealthStatsWeeklyScreen'
 
+let unsubscribe
+
 export default function HealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
@@ -21,8 +23,8 @@ export default function HealthStatsScreen ({ navigation }) {
       let beginningDateObject = new Date(beginningDate)
       console.log('beginningDateObj----->', beginningDateObject)
       try {
-        await db.collection("routes").doc(currentUserUID).collection("sessions").where("created",">=", beginningDateObject).orderBy("created","asc").get()
-        .then((querySnapshot) => {
+        unsubscribe = await db.collection("routes").doc(currentUserUID).collection("sessions").where("created",">=", beginningDateObject).orderBy("created","asc")
+        .onSnapshot((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             const dataObj = doc.data();
             console.log('dataObj----->', dataObj)
@@ -33,9 +35,9 @@ export default function HealthStatsScreen ({ navigation }) {
             }
             userCalories.push(caloriesOverTime)
           })
+          setCalorieData(userCalories)
+          console.log('calorieData array--->', userCalories)
         })
-        setCalorieData(userCalories)
-        console.log('calorieData array--->', userCalories)
       } catch (error) {
         console.log("Error getting documents", error);
       }
@@ -44,12 +46,21 @@ export default function HealthStatsScreen ({ navigation }) {
   }, []);
 
   return (
+    !calorieData ?
+    (
+      <SafeAreaView>
+        <Text>Loading</Text>
+      </SafeAreaView>
+    ) : (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <View style={{ flexDirection: "row" }}>
           <Button title="Day"/>
           <Button title="Week"
-            onPress={() => navigation.navigate("WeeklyHealthStats")}
+            onPress={() => {
+              console.log('button pressed')
+              navigation.navigate("WeeklyHealthStats")
+            }}
           />
           <Button title="Month"/>
         </View>
@@ -62,6 +73,7 @@ export default function HealthStatsScreen ({ navigation }) {
 
       <Button title='Go back' onPress={() => navigation.goBack()} />
     </SafeAreaView>
+    )
   );
 };
 const styles = StyleSheet.create({
@@ -72,3 +84,29 @@ const styles = StyleSheet.create({
   },
 });
 
+
+
+
+// componentDidMount() {
+//   this.db = firebase.firestore();
+//   unsubscribed = this.db
+//     .collection("games")
+//     .doc(this.state.gameID)
+//     .onSnapshot((snapshot) => {
+//       let data = {};
+//       let userUID = this.props.route.params.userUID;
+//       data["status"] = snapshot.data().status;
+//       data["score"] = snapshot.data()[userUID];
+//       data["answered"] = snapshot.data()[`answered${userUID}`];
+//       data["creator"] = snapshot.data().creator;
+//       data["numOneFS"] = snapshot.data().numOne;
+//       data["numTwoFS"] = snapshot.data().numTwo;
+//       data["answerFS"] = snapshot.data().answer;
+//       data["waiting"] = snapshot.data().waiting;
+//       data["received"] = snapshot.data().received;
+//       data["players"] = snapshot.data().players;
+//       data["question"] = snapshot.data().question;
+//       data["gameEnded"] = snapshot.data().gameEnded;
+//       this.setState(data);
+//     });
+// }
