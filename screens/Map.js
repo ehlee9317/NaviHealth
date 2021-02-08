@@ -29,9 +29,10 @@ export default class Map extends Component {
       recordedLongitude: null,
       //recorded speed in kilometers per hour... initial recorded speed at meter per second
       recordedSpeed: null,
+      recordedDistance: 0,
       //first element in the array will be void due to initial state for latitude and longitude being null
-      prevLatLng:{},
       recordedCoordinates: [],
+      prevLatLng: {},
       destination: "",
       destinationPlaceId: "",
       predictions: [],
@@ -45,7 +46,7 @@ export default class Map extends Component {
       selectedDestinationName: "",
       selectedYourLocationName: "",
       directions: [],
-      subwayMode: false, 
+      subwayMode: false,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -59,53 +60,56 @@ export default class Map extends Component {
 
   componentDidMount() {
     //Get current location and set initial region to this
-      navigator.geolocation.getCurrentPosition(
-         (position) => {
-           this.setState(
-             {
-               latitude: position.coords.latitude,
-               longitude: position.coords.longitude,
-             },
-             console.log("getCurrentPosition is Running")
-           );
-         },
-         (error) => console.error(error),
-         { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
-       );
-       this.watchID = navigator.geolocation.watchPosition(
-         (position) => {
-           console.log('position.coords--->', position.coords )
-           if (position.coords.latitude !== 0 && position.coords.longitude !== 0) {
-             this.setState(
-               {
-                 recordedLatitude: position.coords.latitude,
-                 recordedLongitude: position.coords.longitude,
-                 //speed converted to kilometers per hour
-                 recordedSpeed: position.coords.speed * 3.6,
-                 recordedCoordinates: this.state.recordedCoordinates.concat({
-                   latitude: this.state.recordedLatitude,
-                   longitude: this.state.recordedLongitude,
-                  //  speed: this.state.recordedSpeed,
-                 }),
-               },
-               console.log("watchPosition is Running"),
-               console.log("recordedLatitude--->", this.state.recordedLatitude),
-               console.log(
-                 "recordedLongitude--->",
-                 this.state.recordedLongitude
-               ),
-               console.log(
-                 "recordedCoordinates--->",
-                 this.state.recordedCoordinates
-               )
-             );
-           }
-
-         },
-         (error) => console.error(error),
-         { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
-       );
-       this.gotToMyLocation();
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState(
+          {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            recordedLatitude: position.coords.latitude,
+            recordedLongitude: position.coords.longitude
+          },
+          console.log("getCurrentPosition is Running")
+        );
+      },
+      (error) => console.error(error),
+      { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
+    );
+    this.watchID = navigator.geolocation.watchPosition(
+      (position) => {
+        console.log("position.coords--->", position.coords);
+        const newRecordedCoordinates = {
+          latitude: this.state.recordedLatitude,
+          longitude: this.state.recordedLongitude,
+        }
+        if (this.state.routingMode) {
+          this.setState(
+            {
+              recordedLatitude: position.coords.latitude,
+              recordedLongitude: position.coords.longitude,
+              //speed converted to kilometers per hour
+              recordedSpeed: position.coords.speed * 3.6,
+              recordedCoordinates: this.state.recordedCoordinates.concat([
+                newRecordedCoordinates,
+              ]),
+              recordedDistance: this.state.recordedDistance + this.calcDistance(newRecordedCoordinates),
+              prevLatLng: newRecordedCoordinates,
+            },
+            console.log("watchPosition is Running"),
+            console.log("recordedLatitude--->", this.state.recordedLatitude),
+            console.log("recordedLongitude--->", this.state.recordedLongitude),
+            console.log("recordedDistance--->", this.state.recordedDistance)
+          );
+          // console.log(
+          //   "recordedCoordinates--->",
+          //   this.state.recordedCoordinates
+          // );
+        }
+      },
+      (error) => console.error(error),
+      { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
+    );
+    this.gotToMyLocation();
   }
 
   // componentWillUnmount(){
@@ -118,97 +122,97 @@ export default class Map extends Component {
     startingName,
     destinationName
   ) {
-    if(!this.state.subwayMode){
-    try {
-      let apiUrl;
-      if (yourStartingPlaceId) {
-        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
-      } else {
-        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
+    if (!this.state.subwayMode) {
+      try {
+        let apiUrl;
+        if (yourStartingPlaceId) {
+          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
+        } else {
+          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
+        }
+        // console.log("apiUrl----->", apiUrl);
+        const response = await fetch(apiUrl);
+        const json = await response.json();
+        // console.log('startingName in getRouteDirection---->', startingName)
+        // console.log("destinationName in getRouteDirection---->", destinationName);
+        console.log(json.routes[0].legs[0].distance.value);
+        console.log(json.routes[0].legs[0].duration.value);
+        console.log(json.routes[0].legs[0].steps);
+        const directionsArr = json.routes[0].legs[0].steps;
+        const totalDistance = json.routes[0].legs[0].distance.value / 1000;
+        const totalDuration = json.routes[0].legs[0].duration.value / 60;
+        const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+        const pointCoords = points.map((point) => {
+          return { latitude: point[0], longitude: point[1] };
+        });
+        this.setState({
+          pointCoords,
+          predictions: [],
+          yourLocationPredictions: [],
+          totalDistance: totalDistance,
+          totalDuration: totalDuration,
+          directions: directionsArr,
+        });
+        destinationName
+          ? this.setState({
+              destination: destinationName,
+            })
+          : this.setState({
+              yourLocation: startingName,
+            });
+        //  console.log('destination in getRoute ---->', this.state.destination)
+        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+        Keyboard.dismiss();
+        this.map.fitToCoordinates(pointCoords);
+      } catch (error) {
+        console.error(error);
       }
-      // console.log("apiUrl----->", apiUrl);
-      const response = await fetch(apiUrl);
-      const json = await response.json();
-      // console.log('startingName in getRouteDirection---->', startingName)
-      // console.log("destinationName in getRouteDirection---->", destinationName);
-      console.log(json.routes[0].legs[0].distance.value);
-      console.log(json.routes[0].legs[0].duration.value);
-      console.log(json.routes[0].legs[0].steps)
-      const directionsArr = json.routes[0].legs[0].steps
-      const totalDistance = json.routes[0].legs[0].distance.value / 1000;
-      const totalDuration = json.routes[0].legs[0].duration.value / 60;
-      const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-      const pointCoords = points.map((point) => {
-        return { latitude: point[0], longitude: point[1] };
-      });
-      this.setState({
-        pointCoords,
-        predictions: [],
-        yourLocationPredictions: [],
-        totalDistance: totalDistance,
-        totalDuration: totalDuration,
-        directions: directionsArr,
-      });
-      destinationName
-        ? this.setState({
-            destination: destinationName,
-          })
-        : this.setState({
-            yourLocation: startingName,
-          });
-      //  console.log('destination in getRoute ---->', this.state.destination)
-      //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
-      Keyboard.dismiss();
-      this.map.fitToCoordinates(pointCoords);
-    } catch (error) {
-      console.error(error);
-    }
-  } else {
-    try {
-      let apiUrl;
-      if (yourStartingPlaceId) {
-        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
-      } else {
-        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+    } else {
+      try {
+        let apiUrl;
+        if (yourStartingPlaceId) {
+          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+        } else {
+          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+        }
+        console.log("apiUrl----->", apiUrl);
+        const response = await fetch(apiUrl);
+        const json = await response.json();
+        // console.log('startingName in getRouteDirection---->', startingName)
+        // console.log("destinationName in getRouteDirection---->", destinationName);
+        console.log(json.routes[0].legs[0].distance.value);
+        console.log(json.routes[0].legs[0].duration.value);
+        console.log(json.routes[0].legs[0].steps);
+        const directionsArr = json.routes[0].legs[0].steps;
+        const totalDistance = json.routes[0].legs[0].distance.value / 1000;
+        const totalDuration = json.routes[0].legs[0].duration.value / 60;
+        const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+        const pointCoords = points.map((point) => {
+          return { latitude: point[0], longitude: point[1] };
+        });
+        this.setState({
+          pointCoords,
+          predictions: [],
+          yourLocationPredictions: [],
+          totalDistance: totalDistance,
+          totalDuration: totalDuration,
+          directions: directionsArr,
+        });
+        destinationName
+          ? this.setState({
+              destination: destinationName,
+            })
+          : this.setState({
+              yourLocation: startingName,
+            });
+        //  console.log('destination in getRoute ---->', this.state.destination)
+        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+        Keyboard.dismiss();
+        this.map.fitToCoordinates(pointCoords);
+      } catch (error) {
+        console.error(error);
       }
-      console.log("apiUrl----->", apiUrl);
-      const response = await fetch(apiUrl);
-      const json = await response.json();
-      // console.log('startingName in getRouteDirection---->', startingName)
-      // console.log("destinationName in getRouteDirection---->", destinationName);
-      console.log(json.routes[0].legs[0].distance.value);
-      console.log(json.routes[0].legs[0].duration.value);
-      console.log(json.routes[0].legs[0].steps)
-      const directionsArr = json.routes[0].legs[0].steps
-      const totalDistance = json.routes[0].legs[0].distance.value / 1000;
-      const totalDuration = json.routes[0].legs[0].duration.value / 60;
-      const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-      const pointCoords = points.map((point) => {
-        return { latitude: point[0], longitude: point[1] };
-      });
-      this.setState({
-        pointCoords,
-        predictions: [],
-        yourLocationPredictions: [],
-        totalDistance: totalDistance,
-        totalDuration: totalDuration,
-        directions: directionsArr,
-      });
-      destinationName
-        ? this.setState({
-            destination: destinationName,
-          })
-        : this.setState({
-            yourLocation: startingName,
-          });
-      //  console.log('destination in getRoute ---->', this.state.destination)
-      //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
-      Keyboard.dismiss();
-      this.map.fitToCoordinates(pointCoords);
-    } catch (error) {
-      console.error(error);
     }
-  }
   }
 
   async onChangeDestination(destination) {
@@ -256,8 +260,10 @@ export default class Map extends Component {
     );
   }
 
-  calcDistance() {
+  calcDistance(newLatLng) {
     const { prevLatLng } = this.state;
+    console.log('prevLatLng--->', prevLatLng)
+    console.log("newLatLng--->", newLatLng);
     return haversine(prevLatLng, newLatLng) || 0;
   }
 
@@ -293,15 +299,15 @@ export default class Map extends Component {
   getMapRegion = () => {
     return {
       latitude: this.state.latitude,
-      longitude: this.state.longitude
-    }
-  }
+      longitude: this.state.longitude,
+    };
+  };
   changedRegion = (region) => {
     this.setState({
       latitude: region.latitude,
       longitude: region.longitude,
-    })
-  }
+    });
+  };
 
   render() {
     let marker = null;
@@ -386,15 +392,19 @@ export default class Map extends Component {
           showsUserLocation={true}
           followsUserLocation={this.state.routingMode}
         >
-          {!this.state.subwayMode ? (<Polyline
-            coordinates={this.state.pointCoords}
-            strokeWidth={4}
-            strokeColor="#49BEAA"
-          />): (<Polyline
-          coordinates={this.state.pointCoords}
-          strokeWidth={4}
-          strokeColor="#0039A6"
-        />)}
+          {!this.state.subwayMode ? (
+            <Polyline
+              coordinates={this.state.pointCoords}
+              strokeWidth={4}
+              strokeColor="#49BEAA"
+            />
+          ) : (
+            <Polyline
+              coordinates={this.state.pointCoords}
+              strokeWidth={4}
+              strokeColor="#0039A6"
+            />
+          )}
 
           {marker}
           {locationMarker}
@@ -515,20 +525,32 @@ export default class Map extends Component {
             )
           }
         />
-       <Button title="Directions" onPress={()=>{
-         console.log("Button pressed")
-         this.props.navigation.navigate('Directions', {directions: this.state.directions})
-       }}/>
-       {!this.state.subwayMode ?
-       (
-       <Button title ="Subway Off" onPress={()=>{
-         this.setState({subwayMode: !this.state.subwayMode})
-         console.log(this.state.subwayMode)
-       }}/> )  : (<Button title ="Subway On" onPress={()=>{
-        this.setState({subwayMode: !this.state.subwayMode})
-        console.log(this.state.subwayMode)
-      }}/>)
-      }
+        <Button
+          title="Directions"
+          onPress={() => {
+            console.log("Button pressed");
+            this.props.navigation.navigate("Directions", {
+              directions: this.state.directions,
+            });
+          }}
+        />
+        {!this.state.subwayMode ? (
+          <Button
+            title="Subway Off"
+            onPress={() => {
+              this.setState({ subwayMode: !this.state.subwayMode });
+              console.log(this.state.subwayMode);
+            }}
+          />
+        ) : (
+          <Button
+            title="Subway On"
+            onPress={() => {
+              this.setState({ subwayMode: !this.state.subwayMode });
+              console.log(this.state.subwayMode);
+            }}
+          />
+        )}
       </View>
     );
   }
