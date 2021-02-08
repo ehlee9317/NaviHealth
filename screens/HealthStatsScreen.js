@@ -23,8 +23,8 @@ export default function HealthStatsScreen ({ navigation }) {
       let beginningDateObject = new Date(beginningDate)
       console.log('beginningDateObj----->', beginningDateObject)
       try {
-        unsubscribe = await db.collection("routes").doc(currentUserUID).collection("sessions").where("created",">=", beginningDateObject).orderBy("created","asc")
-        .onSnapshot((querySnapshot) => {
+        unsubscribe = await db.collection("routes").doc(currentUserUID).collection("sessions").where("created",">=", beginningDateObject).orderBy("created","asc").get()
+        .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             const dataObj = doc.data();
             console.log('dataObj----->', dataObj)
