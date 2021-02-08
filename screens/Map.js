@@ -76,6 +76,7 @@ export default class Map extends Component {
          (error) => console.error(error),
          { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
        );
+       this.gotToMyLocation();
   }
 
   // componentWillUnmount(){
@@ -287,12 +288,12 @@ export default class Map extends Component {
             this.map = map;
           }}
           style={styles.map}
-          region={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.0121,
-          }}
+          // region={{
+          //   latitude: this.state.latitude,
+          //   longitude: this.state.longitude,
+          //   latitudeDelta: 0.01,
+          //   longitudeDelta: 0.0121,
+          // }}
           showsUserLocation={true}
           followsUserLocation={this.state.routingMode}
         >
