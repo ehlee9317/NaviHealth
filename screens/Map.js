@@ -16,6 +16,7 @@ import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
+import haversine from "haversine";
 
 export default class Map extends Component {
   constructor(props) {
@@ -29,6 +30,7 @@ export default class Map extends Component {
       //recorded speed in kilometers per hour... initial recorded speed at meter per second
       recordedSpeed: null,
       //first element in the array will be void due to initial state for latitude and longitude being null
+      prevLatLng:{},
       recordedCoordinates: [],
       destination: "",
       destinationPlaceId: "",
@@ -79,7 +81,7 @@ export default class Map extends Component {
                  recordedCoordinates: this.state.recordedCoordinates.concat({
                    latitude: this.state.recordedLatitude,
                    longitude: this.state.recordedLongitude,
-                   speed: this.state.recordedSpeed,
+                  //  speed: this.state.recordedSpeed,
                  }),
                },
                console.log("watchPosition is Running"),
@@ -199,6 +201,12 @@ export default class Map extends Component {
       { enableHighAccuracy: true }
     );
   }
+
+  calcDistance() {
+    const { prevLatLng } = this.state;
+    return haversine(prevLatLng, newLatLng) || 0;
+  }
+
   stopNaviHelper() {
     console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(

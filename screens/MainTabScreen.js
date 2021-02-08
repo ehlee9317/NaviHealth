@@ -9,6 +9,7 @@ import Profile from "./Profile";
 import Map from "./Map";
 import SettingScreen from "./SettingScreen";
 import HealthStatsScreen from "./HealthStatsScreen";
+import WeeklyHealthStatsScreen from "./HealthStatsWeeklyScreen";
 
 const HomeStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -38,7 +39,7 @@ const MainTabScreen = () => (
       }}
     />
     <Tab.Screen
-      name="HealthStats"
+      name="DailyHealthStats"
       component={HealthStatsScreen}
       options={{
         tabBarLabel: "HEALTH",
@@ -48,6 +49,17 @@ const MainTabScreen = () => (
         ),
       }}
     />
+    {/* <Tab.Screen
+      name="WeeklyHealthStats"
+      component={WeeklyHealthStatsScreen}
+      options={{
+        tabBarLabel: "HEALTH",
+        tabBarColor: "#456990",
+        tabBarIcon: ({ color }) => (
+          <Icon name="ios-stats-chart" color={color} size={26} />
+        ),
+      }}
+    /> */}
     <Tab.Screen
       name="Setting"
       component={SettingScreen}
