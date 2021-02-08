@@ -100,7 +100,7 @@ export default class Map extends Component {
                )
              );
            }
-           
+
          },
          (error) => console.error(error),
          { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
@@ -395,7 +395,7 @@ export default class Map extends Component {
           strokeWidth={4}
           strokeColor="#0039A6"
         />)}
-         
+
           {marker}
           {locationMarker}
         </MapView>
@@ -519,13 +519,13 @@ export default class Map extends Component {
          console.log("Button pressed")
          this.props.navigation.navigate('Directions', {directions: this.state.directions})
        }}/>
-       {!this.state.subwayMode ? 
+       {!this.state.subwayMode ?
        (
        <Button title ="Subway Off" onPress={()=>{
-         this.setState({subwayMode: !this.state.subwayMode}) 
+         this.setState({subwayMode: !this.state.subwayMode})
          console.log(this.state.subwayMode)
        }}/> )  : (<Button title ="Subway On" onPress={()=>{
-        this.setState({subwayMode: !this.state.subwayMode}) 
+        this.setState({subwayMode: !this.state.subwayMode})
         console.log(this.state.subwayMode)
       }}/>)
       }
