@@ -10,6 +10,7 @@ import LoadingScreen from "./screens/LoadingScreen";
 import MainTabScreen from "./screens/MainTabScreen";
 import HealthStatsScreen from "./screens/HealthStatsScreen"
 import WeeklyHealthStatsScreen from './screens/HealthStatsWeeklyScreen'
+import Directions from './screens/Directions'
 
 const Stack = createStackNavigator();
 
@@ -56,7 +57,13 @@ export default function App() {
           name={"WeeklyHealthStats"}
           component={WeeklyHealthStatsScreen}
           options={{ headerShown: false }}
-        /> */}
+        />
+        */}
+         <Stack.Screen
+          name={"Directions"}
+          component={Directions}
+          options={{ headerShown: false }}
+        /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
