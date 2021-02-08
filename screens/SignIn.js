@@ -94,7 +94,6 @@ export default function SignIn({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
     backgroundColor: "#456990",
     alignItems: "center",
   },
@@ -111,7 +110,6 @@ const styles = StyleSheet.create({
     padding: 30,
     fontSize: 22,
     color: "#545a63",
-    // marginLeft: "-5%"
   },
   inputContainer: {
     justifyContent: "center",
