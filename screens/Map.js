@@ -36,6 +36,8 @@ export default class Map extends Component {
       totalDuration: 0,
       selectedDestinationName: "",
       selectedYourLocationName: "",
+      directions: [],
+      subwayMode: false, 
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -67,6 +69,7 @@ export default class Map extends Component {
     startingName,
     destinationName
   ) {
+    if(!this.state.subwayMode){
     try {
       let apiUrl;
       if (yourStartingPlaceId) {
@@ -81,6 +84,8 @@ export default class Map extends Component {
       // console.log("destinationName in getRouteDirection---->", destinationName);
       console.log(json.routes[0].legs[0].distance.value);
       console.log(json.routes[0].legs[0].duration.value);
+      console.log(json.routes[0].legs[0].steps)
+      const directionsArr = json.routes[0].legs[0].steps
       const totalDistance = json.routes[0].legs[0].distance.value / 1000;
       const totalDuration = json.routes[0].legs[0].duration.value / 60;
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -93,6 +98,7 @@ export default class Map extends Component {
         yourLocationPredictions: [],
         totalDistance: totalDistance,
         totalDuration: totalDuration,
+        directions: directionsArr,
       });
       destinationName
         ? this.setState({
@@ -108,6 +114,52 @@ export default class Map extends Component {
     } catch (error) {
       console.error(error);
     }
+  } else {
+    try {
+      let apiUrl;
+      if (yourStartingPlaceId) {
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourStartingPlaceId}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+      } else {
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+      }
+      console.log("apiUrl----->", apiUrl);
+      const response = await fetch(apiUrl);
+      const json = await response.json();
+      // console.log('startingName in getRouteDirection---->', startingName)
+      // console.log("destinationName in getRouteDirection---->", destinationName);
+      console.log(json.routes[0].legs[0].distance.value);
+      console.log(json.routes[0].legs[0].duration.value);
+      console.log(json.routes[0].legs[0].steps)
+      const directionsArr = json.routes[0].legs[0].steps
+      const totalDistance = json.routes[0].legs[0].distance.value / 1000;
+      const totalDuration = json.routes[0].legs[0].duration.value / 60;
+      const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+      const pointCoords = points.map((point) => {
+        return { latitude: point[0], longitude: point[1] };
+      });
+      this.setState({
+        pointCoords,
+        predictions: [],
+        yourLocationPredictions: [],
+        totalDistance: totalDistance,
+        totalDuration: totalDuration,
+        directions: directionsArr,
+      });
+      destinationName
+        ? this.setState({
+            destination: destinationName,
+          })
+        : this.setState({
+            yourLocation: startingName,
+          });
+      //  console.log('destination in getRoute ---->', this.state.destination)
+      //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+      Keyboard.dismiss();
+      this.map.fitToCoordinates(pointCoords);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   }
 
   async onChangeDestination(destination) {
@@ -267,11 +319,16 @@ export default class Map extends Component {
           showsUserLocation={true}
           followsUserLocation={this.state.routingMode}
         >
-          <Polyline
+          {!this.state.subwayMode ? (<Polyline
             coordinates={this.state.pointCoords}
             strokeWidth={4}
             strokeColor="#49BEAA"
-          />
+          />): (<Polyline
+          coordinates={this.state.pointCoords}
+          strokeWidth={4}
+          strokeColor="#0039A6"
+        />)}
+         
           {marker}
           {locationMarker}
         </MapView>
@@ -391,6 +448,20 @@ export default class Map extends Component {
             )
           }
         />
+       <Button title="Directions" onPress={()=>{
+         console.log("Button pressed")
+         this.props.navigation.navigate('Directions', {directions: this.state.directions})
+       }}/>
+       {!this.state.subwayMode ? 
+       (
+       <Button title ="Subway Off" onPress={()=>{
+         this.setState({subwayMode: !this.state.subwayMode}) 
+         console.log(this.state.subwayMode)
+       }}/> )  : (<Button title ="Subway On" onPress={()=>{
+        this.setState({subwayMode: !this.state.subwayMode}) 
+        console.log(this.state.subwayMode)
+      }}/>)
+      }
       </View>
     );
   }
