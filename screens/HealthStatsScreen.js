@@ -8,8 +8,8 @@ export default function HealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [calorieData, setCalorieData] = useState([])
-  const [caloriesByWeek, setWeekTotals] = useState({})
-  const [weekCalorieData, setWeekCalorieData] = useState({})
+  // const [caloriesByWeek, setWeekTotals] = useState({})
+  // const [weekCalorieData, setWeekCalorieData] = useState({})
 
   useEffect(() => {
     const getTodaysCalories = async () => {
@@ -48,6 +48,7 @@ export default function HealthStatsScreen ({ navigation }) {
         <View style={{ flexDirection: "row" }}>
           <Button title="Day"/>
           <Button title="Week"
+          // want this to render weekly view
             // onPress={()}
           />
           <Button title="Month"/>

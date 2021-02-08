@@ -62,6 +62,7 @@ export default function HealthStatsScreen ({ navigation }) {
           <Button title="Month"/>
         </View>
         <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
+        <Text>AVERAGE CALORIES BURNED: {totalCalories(calorieData)}</Text>
         <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} >
           <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
 
