@@ -24,8 +24,12 @@ export default class Map extends Component {
       error: "",
       latitude: 0,
       longitude: 0,
-      recordedLatitude: 0,
-      recordedLongitude: 0,
+      recordedLatitude: null,
+      recordedLongitude: null,
+      //recorded speed in kilometers per hour... initial recorded speed at meter per second
+      recordedSpeed: null,
+      //first element in the array will be void due to initial state for latitude and longitude being null
+      recordedCoordinates: [],
       destination: "",
       destinationPlaceId: "",
       predictions: [],
@@ -64,15 +68,32 @@ export default class Map extends Component {
        );
        this.watchID = navigator.geolocation.watchPosition(
          (position) => {
-           this.setState(
-             {
-               recordedLatitude: position.coords.latitude,
-               recordedLongitude: position.coords.longitude,
-             },
-             console.log("watchPosition is Running"),
-             console.log('recordedLatitude--->', this.state.recordedLatitude),
-             console.log('recordedLongitude--->', this.state.recordedLongitude)
-           );
+           console.log('position.coords--->', position.coords )
+           if (position.coords.latitude !== 0 && position.coords.longitude !== 0) {
+             this.setState(
+               {
+                 recordedLatitude: position.coords.latitude,
+                 recordedLongitude: position.coords.longitude,
+                 recordedSpeed: position.coords.speed,
+                 recordedCoordinates: this.state.recordedCoordinates.concat({
+                   latitude: this.state.recordedLatitude,
+                   longitude: this.state.recordedLongitude,
+                   speed: this.state.recordedSpeed,
+                 }),
+               },
+               console.log("watchPosition is Running"),
+               console.log("recordedLatitude--->", this.state.recordedLatitude),
+               console.log(
+                 "recordedLongitude--->",
+                 this.state.recordedLongitude
+               ),
+               console.log(
+                 "recordedCoordinates--->",
+                 this.state.recordedCoordinates
+               )
+             );
+           }
+           
          },
          (error) => console.error(error),
          { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
