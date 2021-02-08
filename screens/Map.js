@@ -42,13 +42,10 @@ export default class Map extends Component {
       yourLocationPredictions: [],
       totalDistance: 0,
       totalDuration: 0,
-<<<<<<< HEAD
       selectedDestinationName: "",
       selectedYourLocationName: "",
       directions: [],
       subwayMode: false, 
-=======
->>>>>>> e4b45bf99b8c7053c053bf0e930457801ee6b9c1
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
