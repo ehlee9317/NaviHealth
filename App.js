@@ -8,6 +8,7 @@ import SignUp from "./screens/SignUp";
 import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MainTabScreen from "./screens/MainTabScreen";
+import Directions from "./screens/Directions"
 
 const Stack = createStackNavigator();
 
@@ -44,7 +45,12 @@ export default function App() {
           name={"MainTab"}
           component={MainTabScreen}
           options={{ headerShown: false }}
-        />
+          />
+          <Stack.Screen
+          name={"Directions"}
+          component={Directions}
+          options={{ headerShown: false }}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -432,6 +432,10 @@ export default class Map extends Component {
           this.setState({subwayMode: !this.state.subwayMode})
           console.log("after setState ----->", this.state.subwayMode)
         }}/>
+        <Button title="Directions" onPress={()=>{
+          console.log("Button pressed")
+          this.props.navigation.navigate('Directions')
+        }}/>
       </View>
     );
   }
