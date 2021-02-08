@@ -74,7 +74,8 @@ export default class Map extends Component {
                {
                  recordedLatitude: position.coords.latitude,
                  recordedLongitude: position.coords.longitude,
-                 recordedSpeed: position.coords.speed,
+                 //speed converted to kilometers per hour
+                 recordedSpeed: position.coords.speed * 3.6,
                  recordedCoordinates: this.state.recordedCoordinates.concat({
                    latitude: this.state.recordedLatitude,
                    longitude: this.state.recordedLongitude,
