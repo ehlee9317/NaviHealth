@@ -5,6 +5,7 @@ import {
   Text,
   View,
   Keyboard,
+  Image,
   TouchableHighlight,
   SafeAreaView,
   Button,
@@ -227,7 +228,14 @@ export default class Map extends Component {
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
         />
       );
-      locationMarker = <Marker coordinate={this.state.pointCoords[0]} />;
+      locationMarker = (
+        <Marker coordinate={this.state.pointCoords[0]}>
+          <Image
+            source={require("../assets/bluemarker.png")}
+            style={styles.markerImage}
+          />
+        </Marker>
+      );
     }
 
     const predictions = this.state.predictions.map((prediction) => (
@@ -277,9 +285,6 @@ export default class Map extends Component {
         </TouchableHighlight>
       )
     );
-
-    // console.log("11111 latitude", this.state.latitude);
-    // console.log("22222 longitude", this.state.longitude);
 
     return (
       <View style={styles.container}>
@@ -470,11 +475,11 @@ const styles = StyleSheet.create({
     marginLeft: "8%",
     marginTop: "4%",
   },
-  // locateIcon: {
-  //   justifyContent: "flex-end",
-  //   marginLeft: "82%",
-  //   marginTop: "145%",
-  // },
+  markerImage: {
+    width: 19,
+    height: 30,
+    marginBottom: "8%",
+  },
   inputContainer: {
     flexDirection: "row",
     marginTop: "2%",
