@@ -16,6 +16,7 @@ import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
+import haversine from "haversine";
 
 export default class Map extends Component {
   constructor(props) {
@@ -24,6 +25,13 @@ export default class Map extends Component {
       error: "",
       latitude: 0,
       longitude: 0,
+      recordedLatitude: null,
+      recordedLongitude: null,
+      //recorded speed in kilometers per hour... initial recorded speed at meter per second
+      recordedSpeed: null,
+      //first element in the array will be void due to initial state for latitude and longitude being null
+      prevLatLng:{},
+      recordedCoordinates: [],
       destination: "",
       destinationPlaceId: "",
       predictions: [],
@@ -34,8 +42,6 @@ export default class Map extends Component {
       yourLocationPredictions: [],
       totalDistance: 0,
       totalDuration: 0,
-      selectedDestinationName: "",
-      selectedYourLocationName: "",
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -49,17 +55,58 @@ export default class Map extends Component {
 
   componentDidMount() {
     //Get current location and set initial region to this
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-      },
-      (error) => console.error(error),
-      { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
-    );
+      navigator.geolocation.getCurrentPosition(
+         (position) => {
+           this.setState(
+             {
+               latitude: position.coords.latitude,
+               longitude: position.coords.longitude,
+             },
+             console.log("getCurrentPosition is Running")
+           );
+         },
+         (error) => console.error(error),
+         { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
+       );
+       this.watchID = navigator.geolocation.watchPosition(
+         (position) => {
+           console.log('position.coords--->', position.coords )
+           if (position.coords.latitude !== 0 && position.coords.longitude !== 0) {
+             this.setState(
+               {
+                 recordedLatitude: position.coords.latitude,
+                 recordedLongitude: position.coords.longitude,
+                 //speed converted to kilometers per hour
+                 recordedSpeed: position.coords.speed * 3.6,
+                 recordedCoordinates: this.state.recordedCoordinates.concat({
+                   latitude: this.state.recordedLatitude,
+                   longitude: this.state.recordedLongitude,
+                  //  speed: this.state.recordedSpeed,
+                 }),
+               },
+               console.log("watchPosition is Running"),
+               console.log("recordedLatitude--->", this.state.recordedLatitude),
+               console.log(
+                 "recordedLongitude--->",
+                 this.state.recordedLongitude
+               ),
+               console.log(
+                 "recordedCoordinates--->",
+                 this.state.recordedCoordinates
+               )
+             );
+           }
+           
+         },
+         (error) => console.error(error),
+         { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
+       );
+       this.gotToMyLocation();
   }
+
+  // componentWillUnmount(){
+  //   navigator.geolocation.clearWatch(this.watchID)
+  // }
 
   async getRouteDirections(
     yourStartingPlaceId,
@@ -74,7 +121,7 @@ export default class Map extends Component {
       } else {
         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
       }
-      console.log("apiUrl----->", apiUrl);
+      // console.log("apiUrl----->", apiUrl);
       const response = await fetch(apiUrl);
       const json = await response.json();
       // console.log('startingName in getRouteDirection---->', startingName)
@@ -137,7 +184,6 @@ export default class Map extends Component {
       console.error(err);
     }
   }
-
   gotToMyLocation() {
     console.log("gotToMyLocation is called");
     navigator.geolocation.getCurrentPosition(
@@ -155,6 +201,12 @@ export default class Map extends Component {
       { enableHighAccuracy: true }
     );
   }
+
+  calcDistance() {
+    const { prevLatLng } = this.state;
+    return haversine(prevLatLng, newLatLng) || 0;
+  }
+
   stopNaviHelper() {
     console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(
@@ -184,6 +236,19 @@ export default class Map extends Component {
     });
     this.stopNaviHelper();
   }
+  getMapRegion = () => {
+    return {
+      latitude: this.state.latitude,
+      longitude: this.state.longitude
+    }
+  }
+  changedRegion = (region) => {
+    this.setState({
+      latitude: region.latitude,
+      longitude: region.longitude,
+    })
+  }
+
   render() {
     let marker = null;
     let locationMarker = null;
@@ -258,12 +323,12 @@ export default class Map extends Component {
             this.map = map;
           }}
           style={styles.map}
-          region={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.0121,
-          }}
+          // region={{
+          //   latitude: this.state.latitude,
+          //   longitude: this.state.longitude,
+          //   latitudeDelta: 0.01,
+          //   longitudeDelta: 0.0121,
+          // }}
           showsUserLocation={true}
           followsUserLocation={this.state.routingMode}
         >
