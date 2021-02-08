@@ -9,7 +9,7 @@ import { totalCalories, totalCaloriesWeekly, convertWeekToChart } from '../api/h
 //   { week: 3, calories: 500 },
 //   { week: 4, calories: 400 },
 // ];
-export default function HealthStatsScreen ({ navigation }) {
+export default function WeeklyHealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [calorieData, setCalorieData] = useState([])

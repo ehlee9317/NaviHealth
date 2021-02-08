@@ -3,6 +3,7 @@ import { SafeAreaView, View, Text, Button, StyleSheet } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryLabel, VictoryTheme } from 'victory-native';
 import * as firebase from 'firebase';
 import { totalCalories, daysView, totalCaloriesWeekly } from '../api/healthStatsMethods'
+import WeeklyHealthStatsScreen from './HealthStatsWeeklyScreen'
 
 export default function HealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
@@ -48,8 +49,7 @@ export default function HealthStatsScreen ({ navigation }) {
         <View style={{ flexDirection: "row" }}>
           <Button title="Day"/>
           <Button title="Week"
-          // want this to render weekly view
-            // onPress={()}
+            onPress={() => navigation.navigate("WeeklyHealthStats")}
           />
           <Button title="Month"/>
         </View>
