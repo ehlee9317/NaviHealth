@@ -187,7 +187,8 @@ export default function HealthStatsScreen({ navigation }) {
                     x="date"
                     y="calories"
                     labels={(d) => {
-                      return `${d.datum.date}\n${d.datum.calories}`;
+                     //  return `${d.datum.date}\n${d.datum.calories}`;
+                     return `${d.datum.calories}`;
                     }}
                   />
                 </VictoryChart>
