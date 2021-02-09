@@ -5,7 +5,6 @@ import {
   Text,
   Button,
   StyleSheet,
-  ScrollView,
 } from "react-native";
 import {
   VictoryBar,
@@ -20,7 +19,6 @@ import {
   daysView,
   totalCaloriesWeekly,
 } from "../api/healthStatsMethods";
-import WeeklyHealthStatsScreen from "./HealthStatsWeeklyScreen";
 
 let unsubscribe;
 
@@ -172,7 +170,6 @@ export default function HealthStatsScreen({ navigation }) {
           ) : (
             <View>
               <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
-              {/* <ScrollView horizontal={true}> */}
               {calorieData && (
                 <VictoryChart
                   width={350}
@@ -195,7 +192,6 @@ export default function HealthStatsScreen({ navigation }) {
                   />
                 </VictoryChart>
               )}
-              {/* </ScrollView> */}
             </View>
           )}
         </View>
