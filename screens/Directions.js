@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, SafeAreaView } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function Direction ({route, navigation}){
    const backMap = () =>{
@@ -7,21 +8,32 @@ export default function Direction ({route, navigation}){
   }
   const {directions} = route.params
   console.log("Directions in screen-->", directions)
-  console.log(typeof directions[0].html_instructions)
-  const directionsArr = directions.map((direction)=>{
-    <View>
-    <Text>{direction.html_instructions}</Text>
-  </View>
-  })
-  console.log(directionsArr)
+
+//   const directionsArr = directions.map((direction)=>(
+//     <View>
+//     <Text style={styles.direction}>{direction.html_instructions.replace(/(<([^>]+)>)/gi, "")}</Text>
+//   </View>
+    
+//   ))
+  let finalDirectionsArr = [];
+  for (let i = 0; i < directions.length; i++) {
+      let currDirection = directions[i].html_instructions.replace(/(<([^>]+)>)/gi, "");
+      // console.log('currDirection---->', currDirection)
+      // console.log('typeof currDirection', typeof currDirection)
+      if (currDirection.indexOf("(") !== -1) {
+        finalDirectionsArr.push(currDirection.slice(0, currDirection.indexOf("(")))
+      } else {
+        finalDirectionsArr.push(currDirection)
+      }
+      console.log(finalDirectionsArr)
+  }
   
   return (
     <View style={styles.container}>
       <Text>Directions</Text>
-      <Text>{directions[0].html_instructions}</Text>
-      <Text>
-      {directionsArr}
-      </Text>
+      {
+      finalDirectionsArr.map((elem, index) => <View>
+        <Text>{`${index}. `}{elem}</Text></View>)}
       <Button title="Back to Map" onPress={backMap} />
     </View>
   );
@@ -31,7 +43,10 @@ export default function Direction ({route, navigation}){
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
   },
+  direction: {
+      padding:20,
+  }
 });
