@@ -57,6 +57,8 @@ export async function stopNaviFirebaseHandler(acutalDistance, actualDuration, es
        //to fix duration
        estCaloriesBurned: (estCaloriesBurnedPerMinute * estimatedDuration).toFixed(2),
        created: firebase.firestore.FieldValue.serverTimestamp(),
+       date: new Date().toDateString(),
+       timeStamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
      })
     //  console.log('estCaloriesBurnedPerMinute ------->', estCaloriesBurnedPerMinute)
    } catch (err) {
