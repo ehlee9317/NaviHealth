@@ -33,6 +33,13 @@ export default class Map extends Component {
       //first element in the array will be void due to initial state for latitude and longitude being null
       recordedCoordinates: [],
       prevLatLng: {},
+      //timer
+      timer: null,
+      hours: "00",
+      minutes: "00",
+      seconds: "00",
+      miliseconds: "00",
+      //------
       destination: "",
       destinationPlaceId: "",
       predictions: [],
@@ -67,7 +74,7 @@ export default class Map extends Component {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             recordedLatitude: position.coords.latitude,
-            recordedLongitude: position.coords.longitude
+            recordedLongitude: position.coords.longitude,
           },
           console.log("getCurrentPosition is Running")
         );
@@ -77,11 +84,11 @@ export default class Map extends Component {
     );
     this.watchID = navigator.geolocation.watchPosition(
       (position) => {
-        console.log("position.coords--->", position.coords);
+        // console.log("position.coords--->", position.coords);
         const newRecordedCoordinates = {
           latitude: this.state.recordedLatitude,
           longitude: this.state.recordedLongitude,
-        }
+        };
         if (this.state.routingMode) {
           this.setState(
             {
@@ -92,7 +99,9 @@ export default class Map extends Component {
               recordedCoordinates: this.state.recordedCoordinates.concat([
                 newRecordedCoordinates,
               ]),
-              recordedDistance: this.state.recordedDistance + this.calcDistance(newRecordedCoordinates),
+              recordedDistance:
+                this.state.recordedDistance +
+                this.calcDistance(newRecordedCoordinates),
               prevLatLng: newRecordedCoordinates,
             },
             console.log("watchPosition is Running"),
@@ -112,10 +121,11 @@ export default class Map extends Component {
     this.gotToMyLocation();
   }
 
-  // componentWillUnmount(){
-  //   navigator.geolocation.clearWatch(this.watchID)
-  // }
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
 
+  // API DIRECTION CALLS
   async getRouteDirections(
     yourStartingPlaceId,
     destinationPlaceId,
@@ -215,6 +225,7 @@ export default class Map extends Component {
     }
   }
 
+  //GOOGLE PLACES PREDICTION CALLS
   async onChangeDestination(destination) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
     &input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
@@ -242,6 +253,8 @@ export default class Map extends Component {
       console.error(err);
     }
   }
+
+  //MOVE CAMERA BACK TO CURRENT LOCATION
   gotToMyLocation() {
     console.log("gotToMyLocation is called");
     navigator.geolocation.getCurrentPosition(
@@ -260,11 +273,7 @@ export default class Map extends Component {
     );
   }
 
-  calcDistance(newLatLng) {
-    const { prevLatLng } = this.state;
-    return haversine(prevLatLng, newLatLng) || 0;
-  }
-
+  //NAVI BUTTON HELPERS
   stopNaviHelper() {
     console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(
@@ -281,7 +290,11 @@ export default class Map extends Component {
       (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
-    stopNaviFirebaseHandler(this.state.recordedDistance, this.state.totalDistance, this.state.totalDuration);
+    stopNaviFirebaseHandler(
+      this.state.recordedDistance,
+      this.state.totalDistance,
+      this.state.totalDuration
+    );
   }
   startNaviHandler() {
     this.setState({
@@ -294,18 +307,49 @@ export default class Map extends Component {
     });
     this.stopNaviHelper();
   }
-  getMapRegion = () => {
-    return {
-      latitude: this.state.latitude,
-      longitude: this.state.longitude,
-    };
-  };
-  changedRegion = (region) => {
-    this.setState({
-      latitude: region.latitude,
-      longitude: region.longitude,
-    });
-  };
+  // getMapRegion = () => {
+  //   return {
+  //     latitude: this.state.latitude,
+  //     longitude: this.state.longitude,
+  //   };
+  // };
+  // changedRegion = (region) => {
+  //   this.setState({
+  //     latitude: region.latitude,
+  //     longitude: region.longitude,
+  //   });
+  // };
+
+  //DISTANCE + TIMER HELPERS
+  calcDistance(newLatLng) {
+    const { prevLatLng } = this.state;
+    return haversine(prevLatLng, newLatLng) || 0;
+  }
+
+  //TIMER HELPERS
+  start() {
+    var self = this;
+    let timer = setInterval(() => {
+      var num = (Number(this.state.miliseconds) + 1).toString(),
+        count = this.state.counter;
+      minute = this.state.minutes;
+
+      if (Number(this.state.miliseconds) == 99) {
+        count = (Number(this.state.counter) + 1).toString();
+        num = "00";
+      }
+      if (Number(this.state.counter) == 59) {
+        minute = (Number(this.state.minutes) + 1).toString();
+        count = "00";
+      }
+      self.setState({
+        counter: count.length == 1 ? "0" + count : count,
+        miliseconds: num.length == 1 ? "0" + num : num,
+        minutes: minute.length == 1 ? "0" + minute : minute,
+      });
+    }, 0);
+    this.setState({ timer });
+  }
 
   render() {
     let marker = null;
