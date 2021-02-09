@@ -36,7 +36,7 @@ export const totalCaloriesWeekly = (calorieData) => {
   let allDaysTotals = []
   let totalByDate = {}
   calorieData.forEach(route => {
-    const date = route.day
+    const date = route.date
     const calories = route.calories
     if (!totalByDate[date]) {
       totalByDate[date] = calories
