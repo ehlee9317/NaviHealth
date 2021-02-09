@@ -277,7 +277,9 @@ export default class Map extends Component {
       (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
+    if(!this.state.subwayMode){
     stopNaviFirebaseHandler(this.state.totalDistance, this.state.totalDuration);
+    }
   }
   startNaviHandler() {
     this.setState({
@@ -302,7 +304,8 @@ export default class Map extends Component {
       longitude: region.longitude,
     })
   }
-
+  
+  
   render() {
     let marker = null;
     let locationMarker = null;
@@ -521,12 +524,14 @@ export default class Map extends Component {
        }}/>
        {!this.state.subwayMode ?
        (
-       <Button title ="Subway Off" onPress={()=>{
+       <Button title ="Subway On" onPress={()=>{
          this.setState({subwayMode: !this.state.subwayMode})
          console.log(this.state.subwayMode)
-       }}/> )  : (<Button title ="Subway On" onPress={()=>{
+      
+       }}/> )  : (<Button title ="Subway Off" onPress={()=>{
         this.setState({subwayMode: !this.state.subwayMode})
         console.log(this.state.subwayMode)
+       
       }}/>)
       }
       </View>
