@@ -52,8 +52,8 @@ export default class Map extends Component {
       yourLocation: "",
       yourLocationPredictions: [],
       //estimated Distance
-      totalDistance: 0,
-      totalDuration: 0,
+      estimatedDistance: 0,
+      estimatedDuration: 0,
       selectedDestinationName: "",
       selectedYourLocationName: "",
       directions: [],
@@ -155,8 +155,8 @@ export default class Map extends Component {
         console.log(json.routes[0].legs[0].duration.value);
         console.log(json.routes[0].legs[0].steps);
         const directionsArr = json.routes[0].legs[0].steps;
-        const totalDistance = json.routes[0].legs[0].distance.value / 1000;
-        const totalDuration = json.routes[0].legs[0].duration.value / 60;
+        const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+        const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -165,8 +165,8 @@ export default class Map extends Component {
           pointCoords,
           predictions: [],
           yourLocationPredictions: [],
-          totalDistance: totalDistance,
-          totalDuration: totalDuration,
+          estimatedDistance: estimatedDistance,
+          estimatedDuration: estimatedDuration,
           directions: directionsArr,
         });
         destinationName
@@ -200,8 +200,8 @@ export default class Map extends Component {
         console.log(json.routes[0].legs[0].duration.value);
         console.log(json.routes[0].legs[0].steps);
         const directionsArr = json.routes[0].legs[0].steps;
-        const totalDistance = json.routes[0].legs[0].distance.value / 1000;
-        const totalDuration = json.routes[0].legs[0].duration.value / 60;
+        const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+        const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -210,8 +210,8 @@ export default class Map extends Component {
           pointCoords,
           predictions: [],
           yourLocationPredictions: [],
-          totalDistance: totalDistance,
-          totalDuration: totalDuration,
+          estimatedDistance: estimatedDistance,
+          estimatedDuration: estimatedDuration,
           directions: directionsArr,
         });
         destinationName
@@ -303,8 +303,8 @@ export default class Map extends Component {
       stopNaviFirebaseHandler(
         this.state.recordedDistance,
         this.state.recordedDuration,
-        this.state.totalDistance,
-        this.state.totalDuration
+        this.state.estimatedDistance,
+        this.state.estimatedDuration
       );
     }
   }
@@ -573,7 +573,7 @@ export default class Map extends Component {
           }
         /> */}
 
-        {this.state.totalDistance > 0 ? (
+        {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
             <Button
               title="End Navigation"
