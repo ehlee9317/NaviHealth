@@ -14,7 +14,7 @@ import {
   daysView,
   totalCaloriesWeekly,
 } from '../api/healthStatsMethods';
-// import WeeklyHealthStatsScreen from './HealthStatsWeeklyScreen';
+import WeeklyHealthStatsScreen from './HealthStatsWeeklyScreen';
 
 let unsubscribe;
 
@@ -50,6 +50,7 @@ export default function HealthStatsScreen({ navigation }) {
             date: dataObj.timeStamp,
             calories: Math.round(dataObj.estCaloriesBurned)
           })
+          console.log('user calories array----->', userCalories)
         })
         setCalorieData(userCalories)
       });
@@ -65,7 +66,7 @@ export default function HealthStatsScreen({ navigation }) {
             title='Week'
             onPress={() => {
               console.log('button pressed');
-              // navigation.navigate("WeeklyHealthStats")
+              navigation.navigate("WeeklyHealthStats")
               // {WeeklyHealthStatsScreen}
             }}
           />

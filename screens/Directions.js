@@ -32,7 +32,7 @@ export default function Direction ({route, navigation}){
     <View style={styles.container}>
       <Text>Directions</Text>
       {
-      finalDirectionsArr.map((elem, index) => <View>
+      finalDirectionsArr.map((elem, index) => <View key={index}>
         <Text>{`${index}. `}{elem}</Text></View>)}
       <Button title="Back to Map" onPress={backMap} />
     </View>
