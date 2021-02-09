@@ -35,8 +35,8 @@ export default class Map extends Component {
       prevLatLng: {},
       //timer
       timer: null,
-      hours: "01",
-      minutes: "59",
+      hours: "00",
+      minutes: "00",
       seconds: "00",
       miliseconds: "00",
       recordedDurationMin: null,
