@@ -18,8 +18,8 @@ export default function Direction ({route, navigation}){
   for (let i = 0; i < directions.length; i++) {
       let finalDirectionsArr = []
       let currDirection = directions[i].html_instructions.replace(/(<([^>]+)>)/gi, "");
-      console.log('currDirection---->', currDirection)
-      console.log('typeof currDirection', typeof currDirection)
+      // console.log('currDirection---->', currDirection)
+      // console.log('typeof currDirection', typeof currDirection)
      
     //   for (let j = 0; j < currDirection.length; j++){
     //       let currLetter = currDirection[j];

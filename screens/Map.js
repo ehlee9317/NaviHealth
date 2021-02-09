@@ -39,6 +39,9 @@ export default class Map extends Component {
       minutes: "00",
       seconds: "00",
       miliseconds: "00",
+      recordedDuration: null,
+      startDisabled: true,
+      stopDisabled: false,
       //------
       destination: "",
       destinationPlaceId: "",
@@ -48,6 +51,7 @@ export default class Map extends Component {
       displayMainSearchBar: true,
       yourLocation: "",
       yourLocationPredictions: [],
+      //estimated Distance
       totalDistance: 0,
       totalDuration: 0,
       selectedDestinationName: "",
@@ -103,11 +107,11 @@ export default class Map extends Component {
                 this.state.recordedDistance +
                 this.calcDistance(newRecordedCoordinates),
               prevLatLng: newRecordedCoordinates,
-            },
-            console.log("watchPosition is Running"),
-            console.log("recordedLatitude--->", this.state.recordedLatitude),
-            console.log("recordedLongitude--->", this.state.recordedLongitude),
-            console.log("recordedDistance--->", this.state.recordedDistance)
+            }
+            // console.log("watchPosition is Running"),
+            // console.log("recordedLatitude--->", this.state.recordedLatitude),
+            // console.log("recordedLongitude--->", this.state.recordedLongitude),
+            // console.log("recordedDistance--->", this.state.recordedDistance)
           );
           // console.log(
           //   "recordedCoordinates--->",
@@ -123,6 +127,7 @@ export default class Map extends Component {
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
+    clearInterval(this.state.timer);
   }
 
   // API DIRECTION CALLS
@@ -132,6 +137,7 @@ export default class Map extends Component {
     startingName,
     destinationName
   ) {
+    //to refractor...
     if (!this.state.subwayMode) {
       try {
         let apiUrl;
@@ -290,10 +296,13 @@ export default class Map extends Component {
       (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
+    console.log('seconds---->', this.state.seconds)
+    console.log('recordedDuration---->', this.state.recordedDuration)
     //to rearrange later...
-    if(!this.state.subwayMode) {
+    if (!this.state.subwayMode) {
       stopNaviFirebaseHandler(
         this.state.recordedDistance,
+        this.state.recordedDuration,
         this.state.totalDistance,
         this.state.totalDuration
       );
@@ -303,12 +312,15 @@ export default class Map extends Component {
     this.setState({
       routingMode: true,
     });
+    this.timerStart();
   }
   stopNaviHandler() {
     this.setState({
       routingMode: false,
     });
     this.stopNaviHelper();
+    this.timerStop();
+    this.timerClear();
   }
   // getMapRegion = () => {
   //   return {
@@ -330,32 +342,58 @@ export default class Map extends Component {
   }
 
   //TIMER HELPERS
-  start() {
+  timerStart() {
     var self = this;
     let timer = setInterval(() => {
-      var num = (Number(this.state.miliseconds) + 1).toString(),
-        count = this.state.counter;
-      minute = this.state.minutes;
+      var miliseconds = (Number(this.state.miliseconds) + 1).toString(),
+        second = this.state.seconds;
+        minute = this.state.minutes;
+        hour = this.state.hours;
 
       if (Number(this.state.miliseconds) == 99) {
-        count = (Number(this.state.counter) + 1).toString();
-        num = "00";
+        second = (Number(this.state.seconds) + 1).toString();
+        miliseconds = "00";
       }
-      if (Number(this.state.counter) == 59) {
+      if (Number(this.state.seconds) == 60) {
         minute = (Number(this.state.minutes) + 1).toString();
-        count = "00";
+        second = "00";
+      }
+      if (Number(this.state.minutes) == 60) {
+        hour = (Number(this.state.hours) + 1).toString();
+        minute = "00";
       }
       self.setState({
-        counter: count.length == 1 ? "0" + count : count,
-        miliseconds: num.length == 1 ? "0" + num : num,
+        miliseconds: miliseconds.length == 1 ? "0" + miliseconds : miliseconds,
+        seconds: second.length == 1 ? "0" + second : second,
         minutes: minute.length == 1 ? "0" + minute : minute,
+        hours: hour.length == 1 ? "0" + hour : hour,
+        recordedDuration: `${hour} : ${minute} : ${second}`
       });
     }, 0);
-    this.setState({ timer });
+    this.setState({ 
+      timer,
+     });
   }
-  
-  
+
+  timerStop() {
+    clearInterval(this.state.timer);
+    this.setState({ startDisabled: false, stopDisabled: true });
+  }
+
+  timerClear() {
+    this.setState({
+      timer: null,
+      minutes: "00",
+      seconds: "00",
+      hours: "00",
+    });
+  }
+
   render() {
+    // console.log("hours--->", this.state.hours);
+    // console.log("minutes--->", this.state.minutes);
+    // console.log("seconds--->", this.state.seconds);
+    // console.log("miliseconds--->", this.state.miliseconds);
     let marker = null;
     let locationMarker = null;
     if (this.state.pointCoords.length > 1) {
@@ -571,22 +609,32 @@ export default class Map extends Component {
             )
           }
         />
-       <Button title="Directions" onPress={()=>{
-         console.log("Button pressed")
-         this.props.navigation.navigate('Directions', {directions: this.state.directions})
-       }}/>
-       {!this.state.subwayMode ?
-       (
-       <Button title ="Subway On" onPress={()=>{
-         this.setState({subwayMode: !this.state.subwayMode})
-         console.log(this.state.subwayMode)
-      
-       }}/> )  : (<Button title ="Subway Off" onPress={()=>{
-        this.setState({subwayMode: !this.state.subwayMode})
-        console.log(this.state.subwayMode)
-       
-      }}/>)
-      }
+        <Button
+          title="Directions"
+          onPress={() => {
+            console.log("Button pressed");
+            this.props.navigation.navigate("Directions", {
+              directions: this.state.directions,
+            });
+          }}
+        />
+        {!this.state.subwayMode ? (
+          <Button
+            title="Subway On"
+            onPress={() => {
+              this.setState({ subwayMode: !this.state.subwayMode });
+              console.log(this.state.subwayMode);
+            }}
+          />
+        ) : (
+          <Button
+            title="Subway Off"
+            onPress={() => {
+              this.setState({ subwayMode: !this.state.subwayMode });
+              console.log(this.state.subwayMode);
+            }}
+          />
+        )}
       </View>
     );
   }
