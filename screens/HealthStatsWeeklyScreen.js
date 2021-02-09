@@ -72,12 +72,7 @@ export default function WeeklyHealthStatsScreen ({ navigation }) {
         </View>
         <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
         <Text>AVERAGE DAILY CALORIES BURNED: {Math.round(totalCalories(calorieData) / 7)}</Text>
-        {/* {weekCalorieData && (
-        <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} standalone={false}>
-          <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
-
-        </VictoryChart>
-        )} */}
+        
       </View>
 
       <Button title='Go back' onPress={() => navigation.goBack()} />

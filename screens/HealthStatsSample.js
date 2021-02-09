@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import {
   VictoryBar,
   VictoryChart,
   VictoryLabel,
   VictoryTheme,
+  VictoryZoomContainer,
 } from "victory-native";
 import * as firebase from "firebase";
 import {
@@ -143,14 +151,39 @@ export default function HealthStatsScreen({ navigation }) {
           {displayButtons(buttonNames)}
         </View>
         <View>
-          {buttonLabel === "Day" ? (
+          {buttonLabel === "Week" ? (
             <View>
               <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
+              <Text>
+                AVERAGE DAILY CALORIES BURNED:{" "}
+                {Math.round(totalCalories(calorieData) / 7)}
+              </Text>
+              {/* {weekCalorieData && (
+      <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} standalone={false}>
+        <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
+
+      </VictoryChart>
+      )} */}
+            </View>
+          ) : buttonLabel === "Month" ? (
+            <View>
+              <Text>MONTHLY HEALTH DATA CHART</Text>
+            </View>
+          ) : (
+            <View>
+              <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
+              {/* <ScrollView horizontal={true}> */}
               {calorieData && (
                 <VictoryChart
                   width={350}
                   theme={VictoryTheme.material}
                   domainPadding={30}
+                  containerComponent={
+                    <VictoryZoomContainer
+                      responsive={false}
+                      zoomDimension="x"
+                    />
+                  }
                 >
                   <VictoryBar
                     data={calorieData}
@@ -162,20 +195,7 @@ export default function HealthStatsScreen({ navigation }) {
                   />
                 </VictoryChart>
               )}
-            </View>
-          ) : (
-            <View>
-              <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
-              <Text>
-                AVERAGE DAILY CALORIES BURNED:{" "}
-                {Math.round(totalCalories(calorieData) / 7)}
-              </Text>
-              {/* {weekCalorieData && (
-        <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} standalone={false}>
-          <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
-
-        </VictoryChart>
-        )} */}
+              {/* </ScrollView> */}
             </View>
           )}
         </View>
