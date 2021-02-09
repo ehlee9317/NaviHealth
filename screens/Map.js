@@ -35,10 +35,11 @@ export default class Map extends Component {
       prevLatLng: {},
       //timer
       timer: null,
-      hours: "00",
-      minutes: "00",
+      hours: "01",
+      minutes: "59",
       seconds: "00",
       miliseconds: "00",
+      recordedDurationMin: null,
       recordedDuration: null,
       startDisabled: true,
       stopDisabled: false,
@@ -303,6 +304,7 @@ export default class Map extends Component {
       stopNaviFirebaseHandler(
         this.state.recordedDistance,
         this.state.recordedDuration,
+        this.state.recordedDurationMin,
         this.state.estimatedDistance,
         this.state.estimatedDuration
       );
@@ -369,8 +371,13 @@ export default class Map extends Component {
         seconds: second.length == 1 ? "0" + second : second,
         minutes: minute.length == 1 ? "0" + minute : minute,
         hours: hour.length == 1 ? "0" + hour : hour,
+        recordedDurationMin: `${((Number(this.state.hours) * 60) + Number(this.state.minutes))}`,
         recordedDuration: `${hour} : ${minute} : ${second}`
       });
+          // console.log(
+          //   "recordedDurationMin--->",
+          //   this.state.recordedDurationMin
+          // );
     }, 0);
     this.setState({ 
       timer,

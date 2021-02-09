@@ -42,7 +42,7 @@ export async function loggingOut() {
 }
 
 
-export async function stopNaviFirebaseHandler(acutalDistance, actualDuration, estimatedDistance, estimatedDuration) {
+export async function stopNaviFirebaseHandler(acutalDistance, actualDuration, actualDurationMin, estimatedDistance, estimatedDuration) {
    try {
      const currentUserUID = await firebase.auth().currentUser.uid;
      const db = firebase.firestore();
@@ -52,6 +52,7 @@ export async function stopNaviFirebaseHandler(acutalDistance, actualDuration, es
      await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
        actualDistanceKm: acutalDistance.toFixed(2),
        actualDuration: actualDuration,
+       actualDurationMin: actualDurationMin,
        estimatedDistanceKm: estimatedDistance.toFixed(2),
        estimatedDurationMin: estimatedDuration.toFixed(2),
        //to fix duration
