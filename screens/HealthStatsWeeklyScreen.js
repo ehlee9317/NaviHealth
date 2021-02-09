@@ -4,12 +4,8 @@ import { VictoryBar, VictoryChart, VictoryLabel, VictoryTheme } from 'victory-na
 import * as firebase from 'firebase';
 import { totalCalories, totalCaloriesWeekly, convertWeekToChart } from '../api/healthStatsMethods'
 import HealthStatsScreen from './HealthStatsScreen'
-// const data = [
-//   { week: 1, calories: 100 },
-//   { week: 2, calories: 300 },
-//   { week: 3, calories: 500 },
-//   { week: 4, calories: 400 },
-// ];
+
+
 export default function WeeklyHealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;

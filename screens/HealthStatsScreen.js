@@ -46,12 +46,6 @@ export default function HealthStatsScreen ({ navigation }) {
   }, []);
 
   return (
-    !calorieData ?
-    (
-      <SafeAreaView>
-        <Text>Loading</Text>
-      </SafeAreaView>
-    ) : (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <View style={{ flexDirection: "row" }}>
@@ -59,21 +53,25 @@ export default function HealthStatsScreen ({ navigation }) {
           <Button title="Week"
             onPress={() => {
               console.log('button pressed')
-              navigation.navigate("WeeklyHealthStats")
+              // navigation.navigate("WeeklyHealthStats")
+              // {WeeklyHealthStatsScreen}
             }}
           />
           <Button title="Month"/>
         </View>
         <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
-        <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} >
-          <VictoryBar data={calorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
-
-        </VictoryChart>
+        {calorieData&& (
+          <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30}>
+            <VictoryBar data={calorieData} x='date' y='calories'
+            labels={
+              (d) => {return `${d.datum.date}\n${d.datum.calories}`}
+            } />
+          </VictoryChart>
+        )}
       </View>
 
       <Button title='Go back' onPress={() => navigation.goBack()} />
     </SafeAreaView>
-    )
   );
 };
 const styles = StyleSheet.create({
