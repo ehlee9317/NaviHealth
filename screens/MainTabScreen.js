@@ -41,7 +41,7 @@ const MainTabScreen = () => (
     />
     <Tab.Screen
       name="DailyHealthStats"
-      component={HealthStatsSample}
+      component={HealthStatsScreen}
       options={{
         tabBarLabel: "HEALTH",
         tabBarColor: "#456990",

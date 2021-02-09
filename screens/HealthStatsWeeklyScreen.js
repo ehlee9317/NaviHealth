@@ -5,6 +5,9 @@ import * as firebase from 'firebase';
 import { totalCalories, totalCaloriesWeekly, convertWeekToChart } from '../api/healthStatsMethods'
 import HealthStatsScreen from './HealthStatsScreen'
 
+// data for Victory: [
+//   {"date": date, "calories": calories},
+// ]
 
 export default function WeeklyHealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
@@ -72,7 +75,7 @@ export default function WeeklyHealthStatsScreen ({ navigation }) {
         </View>
         <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
         <Text>AVERAGE DAILY CALORIES BURNED: {Math.round(totalCalories(calorieData) / 7)}</Text>
-        
+
       </View>
 
       <Button title='Go back' onPress={() => navigation.goBack()} />
