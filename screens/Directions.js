@@ -16,7 +16,6 @@ export default function Direction ({route, navigation}){
     
 //   ))
   let finalDirectionsArr = [];
-  let key = 0
   for (let i = 0; i < directions.length; i++) {
       let currDirection = directions[i].html_instructions.replace(/(<([^>]+)>)/gi, "");
       // console.log('currDirection---->', currDirection)
