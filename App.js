@@ -53,17 +53,16 @@ export default function App() {
           component={HealthStatsScreen}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           name={"WeeklyHealthStats"}
           component={WeeklyHealthStatsScreen}
           options={{ headerShown: false }}
         />
-        */}
          <Stack.Screen
           name={"Directions"}
           component={Directions}
           options={{ headerShown: false }}
-        /> 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

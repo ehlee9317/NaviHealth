@@ -10,6 +10,7 @@ import Map from "./Map";
 import SettingScreen from "./SettingScreen";
 import HealthStatsScreen from "./HealthStatsScreen";
 import WeeklyHealthStatsScreen from "./HealthStatsWeeklyScreen";
+import HealthStatsSample from "./HealthStatsSample";
 
 const HomeStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -40,7 +41,7 @@ const MainTabScreen = () => (
     />
     <Tab.Screen
       name="DailyHealthStats"
-      component={HealthStatsScreen}
+      component={HealthStatsSample}
       options={{
         tabBarLabel: "HEALTH",
         tabBarColor: "#456990",

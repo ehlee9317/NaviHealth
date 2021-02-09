@@ -4,12 +4,8 @@ import { VictoryBar, VictoryChart, VictoryLabel, VictoryTheme } from 'victory-na
 import * as firebase from 'firebase';
 import { totalCalories, totalCaloriesWeekly, convertWeekToChart } from '../api/healthStatsMethods'
 import HealthStatsScreen from './HealthStatsScreen'
-// const data = [
-//   { week: 1, calories: 100 },
-//   { week: 2, calories: 300 },
-//   { week: 3, calories: 500 },
-//   { week: 4, calories: 400 },
-// ];
+
+
 export default function WeeklyHealthStatsScreen ({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
@@ -76,12 +72,7 @@ export default function WeeklyHealthStatsScreen ({ navigation }) {
         </View>
         <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
         <Text>AVERAGE DAILY CALORIES BURNED: {Math.round(totalCalories(calorieData) / 7)}</Text>
-        {/* {weekCalorieData && (
-        <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} standalone={false}>
-          <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
-
-        </VictoryChart>
-        )} */}
+        
       </View>
 
       <Button title='Go back' onPress={() => navigation.goBack()} />

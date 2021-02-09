@@ -42,18 +42,18 @@ export default function SignUp({ navigation }) {
       Alert.alert("Email field is required.");
     } else if (!dateOfBirth) {
       Alert.alert("Date of Birth field is required.");
-    // } else if (dateOfBirth.length === 10) {
-    //   const dateArray = dateOfBirth.split("-");
-    //   const month = dateArray[0];
-    //   const day = dateArray[1];
+    } else if (dateOfBirth.length === 10) {
+      const dateArray = dateOfBirth.split("-");
+      const month = dateArray[0];
+      const day = dateArray[1];
 
-    //   if (Number(month) > 12 || Number(month) === 0) {
-    //     Alert.alert("Invalid Month");
-    //   }
+      if (Number(month) > 12 || Number(month) === 0) {
+        Alert.alert("Invalid Month");
+      }
 
-    //   if (Number(day) === 0 || Number(day) > 31) {
-    //     Alert.alert("Invalid day");
-    //   }
+      if (Number(day) === 0 || Number(day) > 31) {
+        Alert.alert("Invalid day");
+      }
     } else if (!weight) {
       Alert.alert("Weight is required.");
     } else if (!height) {
