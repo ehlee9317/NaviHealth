@@ -42,7 +42,7 @@ export async function loggingOut() {
 }
 
 
-export async function stopNaviFirebaseHandler(distance, duration) {
+export async function stopNaviFirebaseHandler(acutalDistance, estimatedDistance, estimatedDuration) {
    try {
      const currentUserUID = await firebase.auth().currentUser.uid;
      const db = firebase.firestore();
@@ -50,13 +50,14 @@ export async function stopNaviFirebaseHandler(distance, duration) {
      console.log('userdata------>', userData)
      const estCaloriesBurnedPerMinute = userData.estCaloriesBurnedPerMinute
      await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
-       distanceKm: distance.toFixed(2),
-       durationMin: duration.toFixed(2),
-       estCaloriesBurned: (estCaloriesBurnedPerMinute * duration).toFixed(2),
+       actualDistanceKm: acutalDistance.toFixed(2),
+       estimatedDistanceKm: estimatedDistance.toFixed(2),
+       estimatedDurationMin: estimatedDuration.toFixed(2),
+       //to fix duration
+       estCaloriesBurned: (estCaloriesBurnedPerMinute * estimatedDuration).toFixed(2),
        created: firebase.firestore.FieldValue.serverTimestamp(),
      })
-     console.log('duration ------->', duration)
-     console.log('estCaloriesBurned ------->', estCaloriesBurnedPerMinute)
+     console.log('estCaloriesBurnedPerMinute ------->', estCaloriesBurnedPerMinute)
    } catch (err) {
      Alert.alert("There is something wrong!!!!", err.message);
    }

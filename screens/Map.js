@@ -262,8 +262,6 @@ export default class Map extends Component {
 
   calcDistance(newLatLng) {
     const { prevLatLng } = this.state;
-    console.log('prevLatLng--->', prevLatLng)
-    console.log("newLatLng--->", newLatLng);
     return haversine(prevLatLng, newLatLng) || 0;
   }
 
@@ -283,7 +281,7 @@ export default class Map extends Component {
       (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
-    stopNaviFirebaseHandler(this.state.totalDistance, this.state.totalDuration);
+    stopNaviFirebaseHandler(this.state.recordedDistance, this.state.totalDistance, this.state.totalDuration);
   }
   startNaviHandler() {
     this.setState({
