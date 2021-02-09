@@ -290,11 +290,14 @@ export default class Map extends Component {
       (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
-    stopNaviFirebaseHandler(
-      this.state.recordedDistance,
-      this.state.totalDistance,
-      this.state.totalDuration
-    );
+    //to rearrange later...
+    if(!this.state.subwayMode) {
+      stopNaviFirebaseHandler(
+        this.state.recordedDistance,
+        this.state.totalDistance,
+        this.state.totalDuration
+      );
+    }
   }
   startNaviHandler() {
     this.setState({
@@ -350,7 +353,8 @@ export default class Map extends Component {
     }, 0);
     this.setState({ timer });
   }
-
+  
+  
   render() {
     let marker = null;
     let locationMarker = null;
@@ -567,32 +571,22 @@ export default class Map extends Component {
             )
           }
         />
-        <Button
-          title="Directions"
-          onPress={() => {
-            console.log("Button pressed");
-            this.props.navigation.navigate("Directions", {
-              directions: this.state.directions,
-            });
-          }}
-        />
-        {!this.state.subwayMode ? (
-          <Button
-            title="Subway Off"
-            onPress={() => {
-              this.setState({ subwayMode: !this.state.subwayMode });
-              console.log(this.state.subwayMode);
-            }}
-          />
-        ) : (
-          <Button
-            title="Subway On"
-            onPress={() => {
-              this.setState({ subwayMode: !this.state.subwayMode });
-              console.log(this.state.subwayMode);
-            }}
-          />
-        )}
+       <Button title="Directions" onPress={()=>{
+         console.log("Button pressed")
+         this.props.navigation.navigate('Directions', {directions: this.state.directions})
+       }}/>
+       {!this.state.subwayMode ?
+       (
+       <Button title ="Subway On" onPress={()=>{
+         this.setState({subwayMode: !this.state.subwayMode})
+         console.log(this.state.subwayMode)
+      
+       }}/> )  : (<Button title ="Subway Off" onPress={()=>{
+        this.setState({subwayMode: !this.state.subwayMode})
+        console.log(this.state.subwayMode)
+       
+      }}/>)
+      }
       </View>
     );
   }
