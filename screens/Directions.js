@@ -15,32 +15,25 @@ export default function Direction ({route, navigation}){
 //   </View>
     
 //   ))
+  let finalDirectionsArr = [];
+  let key = 0
   for (let i = 0; i < directions.length; i++) {
-      let finalDirectionsArr = []
       let currDirection = directions[i].html_instructions.replace(/(<([^>]+)>)/gi, "");
       // console.log('currDirection---->', currDirection)
       // console.log('typeof currDirection', typeof currDirection)
-     
-    //   for (let j = 0; j < currDirection.length; j++){
-    //       let currLetter = currDirection[j];
-    //       console.log('currLetter--->', currLetter)
-    //       console.log('currDirection.length -1', currDirection.length-1)
-    //       if (currLetter === '(' ) {
-    //           finalDirectionsArr.push(currDirection.slice(0 , j+1))
-    //       }
-    //   }
-    //   console.log(finalDirectionsArr)
+      if (currDirection.indexOf("(") !== -1) {
+        finalDirectionsArr.push(currDirection.slice(0, currDirection.indexOf("(")))
+      } else {
+        finalDirectionsArr.push(currDirection)
+      }
+      console.log(finalDirectionsArr)
   }
-  
   
   return (
     <View style={styles.container}>
-     
-     <Text>Directions</Text>
-     {/* {directionsArr.length > 0 ? (<View>{directionsArr}</View>): (<Text>Please enter a route</Text>)}
-      */}
+      <Text>Directions</Text>
+      {finalDirectionsArr.map((elem) => <View><Text>{elem}</Text></View>)}
       <Button title="Back to Map" onPress={backMap} />
-    
     </View>
   );
 };
@@ -49,7 +42,7 @@ export default function Direction ({route, navigation}){
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
   },
   direction: {
