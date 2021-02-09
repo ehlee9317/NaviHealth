@@ -39,6 +39,7 @@ export default class Map extends Component {
       minutes: "00",
       seconds: "00",
       miliseconds: "00",
+      recordedDurationMin: null,
       recordedDuration: null,
       startDisabled: true,
       stopDisabled: false,
@@ -58,6 +59,7 @@ export default class Map extends Component {
       selectedYourLocationName: "",
       directions: [],
       subwayMode: false,
+      navigationMode: "walk",
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -138,7 +140,7 @@ export default class Map extends Component {
     destinationName
   ) {
     //to refractor...
-    if (!this.state.subwayMode) {
+    if (this.state.navigationMode === "walk") {
       try {
         let apiUrl;
         if (yourStartingPlaceId) {
@@ -183,7 +185,7 @@ export default class Map extends Component {
       } catch (error) {
         console.error(error);
       }
-    } else {
+    } else if (this.state.navigationMode === "subway") {
       try {
         let apiUrl;
         if (yourStartingPlaceId) {
@@ -191,7 +193,7 @@ export default class Map extends Component {
         } else {
           apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
         }
-        console.log("apiUrl----->", apiUrl);
+        // console.log("apiUrl----->", apiUrl);
         const response = await fetch(apiUrl);
         const json = await response.json();
         // console.log('startingName in getRouteDirection---->', startingName)
@@ -296,16 +298,18 @@ export default class Map extends Component {
       (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
-    console.log('seconds---->', this.state.seconds)
-    console.log('recordedDuration---->', this.state.recordedDuration)
-    //to rearrange later...
-    if (!this.state.subwayMode) {
+    // console.log('seconds---->', this.state.seconds)
+    // console.log('recordedDuration---->', this.state.recordedDuration)
+    if (this.state.navigationMode === "walk") {
       stopNaviFirebaseHandler(
         this.state.recordedDistance,
         this.state.recordedDuration,
+        this.state.recordedDurationMin,
         this.state.estimatedDistance,
         this.state.estimatedDuration
       );
+    } else if (this.state.navigationMode === "subway") {
+      console.log('pending updates for subway mode')
     }
   }
   startNaviHandler() {
@@ -367,8 +371,13 @@ export default class Map extends Component {
         seconds: second.length == 1 ? "0" + second : second,
         minutes: minute.length == 1 ? "0" + minute : minute,
         hours: hour.length == 1 ? "0" + hour : hour,
+        recordedDurationMin: `${((Number(this.state.hours) * 60) + Number(this.state.minutes))}`,
         recordedDuration: `${hour} : ${minute} : ${second}`
       });
+          // console.log(
+          //   "recordedDurationMin--->",
+          //   this.state.recordedDurationMin
+          // );
     }, 0);
     this.setState({ 
       timer,
@@ -476,19 +485,19 @@ export default class Map extends Component {
           showsUserLocation={true}
           followsUserLocation={this.state.routingMode}
         >
-          {!this.state.subwayMode ? (
+          {this.state.navigationMode === "walk" ? (
             <Polyline
               coordinates={this.state.pointCoords}
               strokeWidth={4}
               strokeColor="#49BEAA"
             />
-          ) : (
+          ) : this.state.navigationMode === "subway" ? (
             <Polyline
               coordinates={this.state.pointCoords}
               strokeWidth={4}
               strokeColor="#0039A6"
             />
-          )}
+          ): ""}
 
           {marker}
           {locationMarker}
@@ -559,20 +568,6 @@ export default class Map extends Component {
         )}
         {predictions}
         {yourLocationPredictions}
-        {/* <Button
-          title="Relocate User"
-          onPress={() =>
-            this.gotToMyLocation(
-              <Button
-                title="End Navigation"
-                onPress={() => {
-                  this.stopNaviHandler();
-                }}
-              />
-            )
-          }
-        /> */}
-
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
             <Button
@@ -618,23 +613,23 @@ export default class Map extends Component {
             });
           }}
         />
-        {!this.state.subwayMode ? (
+        {this.state.navigationMode === "walk" ? (
           <Button
-            title="Subway On"
+            title="Subway"
             onPress={() => {
-              this.setState({ subwayMode: !this.state.subwayMode });
-              console.log(this.state.subwayMode);
+              console.log(this.state.navigationMode);
+              this.setState({ navigationMode: "subway" });
             }}
           />
-        ) : (
+        ) : this.state.navigationMode === "subway" ? (
           <Button
-            title="Subway Off"
+            title="Walk"
             onPress={() => {
-              this.setState({ subwayMode: !this.state.subwayMode });
-              console.log(this.state.subwayMode);
+              console.log(this.state.navigationMode);
+              this.setState({ navigationMode: "walk" });
             }}
           />
-        )}
+        ): ""}
       </View>
     );
   }
