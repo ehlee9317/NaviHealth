@@ -20,16 +20,18 @@ import {
 //   {"date": date, "calories": calories},
 // ]
 
-export default function WeeklyHealthStatsScreen({ navigation }) {
+export default function MonthlyHealthStatsScreen({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [calorieData, setCalorieData] = useState([]);
-  const [weekCalorieDataEstimates, setWeekCalorieDataEstimates] = useState({});
-  const [weekCalorieDataActuals, setWeekCalorieDataActuals] = useState({});
+  const [monthCalorieDataEstimates, setMonthCalorieDataEstimates] = useState(
+    {}
+  );
+  const [monthCalorieDataActuals, setMonthCalorieDataActuals] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  // sets beginning date to 7 days ago:
-  let beginningDate = Date.now() - 604800000;
+  // sets beginning date to 30 days ago:
+  let beginningDate = Date.now() - 2592000000;
   let beginningDateObject = new Date(beginningDate);
   console.log('beginningDateObj----->', beginningDateObject);
 
@@ -48,12 +50,11 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
         querySnapshot.forEach((doc) => {
           const dataObj = doc.data();
           console.log('dataobj=====>', dataObj);
-          // format estimated and actuals data:
+          // convert to Victory chart format:
           estCalories.push({
             date: dataObj.date,
             calories: Math.round(dataObj.estCaloriesBurned),
           });
-
           actualCalories.push({
             date: dataObj.date,
             calories: Math.round(dataObj.actualCaloriesBurned),
@@ -62,15 +63,16 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
         setCalorieData(actualCalories);
 
         // aggregate calories each day:
-        const estWeekTotals = totalCaloriesWeekly(estCalories);
-        const actualWeekTotals = totalCaloriesWeekly(actualCalories);
-
+        const estMonthTotals = totalCaloriesWeekly(estCalories);
+        const actualMonthTotals = totalCaloriesWeekly(actualCalories);
+        // console.log('monthTotals', monthTotals);
         // convert weekly calories into victory chart format:
-        const estWeeklyChartData = convertWeekToChart(estWeekTotals);
-        const actualWeeklyChartData = convertWeekToChart(actualWeekTotals);
-        setWeekCalorieDataEstimates(estWeeklyChartData);
-        setWeekCalorieDataActuals(actualWeeklyChartData);
+        const estMonthlyChartData = convertWeekToChart(estMonthTotals);
+        const actualMonthlyChartData = convertWeekToChart(actualMonthTotals);
+        setMonthCalorieDataEstimates(estMonthlyChartData);
+        setMonthCalorieDataActuals(actualMonthlyChartData);
 
+        // console.log('weekly chart data====>', monthCalorieData);
         setIsLoading(false);
       });
     return () => unsubscribe();
@@ -126,7 +128,7 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
           />
           <VictoryGroup offset={20} colorScale={'qualitative'}>
             <VictoryBar
-              data={weekCalorieDataEstimates}
+              data={monthCalorieDataEstimates}
               style={{data: { fill: "#456990" }}}
               x='date'
               y='calories'
@@ -137,7 +139,7 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
               // labelComponent={<VictoryTooltip style={{fontSize: 15}}/>}
             />
             <VictoryBar
-              data={weekCalorieDataActuals}
+              data={monthCalorieDataActuals}
               style={{data: { fill: "#EF767A" }}}
               x='date'
               y='calories'
@@ -154,7 +156,7 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
           <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
           <Text>
             AVERAGE DAILY CALORIES BURNED:{' '}
-            {Math.round(totalCalories(calorieData) / 7)}
+            {Math.round(totalCalories(calorieData) / 30)}
           </Text>
         </View>
       </View>
