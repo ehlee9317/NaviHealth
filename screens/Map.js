@@ -874,48 +874,75 @@ export default class Map extends Component {
         {yourLocationPredictions}
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
-            <TouchableOpacity
-              style={styles.stopButtonContainer}
-              onPress={() => {
-                this.stopNaviHandler();
-              }}
-            >
-              <View style={styles.stopIconContainer}>
-                <Icon name="ios-close-circle-outline" size={25} color="white" />
-                <Text style={styles.stopButtonText}>Stop</Text>
-              </View>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={styles.stopButtonContainer}
+                onPress={() => {
+                  this.stopNaviHandler();
+                }}
+              >
+                <View style={styles.stopIconContainer}>
+                  <Icon
+                    name="ios-close-circle-outline"
+                    size={25}
+                    color="white"
+                  />
+                  <Text style={styles.stopButtonText}>Stop</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           ) : (
-            <TouchableOpacity
-              style={styles.startButtonContainer}
-              onPress={() => {
-                this.startNaviHandler();
-              }}
-            >
-              <View style={styles.iconContainer}>
-                <Icon style={styles.locateIcon} name="ios-navigate" size={22} />
-                <Text style={styles.startButtonText}>Start</Text>
-              </View>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={styles.startButtonContainer}
+                onPress={() => {
+                  this.startNaviHandler();
+                }}
+              >
+                <View style={styles.iconContainer}>
+                  <Icon
+                    style={styles.locateIcon}
+                    name="ios-navigate"
+                    size={22}
+                  />
+                  <Text style={styles.startButtonText}>Start</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           )
         ) : (
-          <Button title="input a destination" />
+          <Text></Text>
         )}
-
-        <TouchableOpacity
-          style={styles.directionButtonContainer}
-          onPress={() => {
-            console.log("Button pressed");
-            this.props.navigation.navigate("Directions", {
-              directions: this.state.directions,
-            });
-          }}
-        >
-          <View style={styles.directionIconContainer}>
-            <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-            <Text style={styles.directionButtonText}>Directions</Text>
-          </View>
-        </TouchableOpacity>
 
         <View style={styles.locateIconContainer}>
           <TouchableOpacity
@@ -988,7 +1015,7 @@ const styles = StyleSheet.create({
   },
   clickedChipText: {
     color: "white",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   destinationInput: {
     height: 40,
@@ -1119,7 +1146,7 @@ const styles = StyleSheet.create({
   },
   container: {
     ...StyleSheet.absoluteFillObject,
-    flex: 1
+    flex: 1,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
