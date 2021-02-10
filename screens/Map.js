@@ -580,30 +580,30 @@ export default class Map extends Component {
         {yourLocationPredictions}
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
-            <Button
-              title="End Navigation"
+            <TouchableHighlight
+              style={styles.stopButtonContainer}
               onPress={() => {
-                this.stopNaviHandler();
+                this.startNaviHandler();
               }}
-            />
-          ) : (
-            <TouchableHighlight style={styles.startButtonContainer } onPress={() => {
-              this.startNaviHandler();
-            }}>
-              <View>
-                {/* <Button
-                title="Start"
-                style={styles.startButton}
-                onPress={() => {
-                  this.startNaviHandler();
-                }}
-              /> */}
+            >
+              <View style={styles.stopIconContainer}>
                 <Icon
-                  style={styles.locateIcon}
-                  name="ios-navigate"
+                  name="ios-close-circle-outline"
                   size={25}
-                  color={"white"}
+                  color="white"
                 />
+                <Text style={styles.stopButtonText}>Stop</Text>
+              </View>
+            </TouchableHighlight>
+          ) : (
+            <TouchableHighlight
+              style={styles.startButtonContainer}
+              onPress={() => {
+                this.startNaviHandler();
+              }}
+            >
+              <View style={styles.iconContainer}>
+                <Icon style={styles.locateIcon} name="ios-navigate" size={22} />
                 <Text style={styles.startButtonText}>Start</Text>
               </View>
             </TouchableHighlight>
@@ -655,47 +655,64 @@ export default class Map extends Component {
               )
             }
           >
-            <Icon
-              name="ios-navigate"
-              size={35}
-              color={"#0097f5"}
-            />
+            <Icon name="ios-navigate" size={35} color={"#0097f5"} />
           </TouchableHighlight>
-
         </View>
-        <TouchableHighlight style={styles.startButtonContainer } onPress={() => {
-              this.startNaviHandler();
-            }}>
-              <View style={styles.iconContainer }>
-                <Icon
-                  style={styles.locateIcon}
-                  name="ios-navigate"
-                  size={25}
-                  // color={"white"}
-                />
-                <Text style={styles.startButtonText}>Start</Text>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight style={styles.stopButtonContainer } onPress={() => {
-              this.startNaviHandler();
-            }}>
-              <View style={styles.stopIconContainer}>
-                {/* <Icon
-                  style={styles.locateIcon}
-                  name="ios-navigate"
-                  size={25}
-                  // color={"white"}
-                /> */}
-                <Text style={styles.stopButtonText}>Stop</Text>
-              </View>
-            </TouchableHighlight>
-            <Button
-              title="End Navigation"
-              onPress={() => {
-                this.stopNaviHandler();
-              }}
+        <TouchableHighlight
+          style={styles.startButtonContainer}
+          onPress={() => {
+            this.startNaviHandler();
+          }}
+        >
+          <View style={styles.iconContainer}>
+            <Icon style={styles.locateIcon} name="ios-navigate" size={22} />
+            <Text style={styles.startButtonText}>Start</Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={styles.stopButtonContainer}
+          onPress={() => {
+            this.startNaviHandler();
+          }}
+        >
+          <View style={styles.stopIconContainer}>
+            <Icon
+              style={styles.stopIcon}
+              name="ios-close-circle-outline"
+              size={25}
             />
+            <Text style={styles.stopButtonText}>Stop</Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={styles.directionButtonContainer}
+          onPress={() => {
+            console.log("Button pressed");
+            this.props.navigation.navigate("Directions", {
+              directions: this.state.directions,
+            });
+          }}
+        >
+          <View style={styles.directionIconContainer}>
+            <Icon
+              name="ios-list-outline"
+              size={25}
+              color="#0097f5"
+            />
+            <Text style={styles.directionButtonText}>Directions</Text>
+          </View>
+        </TouchableHighlight>
+        <Button
+          title="Directions"
+          onPress={() => {
+            console.log("Button pressed");
+            this.props.navigation.navigate("Directions", {
+              directions: this.state.directions,
+            });
+          }}
+        />
       </View>
+
     );
   }
 }
@@ -767,6 +784,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginLeft: "80%",
     marginTop: "130%",
+    // marginBottom: "-20%",
     padding: "1.5%",
     borderRadius: 500,
     // alignItems: "flex-end"
@@ -782,7 +800,7 @@ const styles = StyleSheet.create({
     // flexDirection: "row",
     // padding: 5
   },
-  iconContainer:{
+  iconContainer: {
     // backgroundColor: "#0097f5",
     // width: "40%",
     // height: 30,
@@ -791,17 +809,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // display: "flex",
     flexDirection: "row",
-    padding: "3%"
+    padding: "3%",
   },
   startButtonText: {
     color: "white",
     marginLeft: "5%",
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   locateIcon: {
-    transform: [{rotate: '316deg'}],
+    transform: [{ rotate: "316deg" }],
     marginLeft: "-2%",
-    color: "white"
+    marginTop: "0.5%",
+    color: "white",
   },
   stopButtonContainer: {
     backgroundColor: "red",
@@ -823,12 +842,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // display: "flex",
     flexDirection: "row",
-    padding: "3%"
+    padding: "1%",
   },
   stopButtonText: {
     color: "white",
-    // marginLeft: "5%",
-    fontWeight: 'bold'
+    marginLeft: "4%",
+    fontWeight: "bold",
+  },
+  directionButtonContainer: {
+    backgroundColor: "white",
+    width: "40%",
+    height: 30,
+    borderRadius: 100,
+    // justifyContent: "center",
+    // alignItems: "center",
+    // display: "flex",
+    // flexDirection: "row",
+    // padding: 5
+  },
+  directionIconContainer: {
+    // backgroundColor: "#0097f5",
+    // width: "40%",
+    // height: 30,
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    // display: "flex",
+    flexDirection: "row",
+    padding: "1%",
+  },
+  directionButtonText: {
+    color: "#0097f5",
+    marginLeft: "4%",
+    fontWeight: "bold",
   },
   container: {
     ...StyleSheet.absoluteFillObject,
