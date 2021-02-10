@@ -80,7 +80,7 @@ export default function DailyHealthStatsScreen({ navigation }) {
               orientation='horizontal'
               gutter={20}
               style={{ border: { stroke: 'black' } }}
-              colorScale={[ "navy", "turquoise" ]}
+              colorScale={["#456990", "#EF767A"]}
               data={[{ name: 'Estimated' }, { name: 'Actuals' }]}
             />
             <VictoryAxis
@@ -110,6 +110,7 @@ export default function DailyHealthStatsScreen({ navigation }) {
             <VictoryGroup offset={30} colorScale={'qualitative'}>
               <VictoryBar
                 data={calorieData}
+                style={{data: { fill: "#456990" }}}
                 x='date'
                 y='calories'
                 labels={(d) => {
@@ -120,6 +121,7 @@ export default function DailyHealthStatsScreen({ navigation }) {
               />
               <VictoryBar
                 data={actualsCalorieData}
+                style={{data: { fill: "#EF767A" }}}
                 x='date'
                 y='calories'
                 labels={(d) => {
@@ -136,7 +138,6 @@ export default function DailyHealthStatsScreen({ navigation }) {
         </View>
       </View>
 
-      <Button title='Go back' onPress={() => navigation.goBack()} />
     </SafeAreaView>
   );
 }

@@ -77,8 +77,6 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
       });
     return () => unsubscribe();
   }, []);
-  // console.log('is loading second state------>', isLoading);
-  // console.log('monthCalorieData----->', monthCalorieData);
 
   return isLoading ? (
     <SafeAreaView>
@@ -101,7 +99,7 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
             orientation='horizontal'
             gutter={20}
             style={{ border: { stroke: 'black' } }}
-            colorScale={['navy', 'turquoise']}
+            colorScale={["#456990", "#EF767A"]}
             data={[{ name: 'Estimated' }, { name: 'Actuals' }]}
           />
           <VictoryAxis
@@ -131,6 +129,7 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
           <VictoryGroup offset={20} colorScale={'qualitative'}>
             <VictoryBar
               data={monthCalorieDataEstimates}
+              style={{data: { fill: "#456990" }}}
               x='date'
               y='calories'
               labels={(d) => {
@@ -141,6 +140,7 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
             />
             <VictoryBar
               data={monthCalorieDataActuals}
+              style={{data: { fill: "#EF767A" }}}
               x='date'
               y='calories'
               labels={(d) => {
@@ -160,8 +160,6 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
           </Text>
         </View>
       </View>
-
-      <Button title='Go back' onPress={() => navigation.goBack()} />
     </SafeAreaView>
   );
 }
