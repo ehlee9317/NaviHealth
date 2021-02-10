@@ -19,6 +19,7 @@ import {
   convertWeekToChart,
 } from '../api/healthStatsMethods';
 import DailyHealthStatsScreen from './DailyHealthStatsScreen'
+import WeeklyHealthStatsScreen from './HealthStatsWeeklyScreen'
 
 export default function HealthStatsScreen({ navigation }) {
   const db = firebase.firestore();
@@ -124,6 +125,7 @@ export default function HealthStatsScreen({ navigation }) {
     return rangeButtons.map((singleButton) => {
       return (
         <Button
+          // key={}
           title={`${singleButton}`}
           onPress={() => rangeClickHandler(singleButton)}
         >
@@ -140,9 +142,9 @@ export default function HealthStatsScreen({ navigation }) {
           {displayButtons(buttonNames)}
         </View>
         <View>
-          {buttonLabel === 'Week' && calorieData ? (
+          {buttonLabel === 'Week' ? (
             <View>
-
+              {<WeeklyHealthStatsScreen />}
             </View>
           ) : buttonLabel === 'Month' ? (
             <View>
