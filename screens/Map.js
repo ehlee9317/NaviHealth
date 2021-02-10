@@ -78,6 +78,7 @@ export default class Map extends Component {
         N: "#FCCC0A",
         Q: "#FCCC0A",
         R: "#FCCC0A",
+        W: "#FCCC0A",
         S: "#808183",
         1: "#EE352E",
         2: "#EE352E",

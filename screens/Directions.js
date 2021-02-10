@@ -8,24 +8,51 @@ export default function Direction ({route, navigation}){
   }
   const {directions} = route.params
   console.log("Directions in screen-->", directions)
+  // console.log("directions steps ---->", directions.steps)
 
-//   const directionsArr = directions.map((direction)=>(
-//     <View>
-//     <Text style={styles.direction}>{direction.html_instructions.replace(/(<([^>]+)>)/gi, "")}</Text>
-//   </View>
-    
-//   ))
   let finalDirectionsArr = [];
   for (let i = 0; i < directions.length; i++) {
-      let currDirection = directions[i].html_instructions.replace(/(<([^>]+)>)/gi, "");
-      // console.log('currDirection---->', currDirection)
-      // console.log('typeof currDirection', typeof currDirection)
-      if (currDirection.indexOf("(") !== -1) {
-        finalDirectionsArr.push(currDirection.slice(0, currDirection.indexOf("(")))
-      } else {
-        finalDirectionsArr.push(currDirection)
+      let currDirection = directions[i];
+      if (currDirection.html_instructions && !currDirection.steps) {
+        let regexSanitizedCurrDirection = directions[
+          i
+        ].html_instructions.replace(/(<([^>]+)>)/gi, "");
+        if (regexSanitizedCurrDirection.indexOf("(") !== -1) {
+          finalDirectionsArr.push(
+            regexSanitizedCurrDirection.slice(
+              0,
+              regexSanitizedCurrDirection.indexOf("(")
+            )
+          );
+        } else {
+          finalDirectionsArr.push(regexSanitizedCurrDirection);
+        }
+      } else if (currDirection.html_instructions && currDirection.steps){
+        for (let j = 0; j < currDirection.steps.length; j++){
+          // let regexSanitizedCurrStepsDirection = currDirection.steps[j].replace(/(<([^>]+)>)/gi, "");
+          // finalDirectionsArr.push(regexSanitizedCurrStepsDirection)
+          let currStepsDirection =  currDirection.steps[j]
+          // console.log('currDirection.steps[j]---->', currStepsDirection)
+          if (currStepsDirection.html_instructions) {
+            let regexSanitizedCurrStepsDirection = currStepsDirection.html_instructions.replace(
+              /<[^>]*>?/gm,
+              ""
+            );
+            // console.log('regexSanitizedCurrStepsDirection---->', regexSanitizedCurrStepsDirection)
+            if (regexSanitizedCurrStepsDirection.indexOf("(") !== -1) {
+              finalDirectionsArr.push(
+                regexSanitizedCurrStepsDirection.slice(
+                  0,
+                  regexSanitizedCurrStepsDirection.indexOf("(")
+                )
+              );
+            } else {
+              finalDirectionsArr.push(regexSanitizedCurrStepsDirection);
+            }
+          }
+        }
       }
-      console.log(finalDirectionsArr)
+      console.log('finalDirectionsArr--->',finalDirectionsArr)
   }
   
   return (
