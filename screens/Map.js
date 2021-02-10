@@ -872,6 +872,7 @@ export default class Map extends Component {
         )}
         {predictions}
         {yourLocationPredictions}
+
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
             <View>
@@ -944,7 +945,22 @@ export default class Map extends Component {
           <Text></Text>
         )}
 
-        <View style={styles.locateIconContainer}>
+        <TouchableOpacity
+          style={styles.yourLocationButtonContainer}
+          onPress={() => {
+            console.log("Button pressed");
+            this.props.navigation.navigate("Directions", {
+              directions: this.state.directions,
+            });
+          }}
+        >
+          <View style={styles.yourLocationIconContainer}>
+            <Icon name="ios-radio-button-on-outline" size={22} color="white" />
+            <Text style={styles.yourLocationButtonText}>Your Location</Text>
+          </View>
+        </TouchableOpacity>
+
+        {/* <View style={styles.locateIconContainer}>
           <TouchableOpacity
             // style={styles.locateIconContainer}
             onPress={() =>
@@ -958,9 +974,9 @@ export default class Map extends Component {
               )
             }
           >
-            <Icon name="ios-navigate" size={35} color={"#0097f5"} />
+            <Icon name="ios-radio-button-on-outline" size={40} color={"#49BEAA"} />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -1072,7 +1088,7 @@ const styles = StyleSheet.create({
   },
   locateIconContainer: {
     width: 52,
-    backgroundColor: "white",
+    // backgroundColor: "white",
     marginLeft: "80%",
     marginTop: "130%",
     padding: "1.5%",
@@ -1086,6 +1102,7 @@ const styles = StyleSheet.create({
     width: "40%",
     height: 30,
     borderRadius: 100,
+    margin: "1%",
   },
   iconContainer: {
     borderRadius: 100,
@@ -1110,6 +1127,7 @@ const styles = StyleSheet.create({
     width: "40%",
     height: 30,
     borderRadius: 100,
+    margin: "1%",
   },
   stopIconContainer: {
     borderRadius: 100,
@@ -1131,6 +1149,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 0.2,
     borderColor: "#49BEAA",
+    marginLeft: "1%",
   },
   directionIconContainer: {
     borderRadius: 100,
@@ -1141,6 +1160,28 @@ const styles = StyleSheet.create({
   },
   directionButtonText: {
     color: "#49BEAA",
+    marginLeft: "4%",
+    fontWeight: "bold",
+  },
+  yourLocationButtonContainer: {
+    backgroundColor: "#49BEAA",
+    width: "40%",
+    height: 30,
+    borderRadius: 100,
+    borderWidth: 0.2,
+    borderColor: "#49BEAA",
+    marginLeft: "1%",
+    marginTop: "1%"
+  },
+  yourLocationIconContainer: {
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    padding: "1%",
+  },
+  yourLocationButtonText: {
+    color: "white",
     marginLeft: "4%",
     fontWeight: "bold",
   },
