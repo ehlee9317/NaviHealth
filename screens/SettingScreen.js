@@ -204,10 +204,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // backgroundColor: "#f7fff7",
+
     alignItems: "center",
   },
   signUpBox: {
-    backgroundColor: "#456990",
+    backgroundColor: "#EEB868", 
     marginTop: "10%",
     padding: 5,
     borderRadius: 5,
@@ -234,7 +235,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   signUpButton: {
-    backgroundColor: "#EEB868",
+    backgroundColor: "#456990",
     borderRadius: 5,
     marginTop: "5%",
     // marginBottom: "-10%",
