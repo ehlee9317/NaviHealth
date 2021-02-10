@@ -17,7 +17,8 @@ import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
-import { SketchPicker } from "react-color";
+
+
 
 export default class Map extends Component {
   constructor(props) {
