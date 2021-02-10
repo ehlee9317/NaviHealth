@@ -8,6 +8,7 @@ import {
   Image,
   TouchableHighlight,
   SafeAreaView,
+  ScrollView,
   Button,
 } from "react-native";
 import MapView, { Polyline, Marker } from "react-native-maps";
@@ -17,8 +18,7 @@ import PolyLine from "@mapbox/polyline";
 import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
-
-
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default class Map extends Component {
   constructor(props) {
@@ -84,7 +84,7 @@ export default class Map extends Component {
         3: "#EE352E",
         4: "#00933C",
         5: "#00933C",
-        6: "#00933C",
+        "6X": "#00933C",
         7: "#B933AD",
       },
     };
@@ -603,22 +603,26 @@ export default class Map extends Component {
       )
     );
 
-    const toggleCategory = {
-      categories: [
-        {
-          name: 'Subway',
-          icon: <Icon name='ios-subway-outline' size={18} />
-        },
-        {
-          name: 'Walk',
-          icon: <Icon name='ios-walk-outline' size={18} />
-        },
-        {
-          name: 'Bike',
-          icon: <Icon name='ios-bicycle-outline' size={18} />
-        }
-      ]
-    }
+    const toggleCategories = [
+      {
+        name: "subway",
+        icon: (
+          <Icon name="ios-subway-outline" size={18} style={styles.chipsIcon} />
+        ),
+      },
+      {
+        name: "walk",
+        icon: (
+          <Icon name="ios-walk-outline" size={18} style={styles.chipsIcon} />
+        ),
+      },
+      {
+        name: "bike",
+        icon: (
+          <Icon name="ios-bicycle-outline" size={18} style={styles.chipsIcon} />
+        ),
+      },
+    ];
 
     return (
       <View style={styles.container}>
@@ -648,11 +652,11 @@ export default class Map extends Component {
               // console.log('elem.travel_mode--->',elem.travel_mode)
               // console.log('elem start_location--->', elem.start_location)
               if (elem.travel_mode === "TRANSIT") {
+                console.log("elem transit_details--->", elem.transit_details);
                 console.log(
-                  "elem transit_details.line--->",
-                  elem.transit_details.line
+                  "elem transit_details.line.short_name--->",
+                  elem.transit_details.line.short_name
                 );
-                console.log('elem transit_details.line.short_name--->', elem.transit_details.line.short_name)
                 if (elem.transit_details.line.vehicle.type === "BUS") {
                   return (
                     <View key={index}>
@@ -717,7 +721,6 @@ export default class Map extends Component {
                 );
               }
             })
-
           ) : (
             ""
           )}
@@ -798,6 +801,42 @@ export default class Map extends Component {
                 />
               </View>
             </SafeAreaView>
+            <ScrollView
+              horizontal
+              scrollEventThrottle={1}
+              showsHorizontalScrollIndicator={false}
+              height={100}
+              style={styles.chipsScrollView}
+            >
+              {toggleCategories.map((category, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.chipsItem}
+                  onPress={() => (
+                    console.log("button pressed"),
+                    this.setState({ navigationMode: category.name }),
+                   (
+                      this.navigationMode === "walk"
+                        ? this.walkModeHandler(
+                            this.state.yourLocationPlaceId,
+                            this.state.destinationPlaceId,
+                            this.state.yourLocation,
+                            this.state.destination
+                          )
+                        : this.subwayModeHandler(
+                            this.state.yourLocationPlaceId,
+                            this.state.destinationPlaceId,
+                            this.state.yourLocation,
+                            this.state.destination
+                          )
+                    )
+                  )}
+                >
+                  {category.icon}
+                  <Text>{category.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
         )}
         {predictions}
@@ -847,20 +886,36 @@ export default class Map extends Component {
           </View>
         </TouchableHighlight>
         {this.state.navigationMode === "walk" ? (
-          <Button
-            title="Subway"
-            onPress={() => {
-              // console.log(this.state.navigationMode);
-              this.setState({ navigationMode: "subway" });
-              this.subwayModeHandler(
-                this.state.yourLocationPlaceId,
-                this.state.destinationPlaceId,
-                this.state.yourLocation,
-                this.state.destination
-              );
-              // console.log("directions--->", this.state.directions);
-            }}
-          />
+          <View>
+            <Button
+              title="Walk"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "walk" });
+                this.walkModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+              }}
+            />
+            <Button title="Bike" />
+            <Button
+              title="Subway"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "subway" });
+                this.subwayModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+                // console.log("directions--->", this.state.directions);
+              }}
+            />
+          </View>
         ) : this.state.navigationMode === "subway" ? (
           <View>
             <Button
@@ -876,9 +931,53 @@ export default class Map extends Component {
                 );
               }}
             />
+            <Button title="Bike" />
+            <Button
+              title="Subway"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "subway" });
+                this.subwayModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+                // console.log("directions--->", this.state.directions);
+              }}
+            />
           </View>
         ) : (
-          ""
+          <View>
+            <Button
+              title="Walk"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "walk" });
+                this.walkModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+              }}
+            />
+            <Button title="Bike" />
+            <Button
+              title="Subway"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "subway" });
+                this.subwayModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+                // console.log("directions--->", this.state.directions);
+              }}
+            />
+          </View>
         )}
         <View style={styles.locateIconContainer}>
           <TouchableHighlight
@@ -911,6 +1010,30 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
   },
+  chipsScrollView: {
+    position: "absolute",
+    // top:Platform.OS === 'ios' ? 190 : 80,
+    marginTop: "35%",
+    marginLeft: "10%",
+    paddingHorizontal: 10,
+  },
+  chipsIcon: {
+    marginRight: 5,
+  },
+  chipsItem: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 8,
+    paddingHorizontal: 20,
+    marginHorizontal: 10,
+    height: 35,
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 10,
+  },
   destinationInput: {
     height: 40,
     borderWidth: 0.5,
@@ -939,7 +1062,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     backgroundColor: "white",
-    paddingBottom: "10%",
+    paddingBottom: "15%",
   },
   backIcon: {
     marginLeft: "2%",
