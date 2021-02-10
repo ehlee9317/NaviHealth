@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Button,
-  StyleSheet,
-} from "react-native";
+import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
 import {
   VictoryBar,
   VictoryChart,
   VictoryLabel,
   VictoryTheme,
   VictoryZoomContainer,
+  VictoryAxis,
 } from "victory-native";
 import * as firebase from "firebase";
 import {
@@ -30,84 +25,79 @@ export default function HealthStatsScreen({ navigation }) {
   const [buttonLabel, setButtonLabel] = useState({});
   const buttonNames = ["Day", "Week", "Month"];
 
-  useEffect(() => {
-    const getTodaysCalories = async () => {
-      let userCalories = [];
+  // let userCalories = []
 
-      // sets beginning date to current day at midnight:
-      let beginningDate = new Date().setHours(0, 0, 0, 0);
-      let beginningDateObject = new Date(beginningDate);
-      console.log("beginningDateObj----->", beginningDateObject);
-      try {
-        unsubscribe = await db
-          .collection("routes")
-          .doc(currentUserUID)
-          .collection("sessions")
-          .where("created", ">=", beginningDateObject)
-          .orderBy("created", "asc")
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              const dataObj = doc.data();
-              console.log("dataObj----->", dataObj);
-              const caloriesOverTime = {
-                // day: dataObj.created.toDate().toString().slice(0,10),
-                date: dataObj.created.toDate().toLocaleTimeString(),
-                calories: Math.round(dataObj.estCaloriesBurned),
-              };
-              userCalories.push(caloriesOverTime);
-            });
-            setCalorieData(userCalories);
-            console.log("calorieData array--->", userCalories);
-          });
-      } catch (error) {
-        console.log("Error getting documents", error);
-      }
-    };
-    getTodaysCalories();
-  }, []);
+  // sets beginning date to current day at midnight:
+  let beginningDate = new Date().setHours(0, 0, 0, 0);
+  let beginningDateObject = new Date(beginningDate);
+  console.log("beginningDateObj----->", beginningDateObject);
 
   useEffect(() => {
-    const getWeeksCalories = async () => {
-      let userCalories = [];
-
-      // sets beginning date to last week:
-      let beginningDate = Date.now() - 604800000;
-      let beginningDateObject = new Date(beginningDate);
-      console.log("beginningDateObj----->", beginningDateObject);
-      try {
-        await db
-          .collection("routes")
-          .doc(currentUserUID)
-          .collection("sessions")
-          .where("created", ">=", beginningDateObject)
-          .orderBy("created", "asc")
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              const dataObj = doc.data();
-              console.log("dataObj----->", dataObj);
-              const caloriesOverTime = {
-                day: dataObj.created.toDate().toString().slice(0, 10),
-                calories: Math.round(dataObj.estCaloriesBurned),
-              };
-              userCalories.push(caloriesOverTime);
-            });
+    // Pulls data from firebase and converts format to Victory chart format:
+    const unsubscribe = db
+      .collection("routes")
+      .doc(currentUserUID)
+      .collection("sessions")
+      .where("created", ">=", beginningDateObject)
+      .orderBy("created", "asc")
+      .onSnapshot((querySnapshot) => {
+        let userCalories = [];
+        querySnapshot.forEach((doc) => {
+          const dataObj = doc.data();
+          console.log("dataobj=====>", dataObj);
+          // convert to Victory chart format:
+          userCalories.push({
+            date: dataObj.timeStamp,
+            calories: Math.round(dataObj.estCaloriesBurned),
           });
+          console.log("user calories array----->", userCalories);
+        });
         setCalorieData(userCalories);
-        console.log("calorieData array--->", userCalories);
-        // aggregate calorie count for each day in the week:
-        const weekTotals = totalCaloriesWeekly(userCalories);
-        console.log("weekTotals", weekTotals);
-        const weeklyChartData = convertWeekToChart(weekTotals);
-        setWeekCalorieData(weeklyChartData);
-        console.log("weekly chart data====>", weekCalorieData);
-      } catch (error) {
-        console.log("Error getting documents", error);
-      }
-    };
-    getWeeksCalories();
+      });
+    return () => unsubscribe();
   }, []);
+
+  //   useEffect(() => {
+  //     const getWeeksCalories = async () => {
+  //       let userCalories = [];
+
+  //       // sets beginning date to last week:
+  //       let beginningDate = Date.now() - 604800000;
+  //       let beginningDateObject = new Date(beginningDate);
+  //       console.log("beginningDateObj----->", beginningDateObject);
+  //       try {
+  //         await db
+  //           .collection("routes")
+  //           .doc(currentUserUID)
+  //           .collection("sessions")
+  //           .where("created", ">=", beginningDateObject)
+  //           .orderBy("created", "asc")
+  //           .get()
+  //           .then((querySnapshot) => {
+  //             querySnapshot.forEach((doc) => {
+  //               const dataObj = doc.data();
+  //               console.log("dataObj----->", dataObj);
+  //               const caloriesOverTime = {
+  //                 day: dataObj.created.toDate().toString().slice(0, 10),
+  //                 calories: Math.round(dataObj.estCaloriesBurned),
+  //               };
+  //               userCalories.push(caloriesOverTime);
+  //             });
+  //           });
+  //         setCalorieData(userCalories);
+  //         console.log("calorieData array--->", userCalories);
+  //         // aggregate calorie count for each day in the week:
+  //         const weekTotals = totalCaloriesWeekly(userCalories);
+  //         console.log("weekTotals", weekTotals);
+  //         const weeklyChartData = convertWeekToChart(weekTotals);
+  //         setWeekCalorieData(weeklyChartData);
+  //         console.log("weekly chart data====>", weekCalorieData);
+  //       } catch (error) {
+  //         console.log("Error getting documents", error);
+  //       }
+  //     };
+  //     getWeeksCalories();
+  //   }, []);
 
   const rangeClickHandler = (buttonName, calorieData) => {
     console.log("button clicked!");
@@ -137,15 +127,7 @@ export default function HealthStatsScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <View style={{ flexDirection: "row" }}>
-          {/* <Button title="Day"/>
-         <Button title="Week"
-           onPress={() => {
-             console.log('button pressed')
-             // navigation.navigate("WeeklyHealthStats")
-             // {WeeklyHealthStatsScreen}
-           }}
-         />
-         <Button title="Month"/> */}
+          <Button title="Month" />
           {displayButtons(buttonNames)}
         </View>
         <View>
@@ -173,6 +155,7 @@ export default function HealthStatsScreen({ navigation }) {
               {calorieData && (
                 <VictoryChart
                   width={350}
+                  height={400}
                   theme={VictoryTheme.material}
                   domainPadding={30}
                   containerComponent={
@@ -182,13 +165,37 @@ export default function HealthStatsScreen({ navigation }) {
                     />
                   }
                 >
+                  <VictoryAxis
+                    style={{
+                      axis: { stroke: "#000" },
+                      axisLabel: { fontSize: 16 },
+                      ticks: { stroke: "#000" },
+                      grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                    }}
+                    dependentAxis
+                  />
+                  <VictoryAxis
+                    style={{
+                      axis: { stroke: "#000" },
+                      axisLabel: { fontSize: 16 },
+                      ticks: { stroke: "#000" },
+                      tickLabels: {
+                        // fill: "transparent",
+                        fontSize: 12,
+                        padding: 1,
+                        angle: 45,
+                        verticalAnchor: "middle",
+                        textAnchor: "start",
+                      },
+                    }}
+                  />
                   <VictoryBar
                     data={calorieData}
                     x="date"
                     y="calories"
                     labels={(d) => {
-                     //  return `${d.datum.date}\n${d.datum.calories}`;
-                     return `${d.datum.calories}`;
+                      //  return `${d.datum.date}\n${d.datum.calories}`;
+                      return `${d.datum.calories}`;
                     }}
                   />
                 </VictoryChart>
@@ -202,6 +209,7 @@ export default function HealthStatsScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
