@@ -51,17 +51,7 @@ export default function App() {
           component={MainTabScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name={"DailyHealthStats"}
-          component={HealthStatsScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={"WeeklyHealthStats"}
-          component={WeeklyHealthStatsScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
+         <Stack.Screen
           name={"Directions"}
           component={Directions}
           options={{ headerShown: false }}
