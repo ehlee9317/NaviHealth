@@ -17,7 +17,7 @@ import {
   totalCaloriesWeekly,
 } from '../api/healthStatsMethods';
 
-export default function HealthStatsScreen({ navigation }) {
+export default function DailyHealthStatsScreen({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [calorieData, setCalorieData] = useState([]);
