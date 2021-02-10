@@ -66,31 +66,6 @@ export default function DailyHealthStatsScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <View style={{ flexDirection: 'row' }}>
-          <Button
-            title='Day'
-            onPress={() => {
-              console.log('button pressed');
-              navigation.navigate('DailyHealthStats');
-            }}
-          />
-          <Button
-            title='Week'
-            onPress={() => {
-              console.log('button pressed');
-              navigation.navigate('WeeklyHealthStats');
-              // {WeeklyHealthStatsScreen}
-            }}
-          />
-          <Button
-            title='Month'
-            onPress={() => {
-              console.log('monthly button pressed');
-              navigation.navigate('MonthlyHealthStats');
-              // {WeeklyHealthStatsScreen}
-            }}
-          />
-        </View>
         {calorieData && (
           <VictoryChart
             width={400}
