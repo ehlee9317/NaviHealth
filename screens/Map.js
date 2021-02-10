@@ -379,7 +379,7 @@ export default class Map extends Component {
           //   this.state.recordedDurationMin
           // );
     }, 0);
-    this.setState({ 
+    this.setState({
       timer,
      });
   }
@@ -588,7 +588,7 @@ export default class Map extends Component {
           <Button title="input a destination" />
         )}
 
-        <Icon
+        {/* <Icon
           style={styles.locateIcon}
           name="ios-locate"
           size={50}
@@ -603,7 +603,7 @@ export default class Map extends Component {
               />
             )
           }
-        />
+        /> */}
         <Button
           title="Directions"
           onPress={() => {
@@ -630,6 +630,26 @@ export default class Map extends Component {
             }}
           />
         ): ""}
+         <TouchableHighlight
+          style={styles.locateIconContainer}
+          onPress={() =>
+            this.gotToMyLocation(
+              <Button
+                title="End Navigation"
+                onPress={() => {
+                  this.stopNaviHandler();
+                }}
+              />
+            )
+          }
+        >
+          <Icon
+            style={styles.locateIcon}
+            name="ios-navigate"
+            size={35}
+            color={"#0097f5"}
+          />
+        </TouchableHighlight>
       </View>
     );
   }
