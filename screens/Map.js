@@ -18,6 +18,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 
+
+
 export default class Map extends Component {
   constructor(props) {
     super(props);
@@ -61,6 +63,30 @@ export default class Map extends Component {
       directions: [],
       subwayMode: false,
       navigationMode: "walk",
+      subwayChart: {
+        A: "#0039A6",
+        C: "#0039A6",
+        E: "#0039A6",
+        B: "#FF6319",
+        D: "#FF6319",
+        F: "#FF6319",
+        M: "#FF6319",
+        G: "#6CBE45",
+        J: "#996633",
+        Z: "#996633",
+        L: "#A7A9AC",
+        N: "#FCCC0A",
+        Q: "#FCCC0A",
+        R: "#FCCC0A",
+        S: "#808183",
+        1: "#EE352E",
+        2: "#EE352E",
+        3: "#EE352E",
+        4: "#00933C",
+        5: "#00933C",
+        6: "#00933C",
+        7: "#B933AD",
+      },
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -502,13 +528,14 @@ export default class Map extends Component {
       hours: "00",
     });
   }
-
+  //POLYLINE METHODS
   render() {
-    console.log('directions--->', this.state.directions)
+    // console.log("directions--->", this.state.directions);
     // console.log("hours--->", this.state.hours);
     // console.log("minutes--->", this.state.minutes);
     // console.log("seconds--->", this.state.seconds);
     // console.log("miliseconds--->", this.state.miliseconds);
+   
     let marker = null;
     let locationMarker = null;
     if (this.state.pointCoords.length > 1) {
@@ -598,11 +625,81 @@ export default class Map extends Component {
               strokeColor="#49BEAA"
             />
           ) : this.state.navigationMode === "subway" ? (
-            <Polyline
-              coordinates={this.state.pointCoords}
-              strokeWidth={4}
-              strokeColor="#0039A6"
-            />
+            this.state.directions.map((elem, index) => {
+              // console.log('eelem--->', elem)
+              // console.log('elem.travel_mode--->',elem.travel_mode)
+              // console.log('elem start_location--->', elem.start_location)
+              if (elem.travel_mode === "TRANSIT") {
+                console.log(
+                  "elem transit_details.line--->",
+                  elem.transit_details.line
+                );
+                console.log('elem transit_details.line.short_name--->', elem.transit_details.line.short_name)
+                if (elem.transit_details.line.vehicle.type === "BUS") {
+                  return (
+                    <View key={index}>
+                      <Polyline
+                        coordinates={[
+                          {
+                            latitude: elem.start_location["lat"],
+                            longitude: elem.start_location["lng"],
+                          },
+                          {
+                            latitude: elem.end_location["lat"],
+                            longitude: elem.end_location["lng"],
+                          },
+                        ]}
+                        strokeWidth={4}
+                        strokeColor="#4D5357"
+                      />
+                    </View>
+                  );
+                } else {
+                  return (
+                    <View key={index}>
+                      <Polyline
+                        coordinates={[
+                          {
+                            latitude: elem.start_location["lat"],
+                            longitude: elem.start_location["lng"],
+                          },
+                          {
+                            latitude: elem.end_location["lat"],
+                            longitude: elem.end_location["lng"],
+                          },
+                        ]}
+                        strokeWidth={4}
+                        strokeColor={
+                          this.state.subwayChart[
+                            elem.transit_details.line.short_name
+                          ]
+                        }
+                      />
+                    </View>
+                  );
+                }
+              } else {
+                return (
+                  <View key={index}>
+                    <Polyline
+                      coordinates={[
+                        {
+                          latitude: elem.start_location["lat"],
+                          longitude: elem.start_location["lng"],
+                        },
+                        {
+                          latitude: elem.end_location["lat"],
+                          longitude: elem.end_location["lng"],
+                        },
+                      ]}
+                      strokeWidth={4}
+                      strokeColor="#49BEAA"
+                    />
+                  </View>
+                );
+              }
+            })
+            
           ) : (
             ""
           )}
@@ -743,24 +840,24 @@ export default class Map extends Component {
                 this.state.yourLocation,
                 this.state.destination
               );
-              console.log('directions--->', this.state.directions)
+              // console.log("directions--->", this.state.directions);
             }}
           />
         ) : this.state.navigationMode === "subway" ? (
           <View>
-          <Button
-            title="Walk"
-            onPress={() => {
-              // console.log(this.state.navigationMode);
-              this.setState({ navigationMode: "walk" });
-              this.walkModeHandler(
-                this.state.yourLocationPlaceId,
-                this.state.destinationPlaceId,
-                this.state.yourLocation,
-                this.state.destination
-              )
-            }}
-          />
+            <Button
+              title="Walk"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "walk" });
+                this.walkModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+              }}
+            />
           </View>
         ) : (
           ""
