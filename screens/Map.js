@@ -19,6 +19,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { color } from "react-native-reanimated";
 
 export default class Map extends Component {
   constructor(props) {
@@ -808,14 +809,14 @@ export default class Map extends Component {
               height={100}
               style={styles.chipsScrollView}
             >
-              {toggleCategories.map((category, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.chipsItem}
-                  onPress={() => (
-                    console.log("button pressed"),
-                    this.setState({ navigationMode: category.name }),
-                   (
+              {toggleCategories.map((category, index) =>
+                category.name !== this.state.navigationMode ? (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.chipsItem}
+                    onPress={() => (
+                      console.log("button pressed"),
+                      this.setState({ navigationMode: category.name }),
                       this.navigationMode === "walk"
                         ? this.walkModeHandler(
                             this.state.yourLocationPlaceId,
@@ -823,19 +824,49 @@ export default class Map extends Component {
                             this.state.yourLocation,
                             this.state.destination
                           )
-                        : this.subwayModeHandler(
+                        : (this.navigationMode = "subway"
+                            ? this.subwayModeHandler(
+                                this.state.yourLocationPlaceId,
+                                this.state.destinationPlaceId,
+                                this.state.yourLocation,
+                                this.state.destination
+                              )
+                            : "")
+                    )}
+                  >
+                    {category.icon}
+                    <Text>{category.name}</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.clickedChipsItem}
+                    onPress={() => (
+                      console.log("button pressed"),
+                      this.setState({ navigationMode: category.name }),
+                      this.navigationMode === "walk"
+                        ? this.walkModeHandler(
                             this.state.yourLocationPlaceId,
                             this.state.destinationPlaceId,
                             this.state.yourLocation,
                             this.state.destination
                           )
-                    )
-                  )}
-                >
-                  {category.icon}
-                  <Text>{category.name}</Text>
-                </TouchableOpacity>
-              ))}
+                        : (this.navigationMode = "subway"
+                            ? this.subwayModeHandler(
+                                this.state.yourLocationPlaceId,
+                                this.state.destinationPlaceId,
+                                this.state.yourLocation,
+                                this.state.destination
+                              )
+                            : "")
+                    )}
+                  >
+                    {/* <Icon name="ios-list-outline" size={25} color="#0097f5" /> */}
+                    <Icon color="white">{category.icon}</Icon>
+                    <Text style={styles.clickedChipText}>{category.name}</Text>
+                  </TouchableOpacity>
+                )
+              )}
             </ScrollView>
           </View>
         )}
@@ -1033,6 +1064,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 5,
     elevation: 10,
+  },
+  clickedChipsItem: {
+    flexDirection: "row",
+    backgroundColor: "#49BEAA",
+    borderRadius: 20,
+    padding: 8,
+    paddingHorizontal: 20,
+    marginHorizontal: 10,
+    height: 35,
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  clickedChipText: {
+    color: "white",
+    fontWeight: "bold"
   },
   destinationInput: {
     height: 40,
