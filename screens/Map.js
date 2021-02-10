@@ -309,7 +309,7 @@ export default class Map extends Component {
         this.state.estimatedDuration
       );
     } else if (this.state.navigationMode === "subway") {
-      console.log('pending updates for subway mode')
+      console.log("pending updates for subway mode");
     }
   }
   startNaviHandler() {
@@ -351,8 +351,8 @@ export default class Map extends Component {
     let timer = setInterval(() => {
       var miliseconds = (Number(this.state.miliseconds) + 1).toString(),
         second = this.state.seconds;
-        minute = this.state.minutes;
-        hour = this.state.hours;
+      minute = this.state.minutes;
+      hour = this.state.hours;
 
       if (Number(this.state.miliseconds) == 99) {
         second = (Number(this.state.seconds) + 1).toString();
@@ -371,17 +371,19 @@ export default class Map extends Component {
         seconds: second.length == 1 ? "0" + second : second,
         minutes: minute.length == 1 ? "0" + minute : minute,
         hours: hour.length == 1 ? "0" + hour : hour,
-        recordedDurationMin: `${((Number(this.state.hours) * 60) + Number(this.state.minutes))}`,
-        recordedDuration: `${hour} : ${minute} : ${second}`
+        recordedDurationMin: `${
+          Number(this.state.hours) * 60 + Number(this.state.minutes)
+        }`,
+        recordedDuration: `${hour} : ${minute} : ${second}`,
       });
-          // console.log(
-          //   "recordedDurationMin--->",
-          //   this.state.recordedDurationMin
-          // );
+      // console.log(
+      //   "recordedDurationMin--->",
+      //   this.state.recordedDurationMin
+      // );
     }, 0);
     this.setState({
       timer,
-     });
+    });
   }
 
   timerStop() {
@@ -497,7 +499,9 @@ export default class Map extends Component {
               strokeWidth={4}
               strokeColor="#0039A6"
             />
-          ): ""}
+          ) : (
+            ""
+          )}
 
           {marker}
           {locationMarker}
@@ -518,6 +522,17 @@ export default class Map extends Component {
         ) : (
           <View style={styles.searchContainer}>
             <SafeAreaView style={styles.inputContainer}>
+              <TouchableHighlight
+                onPress={() => {
+                  console.log("back button clicked");
+                  this.setState({
+                    displayMainSearchBar: !this.state.displayMainSearchBar,
+                  });
+                }}
+                style={styles.backIcon}
+              >
+                <Icon name="ios-chevron-back" size={30} color={"black"} />
+              </TouchableHighlight>
               <View style={{ flex: 1 }}>
                 <Icon
                   name="ios-radio-button-on-outline"
@@ -539,7 +554,7 @@ export default class Map extends Component {
                 />
               </View>
             </SafeAreaView>
-            <SafeAreaView style={styles.inputContainer}>
+            <SafeAreaView style={styles.destinationInputContainer}>
               <View style={{ flex: 1 }}>
                 <Icon
                   name="ios-location"
@@ -588,22 +603,6 @@ export default class Map extends Component {
           <Button title="input a destination" />
         )}
 
-        {/* <Icon
-          style={styles.locateIcon}
-          name="ios-locate"
-          size={50}
-          color={"#49BEAA"}
-          onPress={() =>
-            this.gotToMyLocation(
-              <Button
-                title="End Navigation"
-                onPress={() => {
-                  this.stopNaviHandler();
-                }}
-              />
-            )
-          }
-        /> */}
         <Button
           title="Directions"
           onPress={() => {
@@ -629,8 +628,10 @@ export default class Map extends Component {
               this.setState({ navigationMode: "walk" });
             }}
           />
-        ): ""}
-         <TouchableHighlight
+        ) : (
+          ""
+        )}
+        <TouchableHighlight
           style={styles.locateIconContainer}
           onPress={() =>
             this.gotToMyLocation(
@@ -679,7 +680,7 @@ const styles = StyleSheet.create({
     marginLeft: "-76%",
     padding: 5,
     backgroundColor: "white",
-    width: 330,
+    width: 310,
     justifyContent: "flex-end",
   },
   destinationChangeInput: {
@@ -688,15 +689,19 @@ const styles = StyleSheet.create({
     marginLeft: "-76%",
     padding: 5,
     backgroundColor: "white",
-    width: 330,
+    width: 310,
   },
   searchContainer: {
     backgroundColor: "white",
     paddingBottom: "10%",
   },
+  backIcon: {
+    marginLeft: "2%",
+    marginTop: "1%",
+  },
   icon: {
     justifyContent: "flex-start",
-    marginLeft: "8%",
+    marginLeft: "4%",
     marginTop: "4%",
   },
   markerImage: {
@@ -708,6 +713,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: "2%",
   },
+  destinationInputContainer: {
+    flexDirection: "row",
+    marginTop: "2%",
+    marginLeft: "9%",
+  },
+  locateIconContainer: {
+    width: 52,
+    backgroundColor: "white",
+    marginLeft: "80%",
+    marginTop: "130%",
+    padding: "1.5%",
+    borderRadius: 500,
+  },
+  locateIcon: {},
   container: {
     ...StyleSheet.absoluteFillObject,
   },
