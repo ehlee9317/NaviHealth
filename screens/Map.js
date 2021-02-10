@@ -182,7 +182,10 @@ export default class Map extends Component {
         //  console.log('destination in getRoute ---->', this.state.destination)
         //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
         Keyboard.dismiss();
-        this.map.fitToCoordinates(pointCoords);
+        this.map.fitToCoordinates(pointCoords, {
+          edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+          animated: true,
+        });
       } catch (error) {
         console.error(error);
       }
@@ -227,7 +230,10 @@ export default class Map extends Component {
         //  console.log('destination in getRoute ---->', this.state.destination)
         //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
         Keyboard.dismiss();
-        this.map.fitToCoordinates(pointCoords);
+        this.map.fitToCoordinates(pointCoords, {
+          edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+          animated: true,
+        });
       } catch (error) {
         console.error(error);
       }
@@ -342,7 +348,7 @@ export default class Map extends Component {
 
   //SUBWAY + WALK Mode Handlers
 
-  async subwayNaviHandler(
+  async subwayModeHandler(
     yourLocationPlaceId,
     destinationPlaceId,
     startingName,
@@ -388,13 +394,16 @@ export default class Map extends Component {
       //  console.log('destination in getRoute ---->', this.state.destination)
       //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
       Keyboard.dismiss();
-      this.map.fitToCoordinates(pointCoords);
+      this.map.fitToCoordinates(pointCoords, {
+        edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+        animated: true,
+      });
     } catch (error) {
       console.error(error);
     }
   }
 
-  async walkNaviHandler(
+  async walkModeHandler(
     yourLocationPlaceId,
     destinationPlaceId,
     startingName,
@@ -437,11 +446,13 @@ export default class Map extends Component {
       //  console.log('destination in getRoute ---->', this.state.destination)
       //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
       Keyboard.dismiss();
-      this.map.fitToCoordinates(pointCoords);
+      this.map.fitToCoordinates(pointCoords, {
+        edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+        animated: true,
+      });
     } catch (error) {
       console.error(error);
     }
-
   }
 
   //DISTANCE + TIMER HELPERS
@@ -576,8 +587,6 @@ export default class Map extends Component {
         </TouchableHighlight>
       )
     );
-    console.log("yourPlace");
-
     return (
       <View style={styles.container}>
         <MapView
@@ -730,7 +739,7 @@ export default class Map extends Component {
             onPress={() => {
               // console.log(this.state.navigationMode);
               this.setState({ navigationMode: "subway" });
-              this.subwayNaviHandler(
+              this.subwayModeHandler(
                 this.state.yourLocationPlaceId,
                 this.state.destinationPlaceId,
                 this.state.yourLocation,
@@ -744,15 +753,11 @@ export default class Map extends Component {
             onPress={() => {
               // console.log(this.state.navigationMode);
               this.setState({ navigationMode: "walk" });
-              this.walkNaviHandler(
+              this.walkModeHandler(
                 this.state.yourLocationPlaceId,
                 this.state.destinationPlaceId,
                 this.state.yourLocation,
                 this.state.destination
-              );
-              console.log(
-                "this.state.yourlocationplaceid--->",
-                this.state.yourLocationPlaceId
               );
             }}
           />
