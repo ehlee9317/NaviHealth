@@ -1,7 +1,9 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { View, Text, Button, StyleSheet, TextInput, ScrollView, Keyboard, SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { loggingOut } from "../api/firebaseMethods";
+import * as firebase from "firebase";
+import {updateProfile} from "../api/firebaseMethods"
 
 
 const SettingScreen = ({navigation}) => {
@@ -14,8 +16,32 @@ const SettingScreen = ({navigation}) => {
   const [height, setHeight] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [nativeEventKey, setNativeEventKey] = useState("");
+  const db = firebase.firestore();
+  let currentUserUID = firebase.auth().currentUser.uid;
   
-  
+  useEffect(() => {
+    async function getUserInfo() {
+      try {
+        let doc = await db.collection("users").doc(currentUserUID).get();
+
+        if (!doc.exists) {
+          Alert.alert("No user data found!");
+        } else {
+          let dataObj = doc.data();
+          setFirstName(dataObj.firstName);
+          setLastName(dataObj.lastName);
+          setHeight(dataObj.height);
+          setWeight(dataObj.weight);
+          setDateOfBirth(dataObj.dateOfBirth);
+          setEmail(dataObj.email);
+          
+        }
+      } catch (error) {
+        console.log("something went wrong");
+      }
+    }
+    getUserInfo();
+  }, [])
   
   
   const emptyState = () => {
@@ -47,6 +73,37 @@ const SettingScreen = ({navigation}) => {
   const handlePress = () => {
     loggingOut();
     navigation.replace("Home");
+  }
+  const handleUpdate = () => {
+    // console.log(dataObj)
+    // if (!firstName) {
+    //   firstName = dataObj.firstName
+    // } else if (!email) {
+    //   email = dataObj.email
+    // } else if (!dateOfBirth) {
+    //   dateOfBirth = dataObj.dateOfBirth
+    // } else if (!weight) {
+    //   weight = dataObj.weight
+    // } else if (!height) {
+    //   height = dataObj.height
+    // } else if (!password) {
+    //   password = dataObj.password
+    // } else if (password !== confirmPassword) {
+    //   Alert.alert("Password does not match!");
+    // } else {
+      updateProfile(
+        email,
+        password,
+        lastName,
+        dateOfBirth,
+        firstName,
+        weight,
+        height
+      );
+
+      navigation.navigate("Profile");
+      emptyState();
+      // }
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -131,7 +188,7 @@ const SettingScreen = ({navigation}) => {
             />
           </View>
 
-          <TouchableOpacity style={styles.signUpButton}>
+          <TouchableOpacity style={styles.signUpButton} onPress={handleUpdate}>
             <Text style={styles.signUpText}>Update</Text>
           </TouchableOpacity>
         </View>

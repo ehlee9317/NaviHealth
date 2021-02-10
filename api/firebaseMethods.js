@@ -66,3 +66,23 @@ export async function stopNaviFirebaseHandler(acutalDistance, actualDuration, ac
      Alert.alert("There is something wrong!!!!", err.message);
    }
 }
+
+export async function updateProfile(email, password, lastName, dateOfBirth, firstName, weight, height) {
+  let velocityMilesPerHour = 3
+  try {
+    const currentUser = firebase.auth().currentUser;
+
+    const db = firebase.firestore();
+    await db.collection("users").doc(currentUser.uid).update({
+      email:email,
+      lastName: lastName,
+      firstName: firstName,
+      dateOfBirth: dateOfBirth,
+      weight: weight,
+      height: height,
+      estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(weight, height, velocityMilesPerHour).toFixed(2),
+      });
+  } catch (err) {
+    Alert.alert("Update Failed!", err.message);
+  }
+}
