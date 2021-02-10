@@ -84,7 +84,7 @@ export default class Map extends Component {
         3: "#EE352E",
         4: "#00933C",
         5: "#00933C",
-        6: "#00933C",
+        "6X": "#00933C",
         7: "#B933AD",
       },
     };
@@ -631,10 +631,13 @@ export default class Map extends Component {
               // console.log('elem start_location--->', elem.start_location)
               if (elem.travel_mode === "TRANSIT") {
                 console.log(
-                  "elem transit_details.line--->",
-                  elem.transit_details.line
+                  "elem transit_details--->",
+                  elem.transit_details
                 );
-                console.log('elem transit_details.line.short_name--->', elem.transit_details.line.short_name)
+                console.log(
+                  "elem transit_details.line.short_name--->",
+                  elem.transit_details.line.short_name
+                );
                 if (elem.transit_details.line.vehicle.type === "BUS") {
                   return (
                     <View key={index}>
@@ -699,7 +702,6 @@ export default class Map extends Component {
                 );
               }
             })
-            
           ) : (
             ""
           )}
@@ -829,20 +831,36 @@ export default class Map extends Component {
           </View>
         </TouchableHighlight>
         {this.state.navigationMode === "walk" ? (
-          <Button
-            title="Subway"
-            onPress={() => {
-              // console.log(this.state.navigationMode);
-              this.setState({ navigationMode: "subway" });
-              this.subwayModeHandler(
-                this.state.yourLocationPlaceId,
-                this.state.destinationPlaceId,
-                this.state.yourLocation,
-                this.state.destination
-              );
-              // console.log("directions--->", this.state.directions);
-            }}
-          />
+          <View>
+            <Button
+              title="Walk"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "walk" });
+                this.walkModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+              }}
+            />
+            <Button title="Bike" />
+            <Button
+              title="Subway"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "subway" });
+                this.subwayModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+                // console.log("directions--->", this.state.directions);
+              }}
+            />
+          </View>
         ) : this.state.navigationMode === "subway" ? (
           <View>
             <Button
@@ -858,9 +876,53 @@ export default class Map extends Component {
                 );
               }}
             />
+            <Button title="Bike" />
+            <Button
+              title="Subway"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "subway" });
+                this.subwayModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+                // console.log("directions--->", this.state.directions);
+              }}
+            />
           </View>
         ) : (
-          ""
+          <View>
+            <Button
+              title="Walk"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "walk" });
+                this.walkModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+              }}
+            />
+            <Button title="Bike" />
+            <Button
+              title="Subway"
+              onPress={() => {
+                // console.log(this.state.navigationMode);
+                this.setState({ navigationMode: "subway" });
+                this.subwayModeHandler(
+                  this.state.yourLocationPlaceId,
+                  this.state.destinationPlaceId,
+                  this.state.yourLocation,
+                  this.state.destination
+                );
+                // console.log("directions--->", this.state.directions);
+              }}
+            />
+          </View>
         )}
         <View style={styles.locateIconContainer}>
           <TouchableHighlight
