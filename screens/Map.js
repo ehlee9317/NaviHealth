@@ -154,9 +154,9 @@ export default class Map extends Component {
         const json = await response.json();
         // console.log('startingName in getRouteDirection---->', startingName)
         // console.log("destinationName in getRouteDirection---->", destinationName);
-        console.log(json.routes[0].legs[0].distance.value);
-        console.log(json.routes[0].legs[0].duration.value);
-        console.log(json.routes[0].legs[0].steps);
+        // console.log(json.routes[0].legs[0].distance.value);
+        // console.log(json.routes[0].legs[0].duration.value);
+        
         const directionsArr = json.routes[0].legs[0].steps;
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
@@ -202,9 +202,9 @@ export default class Map extends Component {
         const json = await response.json();
         // console.log('startingName in getRouteDirection---->', startingName)
         // console.log("destinationName in getRouteDirection---->", destinationName);
-        console.log(json.routes[0].legs[0].distance.value);
-        console.log(json.routes[0].legs[0].duration.value);
-        console.log(json.routes[0].legs[0].steps);
+        // console.log(json.routes[0].legs[0].distance.value);
+        // console.log(json.routes[0].legs[0].duration.value);
+        // console.log(json.routes[0].legs[0].steps);
         const directionsArr = json.routes[0].legs[0].steps;
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
@@ -333,20 +333,8 @@ export default class Map extends Component {
     this.timerStop();
     this.timerClear();
   }
-  // getMapRegion = () => {
-  //   return {
-  //     latitude: this.state.latitude,
-  //     longitude: this.state.longitude,
-  //   };
-  // };
-  // changedRegion = (region) => {
-  //   this.setState({
-  //     latitude: region.latitude,
-  //     longitude: region.longitude,
-  //   });
-  // };
 
-  //SUBWAY + WALK Mode Handlers
+  //SUBWAY + WALK MODE Handlers
 
   async subwayModeHandler(
     yourLocationPlaceId,
@@ -517,6 +505,7 @@ export default class Map extends Component {
   }
 
   render() {
+    console.log('directions--->', this.state.directions)
     // console.log("hours--->", this.state.hours);
     // console.log("minutes--->", this.state.minutes);
     // console.log("seconds--->", this.state.seconds);
@@ -745,9 +734,11 @@ export default class Map extends Component {
                 this.state.yourLocation,
                 this.state.destination
               );
+              console.log('directions--->', this.state.directions)
             }}
           />
         ) : this.state.navigationMode === "subway" ? (
+          <View>
           <Button
             title="Walk"
             onPress={() => {
@@ -758,9 +749,10 @@ export default class Map extends Component {
                 this.state.destinationPlaceId,
                 this.state.yourLocation,
                 this.state.destination
-              );
+              )
             }}
           />
+          </View>
         ) : (
           ""
         )}
