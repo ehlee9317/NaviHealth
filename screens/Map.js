@@ -535,7 +535,7 @@ export default class Map extends Component {
     // console.log("minutes--->", this.state.minutes);
     // console.log("seconds--->", this.state.seconds);
     // console.log("miliseconds--->", this.state.miliseconds);
-   
+
     let marker = null;
     let locationMarker = null;
     if (this.state.pointCoords.length > 1) {
@@ -602,6 +602,24 @@ export default class Map extends Component {
         </TouchableHighlight>
       )
     );
+
+    const toggleCategory = {
+      categories: [
+        {
+          name: 'Subway',
+          icon: <Icon name='ios-subway-outline' size={18} />
+        },
+        {
+          name: 'Walk',
+          icon: <Icon name='ios-walk-outline' size={18} />
+        },
+        {
+          name: 'Bike',
+          icon: <Icon name='ios-bicycle-outline' size={18} />
+        }
+      ]
+    }
+
     return (
       <View style={styles.container}>
         <MapView
@@ -699,7 +717,7 @@ export default class Map extends Component {
                 );
               }
             })
-            
+
           ) : (
             ""
           )}
