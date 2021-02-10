@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Button,
-  StyleSheet,
-} from "react-native";
+import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
 import {
   VictoryBar,
   VictoryChart,
   VictoryLabel,
   VictoryTheme,
   VictoryZoomContainer,
+  VictoryAxis,
 } from "victory-native";
 import * as firebase from "firebase";
 import {
   totalCalories,
   daysView,
   totalCaloriesWeekly,
+  convertWeekToChart,
 } from "../api/healthStatsMethods";
 
 let unsubscribe;
@@ -27,87 +23,82 @@ export default function HealthStatsScreen({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
   const [calorieData, setCalorieData] = useState([]);
   const [weekCalorieData, setWeekCalorieData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [buttonLabel, setButtonLabel] = useState({});
   const buttonNames = ["Day", "Week", "Month"];
 
-  useEffect(() => {
-    const getTodaysCalories = async () => {
-      let userCalories = [];
+  // let userCalories = []
 
-      // sets beginning date to current day at midnight:
-      let beginningDate = new Date().setHours(0, 0, 0, 0);
-      let beginningDateObject = new Date(beginningDate);
-      console.log("beginningDateObj----->", beginningDateObject);
-      try {
-        unsubscribe = await db
-          .collection("routes")
-          .doc(currentUserUID)
-          .collection("sessions")
-          .where("created", ">=", beginningDateObject)
-          .orderBy("created", "asc")
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              const dataObj = doc.data();
-              console.log("dataObj----->", dataObj);
-              const caloriesOverTime = {
-                // day: dataObj.created.toDate().toString().slice(0,10),
-                date: dataObj.created.toDate().toLocaleTimeString(),
-                calories: Math.round(dataObj.estCaloriesBurned),
-              };
-              userCalories.push(caloriesOverTime);
-            });
-            setCalorieData(userCalories);
-            console.log("calorieData array--->", userCalories);
+  // sets beginning date to current day at midnight:
+  let beginningDate = new Date().setHours(0, 0, 0, 0);
+  let beginningDateObject = new Date(beginningDate);
+  console.log("beginningDateObj----->", beginningDateObject);
+
+  useEffect(() => {
+    // Pulls data from firebase and converts format to Victory chart format:
+    const unsubscribe = db
+      .collection("routes")
+      .doc(currentUserUID)
+      .collection("sessions")
+      .where("created", ">=", beginningDateObject)
+      .orderBy("created", "asc")
+      .onSnapshot((querySnapshot) => {
+        let userCalories = [];
+        querySnapshot.forEach((doc) => {
+          const dataObj = doc.data();
+          console.log("dataobj=====>", dataObj);
+          // convert to Victory chart format:
+          userCalories.push({
+            timeStamp: dataObj.timeStamp,
+            calories: Math.round(dataObj.estCaloriesBurned),
           });
-      } catch (error) {
-        console.log("Error getting documents", error);
-      }
-    };
-    getTodaysCalories();
+          console.log("user calories array----->", userCalories);
+        });
+        setCalorieData(userCalories);
+      });
+    return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const getWeeksCalories = async () => {
-      let userCalories = [];
+  // sets beginning date to 7 days ago:
+  let beginningWeekDate = Date.now() - 604800000;
+  let beginningWeekDateObject = new Date(beginningWeekDate);
+  console.log("beginningWeekDateObject----->", beginningWeekDateObject);
 
-      // sets beginning date to last week:
-      let beginningDate = Date.now() - 604800000;
-      let beginningDateObject = new Date(beginningDate);
-      console.log("beginningDateObj----->", beginningDateObject);
-      try {
-        await db
-          .collection("routes")
-          .doc(currentUserUID)
-          .collection("sessions")
-          .where("created", ">=", beginningDateObject)
-          .orderBy("created", "asc")
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              const dataObj = doc.data();
-              console.log("dataObj----->", dataObj);
-              const caloriesOverTime = {
-                day: dataObj.created.toDate().toString().slice(0, 10),
-                calories: Math.round(dataObj.estCaloriesBurned),
-              };
-              userCalories.push(caloriesOverTime);
-            });
+  useEffect(() => {
+    console.log("isloading initial state---->", isLoading);
+    // Pulls data from firebase and converts format to Victory chart format:
+    const unsubscribe = db
+      .collection("routes")
+      .doc(currentUserUID)
+      .collection("sessions")
+      .where("created", ">=", beginningWeekDateObject)
+      .orderBy("created", "asc")
+      .onSnapshot((querySnapshot) => {
+        let userCalories = [];
+        querySnapshot.forEach((doc) => {
+          const dataObj = doc.data();
+          console.log("dataobj=====>", dataObj);
+          // convert to Victory chart format:
+          userCalories.push({
+            date: dataObj.date,
+            calories: Math.round(dataObj.estCaloriesBurned),
           });
-        setCalorieData(userCalories);
-        console.log("calorieData array--->", userCalories);
-        // aggregate calorie count for each day in the week:
+        });
+      //   setCalorieData(userCalories);
+        console.log("user calories array----->", userCalories);
+        // aggregate calories each day:
         const weekTotals = totalCaloriesWeekly(userCalories);
         console.log("weekTotals", weekTotals);
+        // convert weekly calories into victory chart format:
         const weeklyChartData = convertWeekToChart(weekTotals);
         setWeekCalorieData(weeklyChartData);
         console.log("weekly chart data====>", weekCalorieData);
-      } catch (error) {
-        console.log("Error getting documents", error);
-      }
-    };
-    getWeeksCalories();
+        setIsLoading(false);
+      });
+    return () => unsubscribe();
   }, []);
+  console.log("is loading second state------>", isLoading);
+  console.log("weekCalorieData----->", weekCalorieData);
 
   const rangeClickHandler = (buttonName, calorieData) => {
     console.log("button clicked!");
@@ -137,15 +128,6 @@ export default function HealthStatsScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <View style={{ flexDirection: "row" }}>
-          {/* <Button title="Day"/>
-         <Button title="Week"
-           onPress={() => {
-             console.log('button pressed')
-             // navigation.navigate("WeeklyHealthStats")
-             // {WeeklyHealthStatsScreen}
-           }}
-         />
-         <Button title="Month"/> */}
           {displayButtons(buttonNames)}
         </View>
         <View>
@@ -156,12 +138,45 @@ export default function HealthStatsScreen({ navigation }) {
                 AVERAGE DAILY CALORIES BURNED:{" "}
                 {Math.round(totalCalories(calorieData) / 7)}
               </Text>
-              {/* {weekCalorieData && (
-      <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} standalone={false}>
-        <VictoryBar data={weekCalorieData} x='date' y='calories' labels={(d)=>{return d.datum.calories}} />
-
-      </VictoryChart>
-      )} */}
+              <VictoryChart
+                width={350}
+                height={400}
+                theme={VictoryTheme.material}
+                domainPadding={30}
+              >
+                <VictoryAxis
+                  style={{
+                    axis: { stroke: "#000" },
+                    axisLabel: { fontSize: 16 },
+                    ticks: { stroke: "#000" },
+                    grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                  }}
+                  dependentAxis
+                />
+                <VictoryAxis
+                  style={{
+                    axis: { stroke: "#000" },
+                    axisLabel: { fontSize: 16 },
+                    ticks: { stroke: "#000" },
+                    tickLabels: {
+                      // fill: "transparent",
+                      fontSize: 11,
+                      padding: 1,
+                      angle: 45,
+                      verticalAnchor: "middle",
+                      textAnchor: "start",
+                    },
+                  }}
+                />
+                <VictoryBar
+                  data={weekCalorieData}
+                  x="date"
+                  y="calories"
+                  labels={(d) => {
+                    return d.datum.calories;
+                  }}
+                />
+              </VictoryChart>
             </View>
           ) : buttonLabel === "Month" ? (
             <View>
@@ -173,6 +188,7 @@ export default function HealthStatsScreen({ navigation }) {
               {calorieData && (
                 <VictoryChart
                   width={350}
+                  height={400}
                   theme={VictoryTheme.material}
                   domainPadding={30}
                   containerComponent={
@@ -182,13 +198,37 @@ export default function HealthStatsScreen({ navigation }) {
                     />
                   }
                 >
+                  <VictoryAxis
+                    style={{
+                      axis: { stroke: "#000" },
+                      axisLabel: { fontSize: 16 },
+                      ticks: { stroke: "#000" },
+                      grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                    }}
+                    dependentAxis
+                  />
+                  <VictoryAxis
+                    style={{
+                      axis: { stroke: "#000" },
+                      axisLabel: { fontSize: 16 },
+                      ticks: { stroke: "#000" },
+                      tickLabels: {
+                        // fill: "transparent",
+                        fontSize: 12,
+                        padding: 1,
+                        angle: 45,
+                        verticalAnchor: "middle",
+                        textAnchor: "start",
+                      },
+                    }}
+                  />
                   <VictoryBar
                     data={calorieData}
-                    x="date"
+                    x="timeStamp"
                     y="calories"
                     labels={(d) => {
-                     //  return `${d.datum.date}\n${d.datum.calories}`;
-                     return `${d.datum.calories}`;
+                      //  return `${d.datum.date}\n${d.datum.calories}`;
+                      return `${d.datum.calories}`;
                     }}
                   />
                 </VictoryChart>
@@ -202,6 +242,7 @@ export default function HealthStatsScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
