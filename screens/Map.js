@@ -583,15 +583,11 @@ export default class Map extends Component {
             <TouchableHighlight
               style={styles.stopButtonContainer}
               onPress={() => {
-                this.startNaviHandler();
+                this.stopNaviHandler();
               }}
             >
               <View style={styles.stopIconContainer}>
-                <Icon
-                  name="ios-close-circle-outline"
-                  size={25}
-                  color="white"
-                />
+                <Icon name="ios-close-circle-outline" size={25} color="white" />
                 <Text style={styles.stopButtonText}>Stop</Text>
               </View>
             </TouchableHighlight>
@@ -612,20 +608,24 @@ export default class Map extends Component {
           <Button title="input a destination" />
         )}
 
-        <Button
-          title="Directions"
+        <TouchableHighlight
+          style={styles.directionButtonContainer}
           onPress={() => {
             console.log("Button pressed");
             this.props.navigation.navigate("Directions", {
               directions: this.state.directions,
             });
           }}
-        />
+        >
+          <View style={styles.directionIconContainer}>
+            <Icon name="ios-list-outline" size={25} color="#0097f5" />
+            <Text style={styles.directionButtonText}>Directions</Text>
+          </View>
+        </TouchableHighlight>
         {this.state.navigationMode === "walk" ? (
           <Button
             title="Subway"
             onPress={() => {
-              ƒ;
               console.log(this.state.navigationMode);
               this.setState({ navigationMode: "subway" });
             }}
@@ -658,61 +658,7 @@ export default class Map extends Component {
             <Icon name="ios-navigate" size={35} color={"#0097f5"} />
           </TouchableHighlight>
         </View>
-        <TouchableHighlight
-          style={styles.startButtonContainer}
-          onPress={() => {
-            this.startNaviHandler();
-          }}
-        >
-          <View style={styles.iconContainer}>
-            <Icon style={styles.locateIcon} name="ios-navigate" size={22} />
-            <Text style={styles.startButtonText}>Start</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={styles.stopButtonContainer}
-          onPress={() => {
-            this.startNaviHandler();
-          }}
-        >
-          <View style={styles.stopIconContainer}>
-            <Icon
-              style={styles.stopIcon}
-              name="ios-close-circle-outline"
-              size={25}
-            />
-            <Text style={styles.stopButtonText}>Stop</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={styles.directionButtonContainer}
-          onPress={() => {
-            console.log("Button pressed");
-            this.props.navigation.navigate("Directions", {
-              directions: this.state.directions,
-            });
-          }}
-        >
-          <View style={styles.directionIconContainer}>
-            <Icon
-              name="ios-list-outline"
-              size={25}
-              color="#0097f5"
-            />
-            <Text style={styles.directionButtonText}>Directions</Text>
-          </View>
-        </TouchableHighlight>
-        <Button
-          title="Directions"
-          onPress={() => {
-            console.log("Button pressed");
-            this.props.navigation.navigate("Directions", {
-              directions: this.state.directions,
-            });
-          }}
-        />
       </View>
-
     );
   }
 }
@@ -784,30 +730,22 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginLeft: "80%",
     marginTop: "130%",
-    // marginBottom: "-20%",
     padding: "1.5%",
     borderRadius: 500,
-    // alignItems: "flex-end"
+    shadowColor: "rgba(0,0,0,0.7)",
+    shadowRadius: 10,
+    shadowOpacity: 0.5,
   },
   startButtonContainer: {
     backgroundColor: "#0097f5",
     width: "40%",
     height: 30,
     borderRadius: 100,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // display: "flex",
-    // flexDirection: "row",
-    // padding: 5
   },
   iconContainer: {
-    // backgroundColor: "#0097f5",
-    // width: "40%",
-    // height: 30,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
-    // display: "flex",
     flexDirection: "row",
     padding: "3%",
   },
@@ -817,7 +755,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   locateIcon: {
-    transform: [{ rotate: "316deg" }],
+    transform: [{ rotate: "317deg" }],
     marginLeft: "-2%",
     marginTop: "0.5%",
     color: "white",
@@ -827,16 +765,8 @@ const styles = StyleSheet.create({
     width: "40%",
     height: 30,
     borderRadius: 100,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // display: "flex",
-    // flexDirection: "row",
-    // padding: 5
   },
   stopIconContainer: {
-    // backgroundColor: "#0097f5",
-    // width: "40%",
-    // height: 30,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
@@ -854,20 +784,13 @@ const styles = StyleSheet.create({
     width: "40%",
     height: 30,
     borderRadius: 100,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // display: "flex",
-    // flexDirection: "row",
-    // padding: 5
+    borderWidth: 0.2,
+    borderColor: "#0097f5",
   },
   directionIconContainer: {
-    // backgroundColor: "#0097f5",
-    // width: "40%",
-    // height: 30,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
-    // display: "flex",
     flexDirection: "row",
     padding: "1%",
   },
@@ -878,8 +801,6 @@ const styles = StyleSheet.create({
   },
   container: {
     ...StyleSheet.absoluteFillObject,
-    // justifyContent: "center",
-    // alignItems: "center"
   },
   map: {
     ...StyleSheet.absoluteFillObject,
