@@ -79,22 +79,14 @@ export default class Map extends Component {
         N: "#FCCC0A",
         Q: "#FCCC0A",
         R: "#FCCC0A",
-        W: "#FCCC0A",
         S: "#808183",
         1: "#EE352E",
-        "1X": "#EE352E",
         2: "#EE352E",
-        "2X": "#EE352E",
         3: "#EE352E",
-        "3X": "#EE352E",
         4: "#00933C",
-        "4X": "#00933C",
         5: "#00933C",
-        "5X": "#00933C",
-        6: "#00933C",
         "6X": "#00933C",
         7: "#B933AD",
-        "7X": "#B933AD",
       },
     };
     this.onChangeDestinationDebounced = _.debounce(
@@ -882,7 +874,7 @@ export default class Map extends Component {
         {yourLocationPredictions}
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
-            <TouchableHighlight
+            <TouchableOpacity
               style={styles.stopButtonContainer}
               onPress={() => {
                 this.stopNaviHandler();
@@ -892,9 +884,9 @@ export default class Map extends Component {
                 <Icon name="ios-close-circle-outline" size={25} color="white" />
                 <Text style={styles.stopButtonText}>Stop</Text>
               </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
           ) : (
-            <TouchableHighlight
+            <TouchableOpacity
               style={styles.startButtonContainer}
               onPress={() => {
                 this.startNaviHandler();
@@ -904,13 +896,13 @@ export default class Map extends Component {
                 <Icon style={styles.locateIcon} name="ios-navigate" size={22} />
                 <Text style={styles.startButtonText}>Start</Text>
               </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
           )
         ) : (
           <Button title="input a destination" />
         )}
 
-        <TouchableHighlight
+        <TouchableOpacity
           style={styles.directionButtonContainer}
           onPress={() => {
             console.log("Button pressed");
@@ -920,106 +912,13 @@ export default class Map extends Component {
           }}
         >
           <View style={styles.directionIconContainer}>
-            <Icon name="ios-list-outline" size={25} color="#0097f5" />
+            <Icon name="ios-list-outline" size={25} color="#49BEAA" />
             <Text style={styles.directionButtonText}>Directions</Text>
           </View>
-        </TouchableHighlight>
-        {this.state.navigationMode === "walk" ? (
-          <View>
-            <Button
-              title="Walk"
-              onPress={() => {
-                // console.log(this.state.navigationMode);
-                this.setState({ navigationMode: "walk" });
-                this.walkModeHandler(
-                  this.state.yourLocationPlaceId,
-                  this.state.destinationPlaceId,
-                  this.state.yourLocation,
-                  this.state.destination
-                );
-              }}
-            />
-            <Button title="Bike" />
-            <Button
-              title="Subway"
-              onPress={() => {
-                // console.log(this.state.navigationMode);
-                this.setState({ navigationMode: "subway" });
-                this.subwayModeHandler(
-                  this.state.yourLocationPlaceId,
-                  this.state.destinationPlaceId,
-                  this.state.yourLocation,
-                  this.state.destination
-                );
-                // console.log("directions--->", this.state.directions);
-              }}
-            />
-          </View>
-        ) : this.state.navigationMode === "subway" ? (
-          <View>
-            <Button
-              title="Walk"
-              onPress={() => {
-                // console.log(this.state.navigationMode);
-                this.setState({ navigationMode: "walk" });
-                this.walkModeHandler(
-                  this.state.yourLocationPlaceId,
-                  this.state.destinationPlaceId,
-                  this.state.yourLocation,
-                  this.state.destination
-                );
-              }}
-            />
-            <Button title="Bike" />
-            <Button
-              title="Subway"
-              onPress={() => {
-                // console.log(this.state.navigationMode);
-                this.setState({ navigationMode: "subway" });
-                this.subwayModeHandler(
-                  this.state.yourLocationPlaceId,
-                  this.state.destinationPlaceId,
-                  this.state.yourLocation,
-                  this.state.destination
-                );
-                // console.log("directions--->", this.state.directions);
-              }}
-            />
-          </View>
-        ) : (
-          <View>
-            <Button
-              title="Walk"
-              onPress={() => {
-                // console.log(this.state.navigationMode);
-                this.setState({ navigationMode: "walk" });
-                this.walkModeHandler(
-                  this.state.yourLocationPlaceId,
-                  this.state.destinationPlaceId,
-                  this.state.yourLocation,
-                  this.state.destination
-                );
-              }}
-            />
-            <Button title="Bike" />
-            <Button
-              title="Subway"
-              onPress={() => {
-                // console.log(this.state.navigationMode);
-                this.setState({ navigationMode: "subway" });
-                this.subwayModeHandler(
-                  this.state.yourLocationPlaceId,
-                  this.state.destinationPlaceId,
-                  this.state.yourLocation,
-                  this.state.destination
-                );
-                // console.log("directions--->", this.state.directions);
-              }}
-            />
-          </View>
-        )}
+        </TouchableOpacity>
+
         <View style={styles.locateIconContainer}>
-          <TouchableHighlight
+          <TouchableOpacity
             // style={styles.locateIconContainer}
             onPress={() =>
               this.gotToMyLocation(
@@ -1033,7 +932,7 @@ export default class Map extends Component {
             }
           >
             <Icon name="ios-navigate" size={35} color={"#0097f5"} />
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -1156,7 +1055,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
   },
   startButtonContainer: {
-    backgroundColor: "#0097f5",
+    backgroundColor: "#49BEAA",
     width: "40%",
     height: 30,
     borderRadius: 100,
@@ -1204,7 +1103,7 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 100,
     borderWidth: 0.2,
-    borderColor: "#0097f5",
+    borderColor: "#49BEAA",
   },
   directionIconContainer: {
     borderRadius: 100,
@@ -1214,12 +1113,13 @@ const styles = StyleSheet.create({
     padding: "1%",
   },
   directionButtonText: {
-    color: "#0097f5",
+    color: "#49BEAA",
     marginLeft: "4%",
     fontWeight: "bold",
   },
   container: {
     ...StyleSheet.absoluteFillObject,
+    flex: 1
   },
   map: {
     ...StyleSheet.absoluteFillObject,
