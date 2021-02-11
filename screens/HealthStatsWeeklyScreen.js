@@ -19,10 +19,6 @@ import {
 } from "../api/healthStatsMethods";
 import Icon from "react-native-vector-icons/Ionicons";
 
-// data for Victory: [
-//   {"date": date, "calories": calories},
-// ]
-
 export default function WeeklyHealthStatsScreen({ navigation }) {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
@@ -84,7 +80,7 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
       <Text>Loading</Text>
     </SafeAreaView>
   ) : (
-    <SafeAreaView >
+    <SafeAreaView>
       <View style={styles.container}>
         <VictoryChart
           width={380}
@@ -118,18 +114,19 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
           />
           <VictoryAxis
             style={{
-              axis: { stroke: "#000" },
+              axis: { stroke: "#ABB0AC" },
               axisLabel: { fontSize: 16 },
-              ticks: { stroke: "#000" },
-              grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+              ticks: { stroke: "#ABB0AC" },
+              grid: { stroke: "white", strokeWidth: 0.25 },
             }}
             dependentAxis
           />
           <VictoryAxis
             style={{
-              axis: { stroke: "#000" },
+              axis: { stroke: "#ABB0AC" },
               axisLabel: { fontSize: 16 },
-              ticks: { stroke: "#000" },
+              ticks: { stroke: "#ABB0AC" },
+              grid: { stroke: "white", strokeWidth: 0.25 },
               tickLabels: {
                 fill: "transparent",
                 fontSize: 12,
@@ -165,30 +162,29 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
             />
           </VictoryGroup>
         </VictoryChart>
-        </View>
-        <Text style={styles.subTitle}>SUMMARY</Text>
+      </View>
+      <Text style={styles.subTitle}>SUMMARY</Text>
+      <View style={styles.statMainContainer}>
         <View style={styles.statContainer}>
           <Icon name="ios-checkmark-outline" style={styles.checkmark} />
           <Text style={styles.statText}>
             TOTAL CALORIES BURNED: {totalCalories(calorieData)}
           </Text>
-
+        </View>
+        <View style={styles.statContainer}>
           <Icon name="ios-checkmark-outline" style={styles.checkmark} />
           <Text style={styles.statText}>
             AVERAGE DAILY CALORIES BURNED:{" "}
             {Math.round(totalCalories(calorieData) / 7)}
           </Text>
         </View>
-
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     backgroundColor: "white",
     borderRadius: 20,
     width: 380,
@@ -198,21 +194,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
-    // marginTop: "-50%"
   },
-  statContainer: {
+  statMainContainer: {
     backgroundColor: "white",
     width: 380,
     height: 100,
     borderRadius: 20,
-    flexDirection: "row",
     padding: "5%",
     shadowColor: "#ccc",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
     marginBottom: "10%",
-
+  },
+  statContainer: {
+    flexDirection: "row",
   },
   checkmark: {
     fontSize: 26,
@@ -220,8 +216,6 @@ const styles = StyleSheet.create({
   },
   statText: {
     fontSize: 16,
-    // borderColor: "#EF767A",
-    // borderWidth: 1,
     padding: 5,
   },
   subTitle: {

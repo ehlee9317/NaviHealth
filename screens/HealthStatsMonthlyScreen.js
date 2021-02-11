@@ -119,18 +119,19 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
           />
           <VictoryAxis
             style={{
-              axis: { stroke: "#000" },
+              axis: { stroke: "#ABB0AC" },
               axisLabel: { fontSize: 16 },
-              ticks: { stroke: "#000" },
-              grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+              ticks: { stroke: "#ABB0AC" },
+              grid: { stroke: "white", strokeWidth: 0.25 },
             }}
             dependentAxis
           />
           <VictoryAxis
             style={{
-              axis: { stroke: "#000" },
+              axis: { stroke: "#ABB0AC" },
               axisLabel: { fontSize: 16 },
-              ticks: { stroke: "#000" },
+              ticks: { stroke: "#ABB0AC" },
+              grid: { stroke: "white", strokeWidth: 0.25 },
               tickLabels: {
                 fill: "transparent",
                 fontSize: 12,
@@ -204,7 +205,6 @@ const styles = StyleSheet.create({
     width: 380,
     height: 100,
     borderRadius: 20,
-    // flexDirection: "row",
     padding: "5%",
     shadowColor: "#ccc",
     shadowOffset: { width: 0, height: 3 },

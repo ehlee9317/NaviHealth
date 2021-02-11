@@ -68,8 +68,8 @@ export default function DailyHealthStatsScreen({ navigation }) {
       <View style={styles.container}>
         {calorieData && (
           <VictoryChart
-            width={400}
-            height={400}
+            width={380}
+            height={380}
             theme={VictoryTheme.material}
             domainPadding={40}
             containerComponent={
@@ -99,18 +99,19 @@ export default function DailyHealthStatsScreen({ navigation }) {
             />
             <VictoryAxis
               style={{
-                axis: { stroke: "#000" },
+                axis: { stroke: "#ABB0AC" },
                 axisLabel: { fontSize: 16 },
-                ticks: { stroke: "#000" },
-                grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                ticks: { stroke: "#ABB0AC" },
+                grid: { stroke: "white", strokeWidth: 0.25 },
               }}
               dependentAxis
             />
             <VictoryAxis
               style={{
-                axis: { stroke: "#000" },
+                axis: { stroke: "#ABB0AC" },
                 axisLabel: { fontSize: 16 },
-                ticks: { stroke: "#000" },
+                ticks: { stroke: "#ABB0AC" },
+                grid: { stroke: "white", strokeWidth: 0.25 },
                 tickLabels: {
                   fill: "transparent",
                   fontSize: 12,
@@ -160,9 +161,6 @@ export default function DailyHealthStatsScreen({ navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     backgroundColor: "white",
     borderRadius: 20,
     width: 380,
@@ -192,8 +190,6 @@ const styles = StyleSheet.create({
   },
   statText: {
     fontSize: 16,
-    // borderColor: "#EF767A",
-    // borderWidth: 1,
     padding: 5,
   },
   subTitle: {
