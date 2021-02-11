@@ -22,9 +22,10 @@ export default function HealthStatsScreen({ navigation }) {
 
   const displayButtons = (rangeButtons) => {
     return rangeButtons.map((singleButton) => {
+      console.log('single button----->', singleButton)
       return (
         <Button
-          // key={}
+          key={singleButton}
           title={`${singleButton}`}
           onPress={() => rangeClickHandler(singleButton)}
         >

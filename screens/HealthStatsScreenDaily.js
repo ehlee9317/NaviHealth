@@ -9,6 +9,7 @@ import {
   VictoryTooltip,
   VictoryGroup,
   VictoryLegend,
+  VictoryVoronoiContainer
 } from 'victory-native';
 import * as firebase from 'firebase';
 import {
@@ -22,8 +23,6 @@ export default function DailyHealthStatsScreen({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
   const [calorieData, setCalorieData] = useState([]);
   const [actualsCalorieData, setActualsData] = useState([]);
-  // const [caloriesByWeek, setWeekTotals] = useState({})
-  // const [weekCalorieData, setWeekCalorieData] = useState({})
 
   // sets beginning date to current day at midnight:
   let beginningDate = new Date().setHours(0, 0, 0, 0);
@@ -72,6 +71,17 @@ export default function DailyHealthStatsScreen({ navigation }) {
             height={400}
             theme={VictoryTheme.material}
             domainPadding={40}
+            containerComponent={
+              <VictoryVoronoiContainer
+              labels={(d) => {
+                return `${d.datum.calories}\n${d.datum.date}`;
+                // return `${d.datum.calories}`;
+              }}
+                labelComponent={
+                  <VictoryTooltip   constrainToVisibleArea style={{fontSize: 13}} />
+                }
+              />
+            }
           >
             <VictoryLegend
               x={125}
@@ -98,7 +108,7 @@ export default function DailyHealthStatsScreen({ navigation }) {
                 axisLabel: { fontSize: 16 },
                 ticks: { stroke: '#000' },
                 tickLabels: {
-                  // fill: "transparent",
+                  fill: "transparent",
                   fontSize: 12,
                   padding: 1,
                   angle: 45,
@@ -107,16 +117,16 @@ export default function DailyHealthStatsScreen({ navigation }) {
                 },
               }}
             />
-            <VictoryGroup offset={30} colorScale={'qualitative'}>
+            <VictoryGroup offset={25} colorScale={'qualitative'}>
               <VictoryBar
                 data={calorieData}
                 style={{data: { fill: "#456990" }}}
                 x='date'
                 y='calories'
-                labels={(d) => {
-                  // return `${d.datum.calories}\n${d.datum.date}`;
-                  return `${d.datum.calories}`;
-                }}
+                // labels={(d) => {
+                //   // return `${d.datum.calories}\n${d.datum.date}`;
+                //   return `${d.datum.calories}`;
+                // }}
                 // labelComponent={<VictoryTooltip style={{fontSize: 15}}/>}
               />
               <VictoryBar
@@ -124,17 +134,17 @@ export default function DailyHealthStatsScreen({ navigation }) {
                 style={{data: { fill: "#EF767A" }}}
                 x='date'
                 y='calories'
-                labels={(d) => {
-                  // return `${d.datum.calories}\n${d.datum.date}`;
-                  return `${d.datum.calories}`;
-                }}
+                // labels={(d) => {
+                //   // return `${d.datum.calories}\n${d.datum.date}`;
+                //   return `${d.datum.calories}`;
+                // }}
                 // labelComponent={<VictoryTooltip style={{fontSize: 15}}/>}
               />
             </VictoryGroup>
           </VictoryChart>
         )}
         <View style={{margin: 50}}>
-          <Text>TOTAL CALORIES BURNED: {totalCalories(actualsCalorieData)}</Text>
+          <Text style={styles.statsBox}>TOTAL CALORIES BURNED: {totalCalories(actualsCalorieData)}</Text>
         </View>
       </View>
 
@@ -147,4 +157,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  statsBox: {
+    fontSize: 16,
+    borderColor: "#EF767A",
+    borderWidth: 1,
+    padding: 10
+  }
 });
