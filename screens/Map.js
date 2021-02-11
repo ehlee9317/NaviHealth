@@ -705,27 +705,6 @@ export default class Map extends Component {
       )
     );
 
-    const toggleCategories = [
-      {
-        name: "subway",
-        icon: (
-          <Icon name="ios-subway-outline" size={18} style={styles.chipsIcon} />
-        ),
-      },
-      {
-        name: "walk",
-        icon: (
-          <Icon name="ios-walk-outline" size={18} style={styles.chipsIcon} />
-        ),
-      },
-      {
-        name: "bike",
-        icon: (
-          <Icon name="ios-bicycle-outline" size={18} style={styles.chipsIcon} />
-        ),
-      },
-    ];
-
     return (
       <View style={styles.container}>
         <MapView
@@ -918,7 +897,11 @@ export default class Map extends Component {
             >
               {/* {toggleCategories.map((category, index) => */}
               <TouchableOpacity
-                style={styles.chipsItem}
+                style={
+                  this.state.navigationMode === "subway"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
                 onPress={() => (
                   this.setState({
                     navigationMode: "subway",
@@ -934,12 +917,28 @@ export default class Map extends Component {
                 <Icon
                   name="ios-subway-outline"
                   size={18}
-                  style={styles.chipsIcon}
+                  style={
+                    this.state.navigationMode === "subway"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
                 />
-                <Text>subway</Text>
+                <Text
+                  style={
+                    this.state.navigationMode === "subway"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  subway
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.chipsItem}
+                style={
+                  this.state.navigationMode === "walk"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
                 onPress={() => (
                   this.setState({
                     navigationMode: "walk",
@@ -955,12 +954,28 @@ export default class Map extends Component {
                 <Icon
                   name="ios-walk-outline"
                   size={18}
-                  style={styles.chipsIcon}
+                  style={
+                    this.state.navigationMode === "walk"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
                 />
-                <Text>walk</Text>
+                <Text
+                  style={
+                    this.state.navigationMode === "walk"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  walk
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.chipsItem}
+                style={
+                  this.state.navigationMode === "bike"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
                 onPress={() => (
                   this.setState({
                     navigationMode: "bike",
@@ -976,9 +991,21 @@ export default class Map extends Component {
                 <Icon
                   name="ios-bicycle-outline"
                   size={18}
-                  style={styles.chipsIcon}
+                  style={
+                    this.state.navigationMode === "bike"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
                 />
-                <Text>bike</Text>
+                <Text
+                  style={
+                    this.state.navigationMode === "bike"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  bike
+                </Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -1113,6 +1140,10 @@ const styles = StyleSheet.create({
   },
   chipsIcon: {
     marginRight: 5,
+  },
+  clickedChipsIcon: {
+    marginRight: 5,
+    color: "white",
   },
   chipsItem: {
     flexDirection: "row",
@@ -1284,7 +1315,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     borderColor: "#49BEAA",
     marginLeft: "1%",
-    marginTop: "1%"
+    marginTop: "1%",
   },
   yourLocationIconContainer: {
     borderRadius: 100,
