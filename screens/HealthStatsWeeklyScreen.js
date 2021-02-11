@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Image,
+} from "react-native";
 import {
   VictoryBar,
   VictoryChart,
@@ -77,7 +84,7 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
 
   return isLoading ? (
     <SafeAreaView>
-      <Text>Loading</Text>
+      <Text fontSize={30}>Loading</Text>
     </SafeAreaView>
   ) : (
     <SafeAreaView>
@@ -167,15 +174,14 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
       <View style={styles.statMainContainer}>
         <View style={styles.statContainer}>
           <Icon name="ios-checkmark-outline" style={styles.checkmark} />
-          <Text style={styles.statText}>
-            TOTAL CALORIES BURNED: {totalCalories(calorieData)}
-          </Text>
+          <Text style={styles.statText}>TOTAL CALORIES BURNED:</Text>
+          <Text style={styles.statNumber}>{totalCalories(calorieData)} kcal</Text>
         </View>
         <View style={styles.statContainer}>
           <Icon name="ios-checkmark-outline" style={styles.checkmark} />
-          <Text style={styles.statText}>
-            AVERAGE DAILY CALORIES BURNED:{" "}
-            {Math.round(totalCalories(calorieData) / 7)}
+          <Text style={styles.statText}>AVG DAILY CALORIES BURNED:</Text>
+          <Text style={styles.statNumber}>
+            {Math.round(totalCalories(calorieData) / 7)} kcal
           </Text>
         </View>
       </View>
@@ -217,6 +223,11 @@ const styles = StyleSheet.create({
   statText: {
     fontSize: 16,
     padding: 5,
+  },
+  statNumber: {
+    fontSize: 19,
+    fontWeight: "700",
+    padding: 3,
   },
   subTitle: {
     fontSize: 20,

@@ -172,15 +172,16 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
       <View style={styles.statMainContainer}>
         <View style={styles.statContainer}>
           <Icon name="ios-checkmark-outline" style={styles.checkmark} />
-          <Text style={styles.statText}>
-            TOTAL CALORIES BURNED: {totalCalories(calorieData)}
-          </Text>
+          <Text style={styles.statText}>TOTAL CALORIES BURNED:</Text>
+          <Text style={styles.statNumber}>{totalCalories(calorieData)} kcal</Text>
         </View>
         <View style={styles.statContainer}>
           <Icon name="ios-checkmark-outline" style={styles.checkmark} />
           <Text style={styles.statText}>
-            AVERAGE DAILY CALORIES BURNED:{" "}
-            {Math.round(totalCalories(calorieData) / 30)}
+            AVG DAILY CALORIES BURNED:
+          </Text>
+          <Text style={styles.statNumber}>
+            {Math.round(totalCalories(calorieData) / 30)} kcal
           </Text>
         </View>
       </View>
@@ -222,6 +223,11 @@ const styles = StyleSheet.create({
   statText: {
     fontSize: 16,
     padding: 5,
+  },
+  statNumber: {
+    fontSize: 19,
+    fontWeight: "700",
+    padding: 3,
   },
   subTitle: {
     fontSize: 20,

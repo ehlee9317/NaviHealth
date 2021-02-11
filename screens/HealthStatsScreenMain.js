@@ -13,7 +13,7 @@ import DailyHealthStatsScreen from "./HealthStatsScreenDaily";
 import WeeklyHealthStatsScreen from "./HealthStatsWeeklyScreen";
 import MonthlyHealthStatsScreen from "./HealthStatsMonthlyScreen";
 
-export default function HealthStatsScreen({ navigation }) {
+export default function HealthStatsScreen() {
   const [buttonLabel, setButtonLabel] = useState({});
   const buttonNames = ["Day", "Week", "Month"];
 
@@ -28,22 +28,7 @@ export default function HealthStatsScreen({ navigation }) {
     }
   };
 
-  const displayButtons = (rangeButtons) => {
-    // return rangeButtons.map((singleButton) => {
-    //   console.log("single button----->", singleButton);
-    //   return (
-    //     <View>
-    //       <TouchableOpacity
-    //         key={singleButton}
-    //         // title={`${singleButton}`}
-    //         style={buttonLabel === "Month" ? styles.buttonLine : styles.button}
-    //         onPress={() => rangeClickHandler(singleButton)}
-    //       >
-    //         <Text>{singleButton}</Text>
-    //       </TouchableOpacity>
-    //     </View>
-    //   );
-    // });
+  const displayButtons = () => {
     return (
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -88,8 +73,6 @@ export default function HealthStatsScreen({ navigation }) {
           )}
         </View>
       </View>
-
-      {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
     </SafeAreaView>
   );
 }
@@ -115,7 +98,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // justifyContent: "space-around",
     // display: "flex",
-    marginBottom: "2%",
+    marginBottom: "1.5%",
     marginLeft: "3%",
     // padding: "5%",
     justifyContent: "center",
@@ -131,24 +114,25 @@ const styles = StyleSheet.create({
     // color: "blue"
   },
   buttonLine: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 1.5,
     justifyContent: "center",
     alignItems: "center",
-    padding: ".5%"
+    padding: ".5%",
+    borderBottomColor: "#456990",
     // justifyContent: "space-around",
 
     // color: "black"
   },
   buttonText: {
     marginRight: "10%",
-    // padding: "3%",
+    // fontWeight: "",
     fontSize: 18,
-
+    fontWeight: "600"
+    // marginLeft: "2%"
     // width: 50,
     // backgroundColor: "black"
     // marginLeft: "2%"
     // borderWidth: 1,
-    borderTopWidth: 1,
     // borderBottomWidth: 1,
     // borderBottomColor: "red",
   },

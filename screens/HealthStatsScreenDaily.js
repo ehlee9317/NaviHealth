@@ -151,9 +151,10 @@ export default function DailyHealthStatsScreen({ navigation }) {
       </View>
       <Text style={styles.subTitle}>SUMMARY</Text>
       <View style={styles.statContainer}>
-        <Icon name="ios-checkmark-outline" style={styles.checkmark}/>
-        <Text style={styles.statText}>
-          TOTAL CALORIES BURNED: {totalCalories(actualsCalorieData)}
+        <Icon name="ios-checkmark-outline" style={styles.checkmark} />
+        <Text style={styles.statText}>TOTAL CALORIES BURNED:</Text>
+        <Text style={styles.statNumber}>
+          {totalCalories(actualsCalorieData)} kcal
         </Text>
       </View>
     </SafeAreaView>
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
-    marginBottom: "10%"
+    marginBottom: "10%",
   },
   checkmark: {
     fontSize: 26,
@@ -191,6 +192,11 @@ const styles = StyleSheet.create({
   statText: {
     fontSize: 16,
     padding: 5,
+  },
+  statNumber: {
+    fontSize: 19,
+    fontWeight: "700",
+    padding: 3,
   },
   subTitle: {
     fontSize: 20,
