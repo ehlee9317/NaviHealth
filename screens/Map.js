@@ -437,6 +437,20 @@ export default class Map extends Component {
     this.setState({
       routingMode: true,
     });
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        if (this.map) {
+          this.map.animateToRegion({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          });
+        }
+      },
+      (error) => alert("Error: Are location services on?"),
+      { enableHighAccuracy: true }
+    );
     this.timerStart();
   }
   stopNaviHandler() {
