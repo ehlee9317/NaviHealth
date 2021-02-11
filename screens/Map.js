@@ -19,6 +19,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { google } from 'google-maps'
 
 export default class Map extends Component {
   constructor(props) {
@@ -337,6 +338,10 @@ export default class Map extends Component {
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
+            // console.log(
+            //   "json onchangeYourLocation---->",
+            //   json
+            // );
       this.setState({
         yourLocationPredictions: json.predictions,
       });
@@ -345,6 +350,15 @@ export default class Map extends Component {
     }
   }
 
+  //CURRENT LOCATION PLACES_ID REVERT
+
+  // async getCurrentLocationPlaceId() {
+  //   const currentPlaceIdUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude}, ${this.state.longitude}&destination=null, null&mode=walk&key=${GOOGLE_API_KEY}`
+  //   const currentPlaceIdResponse = await fetch(currentPlaceIdUrl)
+  //   const currentPlaceIdJson = await currentPlaceIdResponse.json();
+
+  //   console.log('currentPlaceIdJson---->', currentPlaceIdJson)
+  // }
   //CITI BIKE API CALLS
 
   async getCitiBikeData() {
@@ -927,6 +941,8 @@ export default class Map extends Component {
                   size={22}
                   style={styles.icon}
                   color={"#2452F9"}
+                  onPress={() => {                    
+                    this.getRouteDirections(null, this.state.destinationPlaceId, null, this.state.destination), this.setState({yourLocation: "", yourLocationPlaceId: null})}}
                 />
               </View>
               <View style={{ flex: 1 }}>
