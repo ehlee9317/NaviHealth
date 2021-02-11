@@ -168,16 +168,20 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
         </VictoryChart>
       </View>
       <Text style={styles.subTitle}>SUMMARY</Text>
-      <View style={styles.statContainer}>
-        <Icon name="ios-checkmark-outline" style={styles.checkmark} />
-        <Text style={styles.statText}>
-          TOTAL CALORIES BURNED: {totalCalories(calorieData)}
-        </Text>
-        <Icon name="ios-checkmark-outline" style={styles.checkmark} />
-        <Text style={styles.statText}>
-          AVERAGE DAILY CALORIES BURNED:{" "}
-          {Math.round(totalCalories(calorieData) / 30)}
-        </Text>
+      <View style={styles.statMainContainer}>
+        <View style={styles.statContainer}>
+          <Icon name="ios-checkmark-outline" style={styles.checkmark} />
+          <Text style={styles.statText}>
+            TOTAL CALORIES BURNED: {totalCalories(calorieData)}
+          </Text>
+        </View>
+        <View style={styles.statContainer}>
+          <Icon name="ios-checkmark-outline" style={styles.checkmark} />
+          <Text style={styles.statText}>
+            AVERAGE DAILY CALORIES BURNED:{" "}
+            {Math.round(totalCalories(calorieData) / 30)}
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -185,9 +189,6 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     backgroundColor: "white",
     borderRadius: 20,
     width: 380,
@@ -198,12 +199,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 5,
   },
-  statContainer: {
+  statMainContainer: {
     backgroundColor: "white",
     width: 380,
     height: 100,
     borderRadius: 20,
-    flexDirection: "row",
+    // flexDirection: "row",
     padding: "5%",
     shadowColor: "#ccc",
     shadowOffset: { width: 0, height: 3 },
@@ -211,14 +212,15 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     marginBottom: "10%",
   },
+  statContainer: {
+    flexDirection: "row",
+  },
   checkmark: {
     fontSize: 26,
     color: "black",
   },
   statText: {
     fontSize: 16,
-    // borderColor: "#EF767A",
-    // borderWidth: 1,
     padding: 5,
   },
   subTitle: {
