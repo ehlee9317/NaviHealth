@@ -8,8 +8,6 @@ import SignUp from "./screens/SignUp";
 import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MainTabScreen from "./screens/MainTabScreen";
-import HealthStatsScreen from "./screens/HealthStatsScreen";
-import WeeklyHealthStatsScreen from "./screens/HealthStatsWeeklyScreen";
 import Directions from "./screens/Directions";
 import {LogBox} from 'react-native'
 
