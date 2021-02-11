@@ -8,6 +8,7 @@ import {
   ScrollView,
   Keyboard,
   SafeAreaView,
+  Alert, 
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { loggingOut } from "../api/firebaseMethods";
@@ -27,29 +28,7 @@ const SettingScreen = ({ navigation }) => {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
 
-  // useEffect(() => {
-  //   async function getUserInfo() {
-  //     try {
-  //       let doc = await db.collection("users").doc(currentUserUID).get();
-
-  //       if (!doc.exists) {
-  //         Alert.alert("No user data found!");
-  //       } else {
-  //         let dataObj = doc.data();
-  //         setFirstName(dataObj.firstName);
-  //         setLastName(dataObj.lastName);
-  //         setHeight(dataObj.height);
-  //         setWeight(dataObj.weight);
-  //         setDateOfBirth(dataObj.dateOfBirth);
-  //         setEmail(dataObj.email);
-
-  //       }
-  //     } catch (error) {
-  //       console.log("something went wrong");
-  //     }
-  //   }
-  //   getUserInfo();
-  // }, [])
+  
   useEffect(() => {
     const unsubscribe = db
       .collection("users")
@@ -64,17 +43,11 @@ const SettingScreen = ({ navigation }) => {
           setWeight(dataObj.weight);
           setDateOfBirth(dataObj.dateOfBirth);
           setEmail(dataObj.email);
-          setPassword(dataObj.password)
+          setPassword(dataObj.password);
         }
-        // err => {
-        //   // setError(err)
-        // }
+       
       );
-
-    // returning the unsubscribe function will ensure that
-    // we unsubscribe from document changes when our id
-    // changes to a different value.
-    return () => unsubscribe();
+     return () => unsubscribe();
   }, []);
 
   const emptyState = () => {
@@ -108,35 +81,23 @@ const SettingScreen = ({ navigation }) => {
     navigation.replace("Home");
   };
   const handleUpdate = () => {
-    // console.log(dataObj)
-    // if (!firstName) {
-    //   firstName = dataObj.firstName
-    // } else if (!email) {
-    //   email = dataObj.email
-    // } else if (!dateOfBirth) {
-    //   dateOfBirth = dataObj.dateOfBirth
-    // } else if (!weight) {
-    //   weight = dataObj.weight
-    // } else if (!height) {
-    //   height = dataObj.height
-    // } else if (!password) {
-    //   password = dataObj.password
-    // } else if (password !== confirmPassword) {
+    //  if (password !== confirmPassword) {
     //   Alert.alert("Password does not match!");
     // } else {
-    updateProfile(
-      email,
-      password,
-      lastName,
-      dateOfBirth,
-      firstName,
-      weight,
-      height
-    );
+      updateProfile(
+        email,
+        password,
+        lastName,
+        dateOfBirth,
+        firstName,
+        weight,
+        height
+      );
 
-    navigation.navigate("Profile");
-    emptyState();
-    // }
+      navigation.navigate("Profile");
+      emptyState();
+      // }
+    
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -254,11 +215,11 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 22,
     color: "#f7fff7",
+    fontWeight: "bold",
   },
   inputContainer: {
     justifyContent: "center",
     alignItems: "center",
-    
   },
   input: {
     borderColor: "#456990",
@@ -279,7 +240,7 @@ const styles = StyleSheet.create({
     // paddingBottom: 30
   },
   signUpText: {
-    fontSize: 14,
+    fontSize: 18,
     textAlign: "center",
     color: "white",
     fontWeight: "bold",
@@ -293,13 +254,13 @@ const styles = StyleSheet.create({
   logOut: {
     marginTop: "5%",
     backgroundColor: "#EF767A",
-    padding: "4%",
-    borderRadius: 5,
+    padding: "3%",
+    borderRadius: 6,
   },
   logOutText: {
     color: "white",
     fontSize: 18,
-    fontWeight:"bold",
+    fontWeight: "bold",
   },
 });
 
