@@ -56,13 +56,17 @@ export default function Direction ({route, navigation}){
   }
   
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+    <View>
       <Text>Directions</Text>
-      {
-      finalDirectionsArr.map((elem, index) => <View key={index}>
-        <Text>{`${index}. `}{elem}</Text></View>)}
-      <Button title="Back to Map" onPress={backMap} />
     </View>
+    <View>
+      {
+        finalDirectionsArr.map((elem, index) => <View key={index}>
+        <Text style={styles.direction}>{`${index+1}. `}{elem}</Text></View>)}
+    </View>
+      <Button title="Back to Map" onPress={backMap} />
+    </SafeAreaView>
   );
 };
 
@@ -74,6 +78,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   direction: {
-      padding:20,
+      padding:10,
   }
 });
