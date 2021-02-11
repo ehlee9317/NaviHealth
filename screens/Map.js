@@ -19,7 +19,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { color } from "react-native-reanimated";
 
 export default class Map extends Component {
   constructor(props) {
@@ -280,6 +279,8 @@ export default class Map extends Component {
         // console.log(json.routes[0].legs[0].duration.value);
 
         const directionsArr = json.routes[0].legs[0].steps;
+        console.log('bike mode--->', json.routes[0].legs[0].steps)
+        console.log('this.state.navigationMode in bike--->', this.state.navigationMode)
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -522,6 +523,7 @@ export default class Map extends Component {
     startingName,
     destinationName
   ) {
+    console.log('bikeModeHandler pressed -->')
     try {
       let apiUrl;
       if (yourLocationPlaceId) {
@@ -535,6 +537,7 @@ export default class Map extends Component {
       // console.log('startingName in getRouteDirection---->', startingName)
       // console.log("destinationName in getRouteDirection---->", destinationName);
       const directionsArr = json.routes[0].legs[0].steps;
+      console.log('directionsArr in bike--->', directionsArr)
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -922,21 +925,26 @@ export default class Map extends Component {
                     onPress={() => (
                       console.log("button pressed"),
                       this.setState({ navigationMode: category.name }),
-                      this.navigationMode === "walk"
+                      console.log('categoryName1--->', category.name),
+                      console.log(
+                        "this.state.NavigationMode----> touch",
+                        this.state.navigationMode
+                      ),
+                      this.state.navigationMode === "walk"
                         ? this.walkModeHandler(
                             this.state.yourLocationPlaceId,
                             this.state.destinationPlaceId,
                             this.state.yourLocation,
                             this.state.destination
                           )
-                        : (this.navigationMode = "subway"
+                        : (this.state.navigationMode = "subway"
                             ? this.subwayModeHandler(
                                 this.state.yourLocationPlaceId,
                                 this.state.destinationPlaceId,
                                 this.state.yourLocation,
                                 this.state.destination
                               )
-                            : this.navigationMode === "bike"
+                            : this.state.navigationMode === "bike"
                             ? this.bikeModeHandler(
                                 this.state.yourLocationPlaceId,
                                 this.state.destinationPlaceId,
@@ -956,6 +964,11 @@ export default class Map extends Component {
                     onPress={() => (
                       console.log("button pressed"),
                       this.setState({ navigationMode: category.name }),
+                      console.log('categoryName2--->', category.name),
+                      console.log(
+                        "this.state.NavigationMode----> touch2",
+                        this.state.navigationMode
+                      ),
                       this.navigationMode === "walk"
                         ? this.walkModeHandler(
                             this.state.yourLocationPlaceId,
