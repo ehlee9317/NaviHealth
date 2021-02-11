@@ -154,7 +154,7 @@ export default function DailyHealthStatsScreen({ navigation }) {
         <Icon name="ios-checkmark-outline" style={styles.checkmark} />
         <Text style={styles.statText}>TOTAL CALORIES BURNED:</Text>
         <Text style={styles.statNumber}>
-          {totalCalories(actualsCalorieData)} kcal
+          {totalCalories(actualsCalorieData)} cal
         </Text>
       </View>
     </SafeAreaView>

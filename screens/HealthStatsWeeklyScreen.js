@@ -175,13 +175,13 @@ export default function WeeklyHealthStatsScreen({ navigation }) {
         <View style={styles.statContainer}>
           <Icon name="ios-checkmark-outline" style={styles.checkmark} />
           <Text style={styles.statText}>TOTAL CALORIES BURNED:</Text>
-          <Text style={styles.statNumber}>{totalCalories(calorieData)} kcal</Text>
+          <Text style={styles.statNumber}>{totalCalories(calorieData)} cal</Text>
         </View>
         <View style={styles.statContainer}>
           <Icon name="ios-checkmark-outline" style={styles.checkmark} />
           <Text style={styles.statText}>AVG DAILY CALORIES BURNED:</Text>
           <Text style={styles.statNumber}>
-            {Math.round(totalCalories(calorieData) / 7)} kcal
+            {Math.round(totalCalories(calorieData) / 7)} cal
           </Text>
         </View>
       </View>
