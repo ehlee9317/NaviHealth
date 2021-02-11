@@ -365,7 +365,7 @@ export default class Map extends Component {
             result.push({
               location: {
                 latitude: elem.lat,
-                longitude: elem.long
+                longitude: elem.lon
               },
               name: elem.name,
               bikesAvailable: currObj.num_bikes_available
@@ -386,7 +386,7 @@ export default class Map extends Component {
       this.setState({
         citiBikeStationsData: result
       })
-      console.log('citiBikeStationsData---->', this.state.citiBikeStationsData)
+      // console.log('citiBikeStationsData---->', this.state.citiBikeStationsData)
       // console.log('Locationresponse---->', locationResponse)
       // console.log("Statusresponse---->", statusResponse);
     } catch (err) {
