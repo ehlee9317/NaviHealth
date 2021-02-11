@@ -52,7 +52,7 @@ export default function HealthStatsScreen() {
         </TouchableOpacity>
       </View>
     );
-
+    }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
@@ -75,6 +75,7 @@ export default function HealthStatsScreen() {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
