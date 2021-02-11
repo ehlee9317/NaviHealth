@@ -19,7 +19,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { color } from "react-native-reanimated";
 
 export default class Map extends Component {
   constructor(props) {
@@ -167,7 +166,6 @@ export default class Map extends Component {
     startingName,
     destinationName
   ) {
-    //to refractor...
     if (this.state.navigationMode === "walk") {
       try {
         let apiUrl;
@@ -233,6 +231,56 @@ export default class Map extends Component {
         // console.log(json.routes[0].legs[0].duration.value);
         // console.log(json.routes[0].legs[0].steps);
         const directionsArr = json.routes[0].legs[0].steps;
+        const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+        const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
+        const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+        const pointCoords = points.map((point) => {
+          return { latitude: point[0], longitude: point[1] };
+        });
+        this.setState({
+          pointCoords,
+          predictions: [],
+          yourLocationPredictions: [],
+          estimatedDistance: estimatedDistance,
+          estimatedDuration: estimatedDuration,
+          directions: directionsArr,
+        });
+        destinationName
+          ? this.setState({
+              destination: destinationName,
+            })
+          : this.setState({
+              yourLocation: startingName,
+            });
+        //  console.log('destination in getRoute ---->', this.state.destination)
+        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+        Keyboard.dismiss();
+        this.map.fitToCoordinates(pointCoords, {
+          edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+          animated: true,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    } else if (this.state.navigationMode === "bike") {
+      try {
+        let apiUrl;
+        if (yourLocationPlaceId) {
+          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourLocationPlaceId}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
+        } else {
+          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
+        }
+        // console.log("apiUrl----->", apiUrl);
+        const response = await fetch(apiUrl);
+        const json = await response.json();
+        // console.log('startingName in getRouteDirection---->', startingName)
+        // console.log("destinationName in getRouteDirection---->", destinationName);
+        // console.log(json.routes[0].legs[0].distance.value);
+        // console.log(json.routes[0].legs[0].duration.value);
+
+        const directionsArr = json.routes[0].legs[0].steps;
+        console.log('bike mode--->', json.routes[0].legs[0].steps)
+        console.log('this.state.navigationMode in bike--->', this.state.navigationMode)
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -360,7 +408,7 @@ export default class Map extends Component {
     this.timerClear();
   }
 
-  //SUBWAY + WALK MODE Handlers
+  //SUBWAY + WALK + BIKE MODE Handlers
 
   async subwayModeHandler(
     yourLocationPlaceId,
@@ -436,6 +484,59 @@ export default class Map extends Component {
       // console.log('startingName in getRouteDirection---->', startingName)
       // console.log("destinationName in getRouteDirection---->", destinationName);
       const directionsArr = json.routes[0].legs[0].steps;
+      const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+      const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
+      const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+      const pointCoords = points.map((point) => {
+        return { latitude: point[0], longitude: point[1] };
+      });
+      this.setState({
+        pointCoords,
+        predictions: [],
+        yourLocationPredictions: [],
+        estimatedDistance: estimatedDistance,
+        estimatedDuration: estimatedDuration,
+        directions: directionsArr,
+      });
+      destinationName
+        ? this.setState({
+            destination: destinationName,
+          })
+        : this.setState({
+            yourLocation: startingName,
+          });
+      //  console.log('destination in getRoute ---->', this.state.destination)
+      //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+      Keyboard.dismiss();
+      this.map.fitToCoordinates(pointCoords, {
+        edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+        animated: true,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async bikeModeHandler(
+    yourLocationPlaceId,
+    destinationPlaceId,
+    startingName,
+    destinationName
+  ) {
+    try {
+      let apiUrl;
+      if (yourLocationPlaceId) {
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourLocationPlaceId}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
+      } else {
+        apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
+      }
+      // console.log("apiUrl----->", apiUrl);
+      const response = await fetch(apiUrl);
+      const json = await response.json();
+      // console.log('startingName in getRouteDirection---->', startingName)
+      // console.log("destinationName in getRouteDirection---->", destinationName);
+      const directionsArr = json.routes[0].legs[0].steps;
+      console.log('directionsArr in bike--->', directionsArr)
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -584,7 +685,7 @@ export default class Map extends Component {
         <TouchableHighlight
           key={prediction.place_id}
           onPress={() => {
-            this.getRouteDirections(
+            this.walkModeHandler(
               prediction.place_id,
               this.state.destinationPlaceId,
               prediction.structured_formatting.main_text,
@@ -603,27 +704,6 @@ export default class Map extends Component {
         </TouchableHighlight>
       )
     );
-
-    const toggleCategories = [
-      {
-        name: "subway",
-        icon: (
-          <Icon name="ios-subway-outline" size={18} style={styles.chipsIcon} />
-        ),
-      },
-      {
-        name: "walk",
-        icon: (
-          <Icon name="ios-walk-outline" size={18} style={styles.chipsIcon} />
-        ),
-      },
-      {
-        name: "bike",
-        icon: (
-          <Icon name="ios-bicycle-outline" size={18} style={styles.chipsIcon} />
-        ),
-      },
-    ];
 
     return (
       <View style={styles.container}>
@@ -722,6 +802,12 @@ export default class Map extends Component {
                 );
               }
             })
+          ) : this.state.navigationMode === "bike" ? (
+            <Polyline
+              coordinates={this.state.pointCoords}
+              strokeWidth={4}
+              strokeColor="#6AB3D9"
+            />
           ) : (
             ""
           )}
@@ -809,64 +895,118 @@ export default class Map extends Component {
               height={100}
               style={styles.chipsScrollView}
             >
-              {toggleCategories.map((category, index) =>
-                category.name !== this.state.navigationMode ? (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.chipsItem}
-                    onPress={() => (
-                      console.log("button pressed"),
-                      this.setState({ navigationMode: category.name }),
-                      this.navigationMode === "walk"
-                        ? this.walkModeHandler(
-                            this.state.yourLocationPlaceId,
-                            this.state.destinationPlaceId,
-                            this.state.yourLocation,
-                            this.state.destination
-                          )
-                        : (this.navigationMode = "subway"
-                            ? this.subwayModeHandler(
-                                this.state.yourLocationPlaceId,
-                                this.state.destinationPlaceId,
-                                this.state.yourLocation,
-                                this.state.destination
-                              )
-                            : "")
-                    )}
-                  >
-                    {category.icon}
-                    <Text>{category.name}</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.clickedChipsItem}
-                    onPress={() => (
-                      console.log("button pressed"),
-                      this.setState({ navigationMode: category.name }),
-                      this.navigationMode === "walk"
-                        ? this.walkModeHandler(
-                            this.state.yourLocationPlaceId,
-                            this.state.destinationPlaceId,
-                            this.state.yourLocation,
-                            this.state.destination
-                          )
-                        : (this.navigationMode = "subway"
-                            ? this.subwayModeHandler(
-                                this.state.yourLocationPlaceId,
-                                this.state.destinationPlaceId,
-                                this.state.yourLocation,
-                                this.state.destination
-                              )
-                            : "")
-                    )}
-                  >
-                    {/* <Icon name="ios-list-outline" size={25} color="#0097f5" /> */}
-                    <Icon color="white">{category.icon}</Icon>
-                    <Text style={styles.clickedChipText}>{category.name}</Text>
-                  </TouchableOpacity>
-                )
-              )}
+              {/* {toggleCategories.map((category, index) => */}
+              <TouchableOpacity
+                style={
+                  this.state.navigationMode === "subway"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "subway",
+                  }),
+                  this.subwayModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-subway-outline"
+                  size={18}
+                  style={
+                    this.state.navigationMode === "subway"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "subway"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  subway
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={
+                  this.state.navigationMode === "walk"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "walk",
+                  }),
+                  this.walkModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-walk-outline"
+                  size={18}
+                  style={
+                    this.state.navigationMode === "walk"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "walk"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  walk
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={
+                  this.state.navigationMode === "bike"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "bike",
+                  }),
+                  this.bikeModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-bicycle-outline"
+                  size={18}
+                  style={
+                    this.state.navigationMode === "bike"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "bike"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  bike
+                </Text>
+              </TouchableOpacity>
             </ScrollView>
           </View>
         )}
@@ -1000,6 +1140,10 @@ const styles = StyleSheet.create({
   },
   chipsIcon: {
     marginRight: 5,
+  },
+  clickedChipsIcon: {
+    marginRight: 5,
+    color: "white",
   },
   chipsItem: {
     flexDirection: "row",
@@ -1171,7 +1315,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     borderColor: "#49BEAA",
     marginLeft: "1%",
-    marginTop: "1%"
+    marginTop: "1%",
   },
   yourLocationIconContainer: {
     borderRadius: 100,
