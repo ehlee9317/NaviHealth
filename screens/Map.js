@@ -706,8 +706,13 @@ export default class Map extends Component {
         </Marker>
       );
     }
-    
 
+    // if (this.state.citiBikeStationsData.length > 0) {
+    //   this.state.citiBikeStationsData.map((elem) => {
+    //     <Marker coordinate={elem.location}>
+    //     </Marker>
+    //   })
+    // }
     const predictions = this.state.predictions.map((prediction) => (
       <TouchableHighlight
         key={prediction.place_id}
@@ -866,7 +871,16 @@ export default class Map extends Component {
           ) : (
             ""
           )}
-
+          {this.state.citiBikeStationsData.map((elem) => {
+              return (
+                <Marker
+                  key={elem.name}
+                  coordinate={elem.location}
+                  title={`Station ${elem.name}`}
+                  description={`${String(elem.bikesAvailable)} bikes available!`}
+                ></Marker>
+              );
+          })}
           {marker}
           {locationMarker}
         </MapView>
