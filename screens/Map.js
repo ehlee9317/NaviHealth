@@ -952,12 +952,7 @@ export default class Map extends Component {
 
         <TouchableOpacity
           style={styles.yourLocationButtonContainer}
-          onPress={() => {
-            console.log("Button pressed");
-            this.props.navigation.navigate("Directions", {
-              directions: this.state.directions,
-            });
-          }}
+          onPress={() => this.gotToMyLocation()}
         >
           <View style={styles.yourLocationIconContainer}>
             <Icon name="ios-radio-button-on-outline" size={22} color="white" />
