@@ -937,7 +937,7 @@ export default class Map extends Component {
                                 this.state.destination
                               )
                             : this.navigationMode === "bike"
-                            ? this.walkModeHandler(
+                            ? this.bikeModeHandler(
                                 this.state.yourLocationPlaceId,
                                 this.state.destinationPlaceId,
                                 this.state.yourLocation,
