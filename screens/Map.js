@@ -11,7 +11,7 @@ import {
   ScrollView,
   Button,
 } from "react-native";
-import MapView, { Polyline, Marker } from "react-native-maps";
+import MapView, { Polyline, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GOOGLE_API_KEY } from "../config/keys";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
@@ -87,6 +87,7 @@ export default class Map extends Component {
         "6X": "#00933C",
         7: "#B933AD",
       },
+      citiBikeStationsData: []
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -279,8 +280,8 @@ export default class Map extends Component {
         // console.log(json.routes[0].legs[0].duration.value);
 
         const directionsArr = json.routes[0].legs[0].steps;
-        console.log('bike mode--->', json.routes[0].legs[0].steps)
-        console.log('this.state.navigationMode in bike--->', this.state.navigationMode)
+        // console.log('bike mode--->', json.routes[0].legs[0].steps)
+        // console.log('this.state.navigationMode in bike--->', this.state.navigationMode)
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -341,6 +342,55 @@ export default class Map extends Component {
       });
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  //CITI BIKE API CALLS
+
+  async getCitiBikeData() {
+    const stationLocationUrl = 'https://gbfs.citibikenyc.com/gbfs/en/station_information.json'
+    const stationStatusUrl = 'https://gbfs.citibikenyc.com/gbfs/en/station_status.json'
+    try {
+      const locationResult = await fetch(stationLocationUrl)
+      const statusResult = await fetch(stationStatusUrl);
+      const locationJson = await locationResult.json();
+      const statusJson = await statusResult.json();
+      const locationResponse = locationJson.data.stations
+      const statusResponse = statusJson.data.stations;
+      let result = []
+      locationResponse.map((elem) => {
+        for (let key in statusResponse) {
+          let currObj = statusResponse[key]
+          if (currObj["legacy_id"] === elem.legacy_id) {
+            result.push({
+              location: {
+                latitude: elem.lat,
+                longitude: elem.long
+              },
+              name: elem.name,
+              bikesAvailable: currObj.num_bikes_available
+            })
+          }
+        }
+      //   result.push(
+      //     {
+      //     location: {
+      //       latitude: elem.lat,
+      //       longitude: elem.long,
+      //       },
+      //     name: elem.name,
+      //     bikesAvail: elem.
+          
+      // })
+      })
+      this.setState({
+        citiBikeStationsData: result
+      })
+      console.log('citiBikeStationsData---->', this.state.citiBikeStationsData)
+      // console.log('Locationresponse---->', locationResponse)
+      // console.log("Statusresponse---->", statusResponse);
+    } catch (err) {
+      console.err(err)
     }
   }
 
@@ -536,7 +586,7 @@ export default class Map extends Component {
       // console.log('startingName in getRouteDirection---->', startingName)
       // console.log("destinationName in getRouteDirection---->", destinationName);
       const directionsArr = json.routes[0].legs[0].steps;
-      console.log('directionsArr in bike--->', directionsArr)
+      // console.log('directionsArr in bike--->', directionsArr)
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -565,6 +615,7 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
+      this.getCitiBikeData()
     } catch (error) {
       console.error(error);
     }
@@ -655,6 +706,7 @@ export default class Map extends Component {
         </Marker>
       );
     }
+    
 
     const predictions = this.state.predictions.map((prediction) => (
       <TouchableHighlight
@@ -705,6 +757,9 @@ export default class Map extends Component {
       )
     );
 
+    
+
+
     return (
       <View style={styles.container}>
         <MapView
@@ -733,11 +788,11 @@ export default class Map extends Component {
               // console.log('elem.travel_mode--->',elem.travel_mode)
               // console.log('elem start_location--->', elem.start_location)
               if (elem.travel_mode === "TRANSIT") {
-                console.log("elem transit_details--->", elem.transit_details);
-                console.log(
-                  "elem transit_details.line.short_name--->",
-                  elem.transit_details.line.short_name
-                );
+                // console.log("elem transit_details--->", elem.transit_details);
+                // console.log(
+                //   "elem transit_details.line.short_name--->",
+                //   elem.transit_details.line.short_name
+                // );
                 if (elem.transit_details.line.vehicle.type === "BUS") {
                   return (
                     <View key={index}>
