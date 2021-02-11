@@ -916,90 +916,70 @@ export default class Map extends Component {
               height={100}
               style={styles.chipsScrollView}
             >
-              {toggleCategories.map((category, index) =>
-                category.name !== this.state.navigationMode ? (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.chipsItem}
-                    onPress={() => (
-                      console.log("button pressed"),
-                      this.setState({ navigationMode: category.name }),
-                      console.log('categoryName1--->', category.name),
-                      console.log(
-                        "this.state.NavigationMode----> touch",
-                        this.state.navigationMode
-                      ),
-                      this.navigationMode === "walk"
-                        ? this.walkModeHandler(
-                            this.state.yourLocationPlaceId,
-                            this.state.destinationPlaceId,
-                            this.state.yourLocation,
-                            this.state.destination
-                          )
-                        : (this.navigationMode === "subway"
-                            ? this.subwayModeHandler(
-                                this.state.yourLocationPlaceId,
-                                this.state.destinationPlaceId,
-                                this.state.yourLocation,
-                                this.state.destination
-                              )
-                            : this.navigationMode === "bike"
-                            ? this.bikeModeHandler(
-                                this.state.yourLocationPlaceId,
-                                this.state.destinationPlaceId,
-                                this.state.yourLocation,
-                                this.state.destination
-                              )
-                            : "")
-                    )}
-                  >
-                    {category.icon}
-                    <Text>{category.name}</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.clickedChipsItem}
-                    onPress={() => (
-                      console.log("button pressed"),
-                      this.setState({ 
-                        navigationMode: category.name,
-                       }),
-                      console.log('categoryName2--->', category.name),
-                      console.log(
-                        "this.state.NavigationMode----> touch2",
-                        this.state.navigationMode
-                      ),
-                      this.navigationMode === "walk"
-                        ? this.walkModeHandler(
-                            this.state.yourLocationPlaceId,
-                            this.state.destinationPlaceId,
-                            this.state.yourLocation,
-                            this.state.destination
-                          )
-                        : (this.navigationMode === "subway"
-                            ? this.subwayModeHandler(
-                                this.state.yourLocationPlaceId,
-                                this.state.destinationPlaceId,
-                                this.state.yourLocation,
-                                this.state.destination
-                              )
-                            : (this.navigationMode === "bike"
-                                ? this.bikeModeHandler(
-                                    this.state.yourLocationPlaceId,
-                                    this.state.destinationPlaceId,
-                                    this.state.yourLocation,
-                                    this.state.destination
-                                  )
-                                : ""))
-                    )}
-                  >
-                    {/* <Icon name="ios-list-outline" size={25} color="#0097f5" /> */}
-                    <Icon color="white">{category.icon}</Icon>
-                    <Text style={styles.clickedChipText}>{category.name}</Text>
-                  </TouchableOpacity>
-                )
-              )}
+              {/* {toggleCategories.map((category, index) => */}
+              <TouchableOpacity
+                style={styles.chipsItem}
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "subway",
+                  }),
+                  this.subwayModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-subway-outline"
+                  size={18}
+                  style={styles.chipsIcon}
+                />
+                <Text>subway</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.chipsItem}
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "walk",
+                  }),
+                  this.walkModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-walk-outline"
+                  size={18}
+                  style={styles.chipsIcon}
+                />
+                <Text>walk</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.chipsItem}
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "bike",
+                  }),
+                  this.bikeModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-bicycle-outline"
+                  size={18}
+                  style={styles.chipsIcon}
+                />
+                <Text>bike</Text>
+              </TouchableOpacity>
             </ScrollView>
           </View>
         )}
