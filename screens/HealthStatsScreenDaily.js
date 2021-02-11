@@ -68,8 +68,8 @@ export default function DailyHealthStatsScreen({ navigation }) {
       <View style={styles.container}>
         {calorieData && (
           <VictoryChart
-            width={400}
-            height={400}
+            width={380}
+            height={380}
             theme={VictoryTheme.material}
             domainPadding={40}
             containerComponent={
@@ -99,18 +99,19 @@ export default function DailyHealthStatsScreen({ navigation }) {
             />
             <VictoryAxis
               style={{
-                axis: { stroke: "#000" },
+                axis: { stroke: "#ABB0AC" },
                 axisLabel: { fontSize: 16 },
-                ticks: { stroke: "#000" },
-                grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                ticks: { stroke: "#ABB0AC" },
+                grid: { stroke: "white", strokeWidth: 0.25 },
               }}
               dependentAxis
             />
             <VictoryAxis
               style={{
-                axis: { stroke: "#000" },
+                axis: { stroke: "#ABB0AC" },
                 axisLabel: { fontSize: 16 },
-                ticks: { stroke: "#000" },
+                ticks: { stroke: "#ABB0AC" },
+                grid: { stroke: "white", strokeWidth: 0.25 },
                 tickLabels: {
                   fill: "transparent",
                   fontSize: 12,
@@ -150,9 +151,10 @@ export default function DailyHealthStatsScreen({ navigation }) {
       </View>
       <Text style={styles.subTitle}>SUMMARY</Text>
       <View style={styles.statContainer}>
-        <Icon name="ios-checkmark-outline" style={styles.checkmark}/>
-        <Text style={styles.statText}>
-          TOTAL CALORIES BURNED: {totalCalories(actualsCalorieData)}
+        <Icon name="ios-checkmark-outline" style={styles.checkmark} />
+        <Text style={styles.statText}>TOTAL CALORIES BURNED:</Text>
+        <Text style={styles.statNumber}>
+          {totalCalories(actualsCalorieData)} cal
         </Text>
       </View>
     </SafeAreaView>
@@ -160,9 +162,6 @@ export default function DailyHealthStatsScreen({ navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     backgroundColor: "white",
     borderRadius: 20,
     width: 380,
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
-    marginBottom: "10%"
+    marginBottom: "10%",
   },
   checkmark: {
     fontSize: 26,
@@ -192,9 +191,12 @@ const styles = StyleSheet.create({
   },
   statText: {
     fontSize: 16,
-    // borderColor: "#EF767A",
-    // borderWidth: 1,
     padding: 5,
+  },
+  statNumber: {
+    fontSize: 19,
+    fontWeight: "700",
+    padding: 3,
   },
   subTitle: {
     fontSize: 20,

@@ -6,13 +6,14 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
 } from "react-native";
 
 import DailyHealthStatsScreen from "./HealthStatsScreenDaily";
 import WeeklyHealthStatsScreen from "./HealthStatsWeeklyScreen";
 import MonthlyHealthStatsScreen from "./HealthStatsMonthlyScreen";
 
-export default function HealthStatsScreen({ navigation }) {
+export default function HealthStatsScreen() {
   const [buttonLabel, setButtonLabel] = useState({});
   const buttonNames = ["Day", "Week", "Month"];
 
@@ -26,24 +27,31 @@ export default function HealthStatsScreen({ navigation }) {
       setButtonLabel("Day");
     }
   };
+  
+  const displayButtons = () => {
+    return (
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={buttonLabel === "Day" ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler("Day")}
+        >
+          <Text style={styles.buttonText}>Day</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={buttonLabel === "Week" ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler("Week")}
 
-  const displayButtons = (rangeButtons) => {
-    return rangeButtons.map((singleButton) => {
-      console.log("single button----->", singleButton);
-      return (
-        <View >
-          <TouchableOpacity
-            key={singleButton}
-            // title={`${singleButton}`}
-            onPress={() => rangeClickHandler(singleButton)}
-
-          >
-            <Text style={styles.buttonText}>{singleButton}</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    });
-  };
+        >
+          <Text style={styles.buttonText}>Week</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={buttonLabel === "Month" ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler("Month")}
+        >
+          <Text style={styles.buttonText}>Month</Text>
+        </TouchableOpacity>
+      </View>
+    );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -64,8 +72,6 @@ export default function HealthStatsScreen({ navigation }) {
           )}
         </View>
       </View>
-
-      {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
     </SafeAreaView>
   );
 }
@@ -91,19 +97,46 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // justifyContent: "space-around",
     // display: "flex",
-    marginBottom: "3%",
-    marginLeft: "5%",
-    // padding: "5%"
-  },
-  buttonText:{
-    marginRight: "5%",
-    fontSize: 17,
-    // justifyContent: "center",
+    marginBottom: "1.5%",
+    marginLeft: "3%",
+    // padding: "5%",
+    justifyContent: "center",
     // alignItems: "center",
+  },
+  button: {
+    borderBottomWidth: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: ".5%"
+    // justifyContent: "space-around",
+    // fontSize: 20
+    // color: "blue"
+  },
+  buttonLine: {
+    borderBottomWidth: 1.5,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: ".5%",
+    borderBottomColor: "#456990",
+    // justifyContent: "space-around",
+
+    // color: "black"
+  },
+  buttonText: {
+    marginRight: "10%",
+    // fontWeight: "",
+    fontSize: 18,
+    fontWeight: "600",
+    // marginLeft: "2%"
     // width: 50,
     // backgroundColor: "black"
     // marginLeft: "2%"
-    // borderWidth: 1
+    // borderWidth: 1,
+    // borderBottomWidth: 1,
+    // borderBottomColor: "red",
+    marginBottom: "3%",
+    marginLeft: "5%",
+    // padding: "5%"
   },
   dashboardContainer: {
     // backgroundColor: "white",
