@@ -72,7 +72,12 @@ export async function updateProfile(email, password, lastName, dateOfBirth, firs
   let velocityMilesPerHour = 3
   try {
     const currentUser = await firebase.auth().currentUser;
-    
+    console.log("password--->", password)
+    if(password){
+      
+     currentUser.updatePassword(password)
+
+   }
     
     const db = firebase.firestore();
     await db.collection("users").doc(currentUser.uid).update({
@@ -84,12 +89,6 @@ export async function updateProfile(email, password, lastName, dateOfBirth, firs
       height: height,
       estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(weight, height, velocityMilesPerHour).toFixed(2),
     });
-    if(password.length > 0){
-     currentUser.updatePassword(password)
-
-   }else {
-     return 
-   }
   } catch (err) {
     Alert.alert("Update Failed!", err.message);
   }
