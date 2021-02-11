@@ -172,15 +172,6 @@ const SettingScreen = ({ navigation }) => {
             />
           </View>
 
-          <View style={{ padding: 10 }}>
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChangeText={(password2) => setConfirmPassword(password2)}
-              secureTextEntry={true}
-            />
-          </View>
 
           <TouchableOpacity style={styles.signUpButton} onPress={handleUpdate}>
             <Text style={styles.signUpText}>Update</Text>
