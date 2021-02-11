@@ -242,9 +242,9 @@ const styles = StyleSheet.create({
   },
   signUpBox: {
     backgroundColor: "#EEB868",
-    marginTop: "10%",
+    marginTop: "5%",
     padding: 5,
-    borderRadius: 5,
+    borderRadius: 20,
     width: 280,
     height: 670,
   },
@@ -258,6 +258,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     justifyContent: "center",
     alignItems: "center",
+    
   },
   input: {
     borderColor: "#456990",
@@ -292,12 +293,13 @@ const styles = StyleSheet.create({
   logOut: {
     marginTop: "5%",
     backgroundColor: "#EF767A",
-    padding: 10,
+    padding: "4%",
     borderRadius: 5,
   },
   logOutText: {
     color: "white",
     fontSize: 18,
+    fontWeight:"bold",
   },
 });
 

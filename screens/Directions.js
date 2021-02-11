@@ -95,21 +95,19 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     // marginTop:"10%",
     // backgroundColor: "#49BEAA",
-    padding:20,
+    margin: "3%"
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
+    paddingLeft: "5%"
     
   },
   direction: {
     padding: 15,
     fontWeight: "bold",
     fontSize: 20,
-    borderTopWidth: 1.3,
-    borderBottomWidth: 1.3,
-    borderRadius: 20,
-    // borderColor:"#EEB868",
+    // borderRadius: 20,
     color: "white",
   },
   directionContainer: {
@@ -120,8 +118,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     // backgroundColor: "#49BEAA",
-    marginTop:"10%",
-    padding: 20,
+    margin:"3.5%",
     alignItems:"center",
   },
   backButton: {
