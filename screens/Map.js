@@ -543,7 +543,12 @@ export default class Map extends Component {
       marker = (
         <Marker
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
-        />
+        >
+          <Image
+            source={require("../assets/redmarker.png")}
+            style={styles.markerImage}
+          />
+        </Marker>
       );
       locationMarker = (
         <Marker coordinate={this.state.pointCoords[0]}>
@@ -758,7 +763,7 @@ export default class Map extends Component {
               </TouchableHighlight>
               <View style={{ flex: 1 }}>
                 <Icon
-                  name="ios-radio-button-on-outline"
+                  name="ios-location"
                   size={22}
                   style={styles.icon}
                   color={"#2452F9"}
@@ -1171,7 +1176,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     borderColor: "#49BEAA",
     marginLeft: "1%",
-    marginTop: "1%"
+    marginTop: "1%",
   },
   yourLocationIconContainer: {
     borderRadius: 100,
