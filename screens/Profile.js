@@ -21,26 +21,53 @@ export default function Profile({ navigation }) {
   const [weight, setWeight] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
 
-  useEffect(() => {
-    async function getUserInfo() {
-      try {
-        let doc = await db.collection("users").doc(currentUserUID).get();
+  // useEffect(() => {
+  //   async function getUserInfo() {
+  //     try {
+  //       let doc = await db.collection("users").doc(currentUserUID).get();
 
-        if (!doc.exists) {
-          Alert.alert("No user data found!");
-        } else {
-          let dataObj = doc.data();
-          setFirstName(dataObj.firstName);
-          setHeight(dataObj.height);
-          setWeight(dataObj.weight);
-          setDateOfBirth(dataObj.dateOfBirth);
-        }
-      } catch (error) {
-        console.log("something went wrong");
-      }
-    }
-    getUserInfo();
-  }, []);
+  //       if (!doc.exists) {
+  //         Alert.alert("No user data found!");
+  //       } else {
+  //         let dataObj = doc.data();
+  //         setFirstName(dataObj.firstName);
+  //         setHeight(dataObj.height);
+  //         setWeight(dataObj.weight);
+  //         setDateOfBirth(dataObj.dateOfBirth);
+  //       }
+  //     } catch (error) {
+  //       console.log("something went wrong");
+  //     }
+  //   }
+  //   getUserInfo();
+  // }, []);
+  useEffect(
+    () => {
+      const unsubscribe = db
+        .collection('users')
+        .doc(currentUserUID)
+        .onSnapshot(
+          doc => {
+            console.log("doc data --->", doc.data())
+            let dataObj = doc.data();
+            setFirstName(dataObj.firstName);
+            setHeight(dataObj.height);
+            setWeight(dataObj.weight);
+            setDateOfBirth(dataObj.dateOfBirth);
+           
+          },
+          // err => {
+          //   // setError(err)
+          // }
+        )
+
+      // returning the unsubscribe function will ensure that
+      // we unsubscribe from document changes when our id
+      // changes to a different value.
+      return () => unsubscribe()
+    },
+    []
+  )
 
   const handlePress = () => {
     loggingOut();

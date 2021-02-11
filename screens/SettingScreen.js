@@ -1,12 +1,20 @@
-import React, {useEffect, useState} from "react";
-import { View, Text, Button, StyleSheet, TextInput, ScrollView, Keyboard, SafeAreaView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Keyboard,
+  SafeAreaView,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { loggingOut } from "../api/firebaseMethods";
 import * as firebase from "firebase";
-import {updateProfile} from "../api/firebaseMethods"
+import { updateProfile } from "../api/firebaseMethods";
 
-
-const SettingScreen = ({navigation}) => {
+const SettingScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,15 +26,37 @@ const SettingScreen = ({navigation}) => {
   const [nativeEventKey, setNativeEventKey] = useState("");
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
-  
-  useEffect(() => {
-    async function getUserInfo() {
-      try {
-        let doc = await db.collection("users").doc(currentUserUID).get();
 
-        if (!doc.exists) {
-          Alert.alert("No user data found!");
-        } else {
+  // useEffect(() => {
+  //   async function getUserInfo() {
+  //     try {
+  //       let doc = await db.collection("users").doc(currentUserUID).get();
+
+  //       if (!doc.exists) {
+  //         Alert.alert("No user data found!");
+  //       } else {
+  //         let dataObj = doc.data();
+  //         setFirstName(dataObj.firstName);
+  //         setLastName(dataObj.lastName);
+  //         setHeight(dataObj.height);
+  //         setWeight(dataObj.weight);
+  //         setDateOfBirth(dataObj.dateOfBirth);
+  //         setEmail(dataObj.email);
+
+  //       }
+  //     } catch (error) {
+  //       console.log("something went wrong");
+  //     }
+  //   }
+  //   getUserInfo();
+  // }, [])
+  useEffect(() => {
+    const unsubscribe = db
+      .collection("users")
+      .doc(currentUserUID)
+      .onSnapshot(
+        (doc) => {
+          console.log("doc data --->", doc.data());
           let dataObj = doc.data();
           setFirstName(dataObj.firstName);
           setLastName(dataObj.lastName);
@@ -34,16 +64,19 @@ const SettingScreen = ({navigation}) => {
           setWeight(dataObj.weight);
           setDateOfBirth(dataObj.dateOfBirth);
           setEmail(dataObj.email);
-          
+          setPassword(dataObj.password)
         }
-      } catch (error) {
-        console.log("something went wrong");
-      }
-    }
-    getUserInfo();
-  }, [])
-  
-  
+        // err => {
+        //   // setError(err)
+        // }
+      );
+
+    // returning the unsubscribe function will ensure that
+    // we unsubscribe from document changes when our id
+    // changes to a different value.
+    return () => unsubscribe();
+  }, []);
+
   const emptyState = () => {
     setFirstName("");
     setLastName("");
@@ -53,7 +86,7 @@ const SettingScreen = ({navigation}) => {
     setWeight("");
     setHeight("");
     setDateOfBirth("");
-  }
+  };
 
   const dateOfBirthHandler = (inputtedValue) => {
     let temp = "";
@@ -73,7 +106,7 @@ const SettingScreen = ({navigation}) => {
   const handlePress = () => {
     loggingOut();
     navigation.replace("Home");
-  }
+  };
   const handleUpdate = () => {
     // console.log(dataObj)
     // if (!firstName) {
@@ -91,20 +124,20 @@ const SettingScreen = ({navigation}) => {
     // } else if (password !== confirmPassword) {
     //   Alert.alert("Password does not match!");
     // } else {
-      updateProfile(
-        email,
-        password,
-        lastName,
-        dateOfBirth,
-        firstName,
-        weight,
-        height
-      );
+    updateProfile(
+      email,
+      password,
+      lastName,
+      dateOfBirth,
+      firstName,
+      weight,
+      height
+    );
 
-      navigation.navigate("Profile");
-      emptyState();
-      // }
-  }
+    navigation.navigate("Profile");
+    emptyState();
+    // }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.signUpBox}>
@@ -198,7 +231,7 @@ const SettingScreen = ({navigation}) => {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -208,7 +241,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   signUpBox: {
-    backgroundColor: "#EEB868", 
+    backgroundColor: "#EEB868",
     marginTop: "10%",
     padding: 5,
     borderRadius: 5,
@@ -257,19 +290,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   logOut: {
-    marginTop: "5%", 
-    backgroundColor:"#EF767A",
-    padding:10, 
-    borderRadius:5, 
-   },
-   logOutText: {
-     color: "white",
-     fontSize: 18, 
-   }
+    marginTop: "5%",
+    backgroundColor: "#EF767A",
+    padding: 10,
+    borderRadius: 5,
+  },
+  logOutText: {
+    color: "white",
+    fontSize: 18,
+  },
 });
 
-
-
 export default SettingScreen;
-
-
