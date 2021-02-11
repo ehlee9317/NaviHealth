@@ -19,6 +19,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { google } from 'google-maps'
 
 export default class Map extends Component {
   constructor(props) {
@@ -87,7 +88,8 @@ export default class Map extends Component {
         "6X": "#00933C",
         7: "#B933AD",
       },
-      citiBikeStationsData: []
+      citiBikeStationsData: [],
+      currentLocationPlaceId: "",
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -337,6 +339,10 @@ export default class Map extends Component {
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
+            // console.log(
+            //   "json onchangeYourLocation---->",
+            //   json
+            // );
       this.setState({
         yourLocationPredictions: json.predictions,
       });
@@ -345,6 +351,21 @@ export default class Map extends Component {
     }
   }
 
+  //CURRENT LOCATION PLACES_ID REVERT
+
+  async getCurrentLocationPlaceId() {
+    const currentPlaceIdUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude}, ${this.state.longitude}&destination=null, null&mode=walk&key=${GOOGLE_API_KEY}`
+    const currentPlaceIdResponse = await fetch(currentPlaceIdUrl)
+    const currentPlaceIdJson = await currentPlaceIdResponse.json();
+    // console.log('json--->',currentPlaceIdJson)
+    const currentPlaceIdResult = currentPlaceIdJson.geocoded_waypoints[0].place_id
+    // console.log('currentPlaceIdResult--->', currentPlaceIdResult)
+    this.setState({
+      currentLocationPlaceId: currentPlaceIdResult
+    })
+    console.log('this.state.currentLocationPlaceId--->', currentPlaceIdResult)
+
+  }
   //CITI BIKE API CALLS
 
   async getCitiBikeData() {
@@ -566,6 +587,7 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
+      this.getCurrentLocationPlaceId()
     } catch (error) {
       console.error(error);
     }
