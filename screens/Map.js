@@ -372,16 +372,6 @@ export default class Map extends Component {
             })
           }
         }
-      //   result.push(
-      //     {
-      //     location: {
-      //       latitude: elem.lat,
-      //       longitude: elem.long,
-      //       },
-      //     name: elem.name,
-      //     bikesAvail: elem.
-          
-      // })
       })
       this.setState({
         citiBikeStationsData: result
@@ -615,7 +605,8 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
-      this.getCitiBikeData()
+      //disable comment to enable
+      // this.getCitiBikeData()
     } catch (error) {
       console.error(error);
     }
