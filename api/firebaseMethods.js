@@ -71,8 +71,14 @@ export async function stopNaviFirebaseHandler(actualDistance, actualDuration, ac
 export async function updateProfile(email, password, lastName, dateOfBirth, firstName, weight, height) {
   let velocityMilesPerHour = 3
   try {
-    const currentUser = firebase.auth().currentUser;
+    const currentUser = await firebase.auth().currentUser;
+    console.log("password--->", password)
+    if(password){
+      
+     currentUser.updatePassword(password)
 
+   }
+    
     const db = firebase.firestore();
     await db.collection("users").doc(currentUser.uid).update({
       email:email,
@@ -82,7 +88,7 @@ export async function updateProfile(email, password, lastName, dateOfBirth, firs
       weight: weight,
       height: height,
       estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(weight, height, velocityMilesPerHour).toFixed(2),
-      });
+    });
   } catch (err) {
     Alert.alert("Update Failed!", err.message);
   }

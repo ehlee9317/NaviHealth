@@ -27,7 +27,7 @@ export default function HealthStatsScreen() {
       setButtonLabel("Day");
     }
   };
-
+  
   const displayButtons = () => {
     return (
       <View style={styles.buttonContainer}>
@@ -52,7 +52,6 @@ export default function HealthStatsScreen() {
         </TouchableOpacity>
       </View>
     );
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -127,7 +126,7 @@ const styles = StyleSheet.create({
     marginRight: "10%",
     // fontWeight: "",
     fontSize: 18,
-    fontWeight: "600"
+    fontWeight: "600",
     // marginLeft: "2%"
     // width: 50,
     // backgroundColor: "black"
@@ -135,6 +134,9 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderBottomWidth: 1,
     // borderBottomColor: "red",
+    marginBottom: "3%",
+    marginLeft: "5%",
+    // padding: "5%"
   },
   dashboardContainer: {
     // backgroundColor: "white",

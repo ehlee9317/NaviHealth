@@ -60,7 +60,7 @@ export default function Direction({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <ScrollView>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Directions</Text>
+        <Text style={styles.title}>DIRECTIONS</Text>
       </View>
         <View style={styles.directionContainer}>
           {finalDirectionsArr.map((elem, index) => (
@@ -87,43 +87,43 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     // backgroundColor: "#456990",
+    
   },
   titleContainer:{
     flex:.5, 
-    alignItems:"center",
+    // alignItems:"center",
     justifyContent:"center",
     // marginTop:"10%",
-    backgroundColor: "#49BEAA",
-    padding:20,
+    // backgroundColor: "#49BEAA",
+    margin: "3%"
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
-    color:"white"
+    paddingLeft: "5%"
+    
   },
   direction: {
     padding: 15,
     fontWeight: "bold",
-    fontSize: 16,
-    borderWidth: 1.3,
-    borderRadius: 4,
-    borderColor:"#EEB868",
+    fontSize: 20,
+    // borderRadius: 20,
     color: "white",
   },
   directionContainer: {
     backgroundColor: "#49BEAA",
     justifyContent: "flex-start",
-    marginTop: "6%",
+    margin: "6%",
+    borderRadius: 20,
   },
   buttonContainer: {
-    backgroundColor: "#49BEAA",
-    marginTop:"10%",
-    padding: 20,
+    // backgroundColor: "#49BEAA",
+    margin:"3.5%",
     alignItems:"center",
   },
   backButton: {
     // marginTop:"10%"
-    color:"white",
+    color:"black",
     fontSize:20,
     fontWeight: "bold",
   },
