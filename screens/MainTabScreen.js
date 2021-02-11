@@ -8,9 +8,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Profile from "./Profile";
 import Map from "./Map";
 import SettingScreen from "./SettingScreen";
-import HealthStatsScreen from "./HealthStatsScreen";
-import WeeklyHealthStatsScreen from "./HealthStatsWeeklyScreen";
-import HealthStatsSample from "./HealthStatsScreenMain";
+import HealthStatsScreen from "./HealthStatsScreenMain";
 
 const HomeStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -41,7 +39,7 @@ const MainTabScreen = () => (
     />
     <Tab.Screen
       name="DailyHealthStats"
-      component={HealthStatsSample}
+      component={HealthStatsScreen}
       options={{
         tabBarLabel: "HEALTH",
         tabBarColor: "#456990",
@@ -50,17 +48,6 @@ const MainTabScreen = () => (
         ),
       }}
     />
-    {/* <Tab.Screen
-      name="WeeklyHealthStats"
-      component={WeeklyHealthStatsScreen}
-      options={{
-        tabBarLabel: "HEALTH",
-        tabBarColor: "#456990",
-        tabBarIcon: ({ color }) => (
-          <Icon name="ios-stats-chart" color={color} size={26} />
-        ),
-      }}
-    /> */}
     <Tab.Screen
       name="Setting"
       component={SettingScreen}
