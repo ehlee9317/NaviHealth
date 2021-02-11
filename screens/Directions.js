@@ -57,15 +57,13 @@ export default function Direction ({route, navigation}){
   
   return (
     <SafeAreaView style={styles.container}>
-    <View>
-      <Text>Directions</Text>
-    </View>
-    <View>
+     <Text>Directions</Text>
+    <View style={styles.directionContainer}>
       {
         finalDirectionsArr.map((elem, index) => <View key={index}>
         <Text style={styles.direction}>{`${index+1}. `}{elem}</Text></View>)}
     </View>
-      <Button title="Back to Map" onPress={backMap} />
+      <Button style={styles.backButton} title="Back to Map" onPress={backMap} />
     </SafeAreaView>
   );
 };
@@ -76,8 +74,25 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-start",
     justifyContent: "center",
+    // backgroundColor: "#456990",
   },
   direction: {
-      padding:10,
+      padding:15,
+      fontWeight: "bold",
+      fontSize: 16, 
+      borderWidth:1,
+      borderRadius: 5,
+      color: "white"
+      
+  },
+  directionContainer: {
+   backgroundColor: "#49BEAA",
+   
+   marginTop: "6%",
+  
+  //  alignItems:"stretch"
+  },
+  backButton: {
+    // marginTop:"10%"
   }
 });
