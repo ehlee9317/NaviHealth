@@ -160,160 +160,160 @@ export default class Map extends Component {
   }
 
   // API DIRECTION CALLS
-  async getRouteDirections(
-    yourLocationPlaceId,
-    destinationPlaceId,
-    startingName,
-    destinationName
-  ) {
-    if (this.state.navigationMode === "walk") {
-      try {
-        let apiUrl;
-        if (yourLocationPlaceId) {
-          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourLocationPlaceId}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
-        } else {
-          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
-        }
-        // console.log("apiUrl----->", apiUrl);
-        const response = await fetch(apiUrl);
-        const json = await response.json();
-        // console.log('startingName in getRouteDirection---->', startingName)
-        // console.log("destinationName in getRouteDirection---->", destinationName);
-        // console.log(json.routes[0].legs[0].distance.value);
-        // console.log(json.routes[0].legs[0].duration.value);
+  // async getRouteDirections(
+  //   yourLocationPlaceId,
+  //   destinationPlaceId,
+  //   startingName,
+  //   destinationName
+  // ) {
+  //   if (this.state.navigationMode === "walk") {
+  //     try {
+  //       let apiUrl;
+  //       if (yourLocationPlaceId) {
+  //         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourLocationPlaceId}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
+  //       } else {
+  //         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
+  //       }
+  //       // console.log("apiUrl----->", apiUrl);
+  //       const response = await fetch(apiUrl);
+  //       const json = await response.json();
+  //       // console.log('startingName in getRouteDirection---->', startingName)
+  //       // console.log("destinationName in getRouteDirection---->", destinationName);
+  //       // console.log(json.routes[0].legs[0].distance.value);
+  //       // console.log(json.routes[0].legs[0].duration.value);
 
-        const directionsArr = json.routes[0].legs[0].steps;
-        const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
-        const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
-        const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-        const pointCoords = points.map((point) => {
-          return { latitude: point[0], longitude: point[1] };
-        });
-        this.setState({
-          pointCoords,
-          predictions: [],
-          yourLocationPredictions: [],
-          estimatedDistance: estimatedDistance,
-          estimatedDuration: estimatedDuration,
-          directions: directionsArr,
-        });
-        destinationName
-          ? this.setState({
-              destination: destinationName,
-            })
-          : this.setState({
-              yourLocation: startingName,
-            });
-        //  console.log('destination in getRoute ---->', this.state.destination)
-        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
-        Keyboard.dismiss();
-        this.map.fitToCoordinates(pointCoords, {
-          edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
-          animated: true,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    } else if (this.state.navigationMode === "subway") {
-      try {
-        let apiUrl;
-        if (yourLocationPlaceId) {
-          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourLocationPlaceId}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
-        } else {
-          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
-        }
-        // console.log("apiUrl----->", apiUrl);
-        const response = await fetch(apiUrl);
-        const json = await response.json();
-        // console.log('startingName in getRouteDirection---->', startingName)
-        // console.log("destinationName in getRouteDirection---->", destinationName);
-        // console.log(json.routes[0].legs[0].distance.value);
-        // console.log(json.routes[0].legs[0].duration.value);
-        // console.log(json.routes[0].legs[0].steps);
-        const directionsArr = json.routes[0].legs[0].steps;
-        const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
-        const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
-        const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-        const pointCoords = points.map((point) => {
-          return { latitude: point[0], longitude: point[1] };
-        });
-        this.setState({
-          pointCoords,
-          predictions: [],
-          yourLocationPredictions: [],
-          estimatedDistance: estimatedDistance,
-          estimatedDuration: estimatedDuration,
-          directions: directionsArr,
-        });
-        destinationName
-          ? this.setState({
-              destination: destinationName,
-            })
-          : this.setState({
-              yourLocation: startingName,
-            });
-        //  console.log('destination in getRoute ---->', this.state.destination)
-        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
-        Keyboard.dismiss();
-        this.map.fitToCoordinates(pointCoords, {
-          edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
-          animated: true,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    } else if (this.state.navigationMode === "bike") {
-      try {
-        let apiUrl;
-        if (yourLocationPlaceId) {
-          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourLocationPlaceId}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
-        } else {
-          apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
-        }
-        // console.log("apiUrl----->", apiUrl);
-        const response = await fetch(apiUrl);
-        const json = await response.json();
-        // console.log('startingName in getRouteDirection---->', startingName)
-        // console.log("destinationName in getRouteDirection---->", destinationName);
-        // console.log(json.routes[0].legs[0].distance.value);
-        // console.log(json.routes[0].legs[0].duration.value);
+  //       const directionsArr = json.routes[0].legs[0].steps;
+  //       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+  //       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
+  //       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+  //       const pointCoords = points.map((point) => {
+  //         return { latitude: point[0], longitude: point[1] };
+  //       });
+  //       this.setState({
+  //         pointCoords,
+  //         predictions: [],
+  //         yourLocationPredictions: [],
+  //         estimatedDistance: estimatedDistance,
+  //         estimatedDuration: estimatedDuration,
+  //         directions: directionsArr,
+  //       });
+  //       destinationName
+  //         ? this.setState({
+  //             destination: destinationName,
+  //           })
+  //         : this.setState({
+  //             yourLocation: startingName,
+  //           });
+  //       //  console.log('destination in getRoute ---->', this.state.destination)
+  //       //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+  //       Keyboard.dismiss();
+  //       this.map.fitToCoordinates(pointCoords, {
+  //         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+  //         animated: true,
+  //       });
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   } else if (this.state.navigationMode === "subway") {
+  //     try {
+  //       let apiUrl;
+  //       if (yourLocationPlaceId) {
+  //         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourLocationPlaceId}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+  //       } else {
+  //         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
+  //       }
+  //       // console.log("apiUrl----->", apiUrl);
+  //       const response = await fetch(apiUrl);
+  //       const json = await response.json();
+  //       // console.log('startingName in getRouteDirection---->', startingName)
+  //       // console.log("destinationName in getRouteDirection---->", destinationName);
+  //       // console.log(json.routes[0].legs[0].distance.value);
+  //       // console.log(json.routes[0].legs[0].duration.value);
+  //       // console.log(json.routes[0].legs[0].steps);
+  //       const directionsArr = json.routes[0].legs[0].steps;
+  //       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+  //       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
+  //       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+  //       const pointCoords = points.map((point) => {
+  //         return { latitude: point[0], longitude: point[1] };
+  //       });
+  //       this.setState({
+  //         pointCoords,
+  //         predictions: [],
+  //         yourLocationPredictions: [],
+  //         estimatedDistance: estimatedDistance,
+  //         estimatedDuration: estimatedDuration,
+  //         directions: directionsArr,
+  //       });
+  //       destinationName
+  //         ? this.setState({
+  //             destination: destinationName,
+  //           })
+  //         : this.setState({
+  //             yourLocation: startingName,
+  //           });
+  //       //  console.log('destination in getRoute ---->', this.state.destination)
+  //       //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+  //       Keyboard.dismiss();
+  //       this.map.fitToCoordinates(pointCoords, {
+  //         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+  //         animated: true,
+  //       });
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   } else if (this.state.navigationMode === "bike") {
+  //     try {
+  //       let apiUrl;
+  //       if (yourLocationPlaceId) {
+  //         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${yourLocationPlaceId}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
+  //       } else {
+  //         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
+  //       }
+  //       // console.log("apiUrl----->", apiUrl);
+  //       const response = await fetch(apiUrl);
+  //       const json = await response.json();
+  //       // console.log('startingName in getRouteDirection---->', startingName)
+  //       // console.log("destinationName in getRouteDirection---->", destinationName);
+  //       // console.log(json.routes[0].legs[0].distance.value);
+  //       // console.log(json.routes[0].legs[0].duration.value);
 
-        const directionsArr = json.routes[0].legs[0].steps;
-        console.log('bike mode--->', json.routes[0].legs[0].steps)
-        console.log('this.state.navigationMode in bike--->', this.state.navigationMode)
-        const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
-        const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
-        const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-        const pointCoords = points.map((point) => {
-          return { latitude: point[0], longitude: point[1] };
-        });
-        this.setState({
-          pointCoords,
-          predictions: [],
-          yourLocationPredictions: [],
-          estimatedDistance: estimatedDistance,
-          estimatedDuration: estimatedDuration,
-          directions: directionsArr,
-        });
-        destinationName
-          ? this.setState({
-              destination: destinationName,
-            })
-          : this.setState({
-              yourLocation: startingName,
-            });
-        //  console.log('destination in getRoute ---->', this.state.destination)
-        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
-        Keyboard.dismiss();
-        this.map.fitToCoordinates(pointCoords, {
-          edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
-          animated: true,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
+  //       const directionsArr = json.routes[0].legs[0].steps;
+  //       console.log('bike mode--->', json.routes[0].legs[0].steps)
+  //       console.log('this.state.navigationMode in bike--->', this.state.navigationMode)
+  //       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+  //       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
+  //       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+  //       const pointCoords = points.map((point) => {
+  //         return { latitude: point[0], longitude: point[1] };
+  //       });
+  //       this.setState({
+  //         pointCoords,
+  //         predictions: [],
+  //         yourLocationPredictions: [],
+  //         estimatedDistance: estimatedDistance,
+  //         estimatedDuration: estimatedDuration,
+  //         directions: directionsArr,
+  //       });
+  //       destinationName
+  //         ? this.setState({
+  //             destination: destinationName,
+  //           })
+  //         : this.setState({
+  //             yourLocation: startingName,
+  //           });
+  //       //  console.log('destination in getRoute ---->', this.state.destination)
+  //       //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
+  //       Keyboard.dismiss();
+  //       this.map.fitToCoordinates(pointCoords, {
+  //         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
+  //         animated: true,
+  //       });
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  // }
 
   //GOOGLE PLACES PREDICTION CALLS
   async onChangeDestination(destination) {
@@ -408,7 +408,7 @@ export default class Map extends Component {
     this.timerClear();
   }
 
-  //SUBWAY + WALK MODE Handlers
+  //SUBWAY + WALK + BIKE MODE Handlers
 
   async subwayModeHandler(
     yourLocationPlaceId,
@@ -523,7 +523,6 @@ export default class Map extends Component {
     startingName,
     destinationName
   ) {
-    console.log('bikeModeHandler pressed -->')
     try {
       let apiUrl;
       if (yourLocationPlaceId) {
@@ -658,10 +657,11 @@ export default class Map extends Component {
     }
 
     const predictions = this.state.predictions.map((prediction) => (
+      this.state.navigationMode === "walk" ?
       <TouchableHighlight
         key={prediction.place_id}
         onPress={() => {
-          this.getRouteDirections(
+          this.walkModeHandler(
             null,
             prediction.place_id,
             null,
@@ -678,15 +678,60 @@ export default class Map extends Component {
         <View>
           <Text style={styles.suggestions}>{prediction.description}</Text>
         </View>
-      </TouchableHighlight>
+      </TouchableHighlight> : 
+      this.state.navigationMode === "subway" ? 
+      <TouchableHighlight
+        key={prediction.place_id}
+        onPress={() => {
+          this.subwayModeHandler(
+            null,
+            prediction.place_id,
+            null,
+            prediction.structured_formatting.main_text
+          );
+
+          this.setState({
+            displayMainSearchBar: false,
+            destinationPlaceId: prediction.place_id,
+            // destination:  prediction.structured_formatting.main_text,
+          });
+        }}
+      >
+        <View>
+          <Text style={styles.suggestions}>{prediction.description}</Text>
+        </View>
+      </TouchableHighlight> : 
+      this.state.navigationMode === "bike" ? 
+      <TouchableHighlight
+        key={prediction.place_id}
+        onPress={() => {
+          this.bikeModeHandler(
+            null,
+            prediction.place_id,
+            null,
+            prediction.structured_formatting.main_text
+          );
+
+          this.setState({
+            displayMainSearchBar: false,
+            destinationPlaceId: prediction.place_id,
+            // destination:  prediction.structured_formatting.main_text,
+          });
+        }}
+      >
+        <View>
+          <Text style={styles.suggestions}>{prediction.description}</Text>
+        </View>
+      </TouchableHighlight> : ("")
     ));
 
     const yourLocationPredictions = this.state.yourLocationPredictions.map(
       (prediction) => (
+        this.state.navigationMode === "walk" ?
         <TouchableHighlight
           key={prediction.place_id}
           onPress={() => {
-            this.getRouteDirections(
+            this.walkModeHandler(
               prediction.place_id,
               this.state.destinationPlaceId,
               prediction.structured_formatting.main_text,
@@ -702,7 +747,50 @@ export default class Map extends Component {
           <View>
             <Text style={styles.suggestions}>{prediction.description}</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableHighlight> :
+        this.state.navigationMode === "subway" ? 
+        <TouchableHighlight
+          key={prediction.place_id}
+          onPress={() => {
+            this.subwayModeHandler(
+              prediction.place_id,
+              this.state.destinationPlaceId,
+              prediction.structured_formatting.main_text,
+              this.state.destinationName
+            );
+            this.setState({
+              displayMainSearchBar: false,
+              yourLocationPlaceId: prediction.place_id,
+              yourLocation: prediction.structured_formatting.main_text,
+            });
+          }}
+        >
+          <View>
+            <Text style={styles.suggestions}>{prediction.description}</Text>
+          </View>
+        </TouchableHighlight> : 
+        this.state.navigationMode === "bike" ? 
+        <TouchableHighlight
+          key={prediction.place_id}
+          onPress={() => {
+            this.bikeModeHandler(
+              prediction.place_id,
+              this.state.destinationPlaceId,
+              prediction.structured_formatting.main_text,
+              this.state.destinationName
+            );
+            this.setState({
+              displayMainSearchBar: false,
+              yourLocationPlaceId: prediction.place_id,
+              yourLocation: prediction.structured_formatting.main_text,
+            });
+          }}
+        >
+          <View>
+            <Text style={styles.suggestions}>{prediction.description}</Text>
+          </View>
+        </TouchableHighlight> : 
+        ("")
       )
     );
 
@@ -963,7 +1051,9 @@ export default class Map extends Component {
                     style={styles.clickedChipsItem}
                     onPress={() => (
                       console.log("button pressed"),
-                      this.setState({ navigationMode: category.name }),
+                      this.setState({ 
+                        navigationMode: category.name,
+                       }),
                       console.log('categoryName2--->', category.name),
                       console.log(
                         "this.state.NavigationMode----> touch2",
