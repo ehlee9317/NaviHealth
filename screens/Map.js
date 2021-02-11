@@ -152,7 +152,7 @@ export default class Map extends Component {
       (error) => console.error(error),
       { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
     );
-    this.gotToMyLocation();
+    this.goToMyLocation();
   }
 
   componentWillUnmount() {
@@ -385,8 +385,8 @@ export default class Map extends Component {
   }
 
   //MOVE CAMERA BACK TO CURRENT LOCATION
-  gotToMyLocation() {
-    console.log("gotToMyLocation is called");
+  goToMyLocation() {
+    console.log("goToMyLocation is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         if (this.map) {
@@ -1152,7 +1152,7 @@ export default class Map extends Component {
 
         <TouchableOpacity
           style={styles.yourLocationButtonContainer}
-          onPress={() => this.gotToMyLocation()}
+          onPress={() => this.goToMyLocation()}
         >
           <View style={styles.yourLocationIconContainer}>
             <Icon name="ios-radio-button-on-outline" size={22} color="white" />
@@ -1164,7 +1164,7 @@ export default class Map extends Component {
           <TouchableOpacity
             // style={styles.locateIconContainer}
             onPress={() =>
-              this.gotToMyLocation(
+              this.goToMyLocation(
                 <Button
                   title="End Navigation"
                   onPress={() => {
