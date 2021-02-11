@@ -6,6 +6,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
 } from "react-native";
 
 import DailyHealthStatsScreen from "./HealthStatsScreenDaily";
@@ -28,21 +29,44 @@ export default function HealthStatsScreen({ navigation }) {
   };
 
   const displayButtons = (rangeButtons) => {
-    return rangeButtons.map((singleButton) => {
-      console.log("single button----->", singleButton);
-      return (
-        <View >
-          <TouchableOpacity
-            key={singleButton}
-            // title={`${singleButton}`}
-            onPress={() => rangeClickHandler(singleButton)}
+    // return rangeButtons.map((singleButton) => {
+    //   console.log("single button----->", singleButton);
+    //   return (
+    //     <View>
+    //       <TouchableOpacity
+    //         key={singleButton}
+    //         // title={`${singleButton}`}
+    //         style={buttonLabel === "Month" ? styles.buttonLine : styles.button}
+    //         onPress={() => rangeClickHandler(singleButton)}
+    //       >
+    //         <Text>{singleButton}</Text>
+    //       </TouchableOpacity>
+    //     </View>
+    //   );
+    // });
+    return (
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={buttonLabel === "Day" ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler("Day")}
+        >
+          <Text style={styles.buttonText}>Day</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={buttonLabel === "Week" ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler("Week")}
 
-          >
-            <Text style={styles.buttonText}>{singleButton}</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    });
+        >
+          <Text style={styles.buttonText}>Week</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={buttonLabel === "Month" ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler("Month")}
+        >
+          <Text style={styles.buttonText}>Month</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   return (
@@ -91,19 +115,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // justifyContent: "space-around",
     // display: "flex",
-    marginBottom: "3%",
-    marginLeft: "5%",
-    // padding: "5%"
-  },
-  buttonText:{
-    marginRight: "5%",
-    fontSize: 17,
-    // justifyContent: "center",
+    marginBottom: "2%",
+    marginLeft: "3%",
+    // padding: "5%",
+    justifyContent: "center",
     // alignItems: "center",
+  },
+  button: {
+    borderBottomWidth: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: ".5%"
+    // justifyContent: "space-around",
+    // fontSize: 20
+    // color: "blue"
+  },
+  buttonLine: {
+    borderBottomWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: ".5%"
+    // justifyContent: "space-around",
+
+    // color: "black"
+  },
+  buttonText: {
+    marginRight: "10%",
+    // padding: "3%",
+    fontSize: 18,
+
     // width: 50,
     // backgroundColor: "black"
     // marginLeft: "2%"
-    // borderWidth: 1
+    // borderWidth: 1,
+    borderTopWidth: 1,
+    // borderBottomWidth: 1,
+    // borderBottomColor: "red",
   },
   dashboardContainer: {
     // backgroundColor: "white",
