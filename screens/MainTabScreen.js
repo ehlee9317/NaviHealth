@@ -10,7 +10,7 @@ import Map from "./Map";
 import SettingScreen from "./SettingScreen";
 import HealthStatsScreen from "./HealthStatsScreen";
 import WeeklyHealthStatsScreen from "./HealthStatsWeeklyScreen";
-import HealthStatsSample from "./HealthStatsSample";
+import HealthStatsSample from "./HealthStatsScreenMain";
 
 const HomeStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
