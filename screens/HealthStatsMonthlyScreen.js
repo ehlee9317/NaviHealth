@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, Button, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
 import {
   VictoryBar,
   VictoryChart,
@@ -9,15 +9,15 @@ import {
   VictoryTooltip,
   VictoryGroup,
   VictoryLegend,
-  VictoryVoronoiContainer
-} from 'victory-native';
-import * as firebase from 'firebase';
+  VictoryVoronoiContainer,
+} from "victory-native";
+import * as firebase from "firebase";
 import {
   totalCalories,
   totalCaloriesWeekly,
   convertWeekToChart,
-} from '../api/healthStatsMethods';
-
+} from "../api/healthStatsMethods";
+import Icon from "react-native-vector-icons/Ionicons";
 // data for Victory: [
 //   {"date": date, "calories": calories},
 // ]
@@ -35,23 +35,23 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
   // sets beginning date to 30 days ago:
   let beginningDate = Date.now() - 2592000000;
   let beginningDateObject = new Date(beginningDate);
-  console.log('beginningDateObj----->', beginningDateObject);
+  console.log("beginningDateObj----->", beginningDateObject);
 
   useEffect(() => {
-    console.log('isloading initial state---->', isLoading);
+    console.log("isloading initial state---->", isLoading);
     // Pulls data from firebase and converts format to Victory chart format:
     const unsubscribe = db
-      .collection('routes')
+      .collection("routes")
       .doc(currentUserUID)
-      .collection('sessions')
-      .where('created', '>=', beginningDateObject)
-      .orderBy('created', 'asc')
+      .collection("sessions")
+      .where("created", ">=", beginningDateObject)
+      .orderBy("created", "asc")
       .onSnapshot((querySnapshot) => {
         let estCalories = [];
         let actualCalories = [];
         querySnapshot.forEach((doc) => {
           const dataObj = doc.data();
-          console.log('dataobj=====>', dataObj);
+          console.log("dataobj=====>", dataObj);
           // convert to Victory chart format:
           estCalories.push({
             date: dataObj.date,
@@ -85,9 +85,8 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
       <Text>Loading</Text>
     </SafeAreaView>
   ) : (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <View style={styles.container}>
-
         <VictoryChart
           width={400}
           height={400}
@@ -95,12 +94,15 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
           domainPadding={30}
           containerComponent={
             <VictoryVoronoiContainer
-            labels={(d) => {
-              return `${d.datum.calories}\n${d.datum.date}`;
-              // return `${d.datum.calories}`;
-            }}
+              labels={(d) => {
+                return `${d.datum.calories}\n${d.datum.date}`;
+                // return `${d.datum.calories}`;
+              }}
               labelComponent={
-                <VictoryTooltip   constrainToVisibleArea style={{fontSize: 13}} />
+                <VictoryTooltip
+                  constrainToVisibleArea
+                  style={{ fontSize: 13 }}
+                />
               }
             />
           }
@@ -109,42 +111,42 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
             x={125}
             y={10}
             centerTitle
-            orientation='horizontal'
+            orientation="horizontal"
             gutter={20}
-            style={{ border: { stroke: 'black' } }}
+            style={{ border: { stroke: "black" } }}
             colorScale={["#456990", "#EF767A"]}
-            data={[{ name: 'Estimated' }, { name: 'Actuals' }]}
+            data={[{ name: "Estimated" }, { name: "Actuals" }]}
           />
           <VictoryAxis
             style={{
-              axis: { stroke: '#000' },
+              axis: { stroke: "#000" },
               axisLabel: { fontSize: 16 },
-              ticks: { stroke: '#000' },
-              grid: { stroke: '#B3E5FC', strokeWidth: 0.25 },
+              ticks: { stroke: "#000" },
+              grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
             }}
             dependentAxis
           />
           <VictoryAxis
             style={{
-              axis: { stroke: '#000' },
+              axis: { stroke: "#000" },
               axisLabel: { fontSize: 16 },
-              ticks: { stroke: '#000' },
+              ticks: { stroke: "#000" },
               tickLabels: {
                 fill: "transparent",
                 fontSize: 12,
                 padding: 1,
                 angle: 45,
-                verticalAnchor: 'middle',
-                textAnchor: 'start',
+                verticalAnchor: "middle",
+                textAnchor: "start",
               },
             }}
           />
-          <VictoryGroup offset={12} colorScale={'qualitative'}>
+          <VictoryGroup offset={12} colorScale={"qualitative"}>
             <VictoryBar
               data={monthCalorieDataEstimates}
-              style={{data: { fill: "#456990" }}}
-              x='date'
-              y='calories'
+              style={{ data: { fill: "#456990" } }}
+              x="date"
+              y="calories"
               // labels={(d) => {
               //   // return `${d.datum.calories}\n${d.datum.date}`;
               //   return `${d.datum.calories}`;
@@ -153,9 +155,9 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
             />
             <VictoryBar
               data={monthCalorieDataActuals}
-              style={{data: { fill: "#EF767A" }}}
-              x='date'
-              y='calories'
+              style={{ data: { fill: "#EF767A" } }}
+              x="date"
+              y="calories"
               // labels={(d) => {
               //   // return `${d.datum.calories}\n${d.datum.date}`;
               //   return `${d.datum.calories}`;
@@ -164,14 +166,18 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
             />
           </VictoryGroup>
         </VictoryChart>
-
-        <View style={{margin: 50}}>
-          <Text style={styles.statsBox}>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
-          <Text style={styles.statsBox}>
-            AVERAGE DAILY CALORIES BURNED:{' '}
-            {Math.round(totalCalories(calorieData) / 30)}
-          </Text>
-        </View>
+      </View>
+      <Text style={styles.subTitle}>SUMMARY</Text>
+      <View style={styles.statContainer}>
+        <Icon name="ios-checkmark-outline" style={styles.checkmark} />
+        <Text style={styles.statText}>
+          TOTAL CALORIES BURNED: {totalCalories(calorieData)}
+        </Text>
+        <Icon name="ios-checkmark-outline" style={styles.checkmark} />
+        <Text style={styles.statText}>
+          AVERAGE DAILY CALORIES BURNED:{" "}
+          {Math.round(totalCalories(calorieData) / 30)}
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -179,14 +185,46 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // flex: 1,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    backgroundColor: "white",
+    borderRadius: 20,
+    width: 380,
+    height: 390,
+    padding: "2%",
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
   },
-  statsBox: {
+  statContainer: {
+    backgroundColor: "white",
+    width: 380,
+    height: 100,
+    borderRadius: 20,
+    flexDirection: "row",
+    padding: "5%",
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    marginBottom: "10%",
+  },
+  checkmark: {
+    fontSize: 26,
+    color: "black",
+  },
+  statText: {
     fontSize: 16,
-    borderColor: "#EF767A",
-    borderWidth: 1,
-    padding: 10
-  }
+    // borderColor: "#EF767A",
+    // borderWidth: 1,
+    padding: 5,
+  },
+  subTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: "8%",
+    marginBottom: "4%",
+  },
 });
