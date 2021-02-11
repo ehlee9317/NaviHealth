@@ -58,10 +58,10 @@ export default function Direction({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ScrollView>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Directions</Text>
       </View>
-      <ScrollView>
         <View style={styles.directionContainer}>
           {finalDirectionsArr.map((elem, index) => (
             <View key={index}>
@@ -72,12 +72,12 @@ export default function Direction({ route, navigation }) {
             </View>
           ))}
         </View>
-      </ScrollView>
       <View style={styles.buttonContainer}>
      <TouchableOpacity>
       <Text style={styles.backButton} onPress={backMap}>Back to Map</Text>
       </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -92,7 +92,9 @@ const styles = StyleSheet.create({
     flex:.5, 
     alignItems:"center",
     justifyContent:"center",
-    backgroundColor: "#49BEAA"
+    // marginTop:"10%",
+    backgroundColor: "#49BEAA",
+    padding:20,
   },
   title: {
     fontSize: 30,
@@ -103,23 +105,26 @@ const styles = StyleSheet.create({
     padding: 15,
     fontWeight: "bold",
     fontSize: 16,
-    borderWidth: 2,
-    borderRadius: 5,
-    borderColor: "#EEB868",
+    borderWidth: 1.3,
+    borderRadius: 4,
+    borderColor:"#EEB868",
     color: "white",
   },
   directionContainer: {
     backgroundColor: "#49BEAA",
     justifyContent: "flex-start",
     marginTop: "6%",
-
-    //  alignItems:"stretch"
   },
   buttonContainer: {
     backgroundColor: "#49BEAA",
+    marginTop:"10%",
+    padding: 20,
+    alignItems:"center",
   },
   backButton: {
     // marginTop:"10%"
     color:"white",
+    fontSize:20,
+    fontWeight: "bold",
   },
 });
