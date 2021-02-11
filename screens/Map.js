@@ -88,8 +88,7 @@ export default class Map extends Component {
         "6X": "#00933C",
         7: "#B933AD",
       },
-      citiBikeStationsData: [],
-      currentLocationPlaceId: "",
+      citiBikeStationsData: []
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -353,19 +352,13 @@ export default class Map extends Component {
 
   //CURRENT LOCATION PLACES_ID REVERT
 
-  async getCurrentLocationPlaceId() {
-    const currentPlaceIdUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude}, ${this.state.longitude}&destination=null, null&mode=walk&key=${GOOGLE_API_KEY}`
-    const currentPlaceIdResponse = await fetch(currentPlaceIdUrl)
-    const currentPlaceIdJson = await currentPlaceIdResponse.json();
-    // console.log('json--->',currentPlaceIdJson)
-    const currentPlaceIdResult = currentPlaceIdJson.geocoded_waypoints[0].place_id
-    // console.log('currentPlaceIdResult--->', currentPlaceIdResult)
-    this.setState({
-      currentLocationPlaceId: currentPlaceIdResult
-    })
-    console.log('this.state.currentLocationPlaceId--->', currentPlaceIdResult)
+  // async getCurrentLocationPlaceId() {
+  //   const currentPlaceIdUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude}, ${this.state.longitude}&destination=null, null&mode=walk&key=${GOOGLE_API_KEY}`
+  //   const currentPlaceIdResponse = await fetch(currentPlaceIdUrl)
+  //   const currentPlaceIdJson = await currentPlaceIdResponse.json();
 
-  }
+  //   console.log('currentPlaceIdJson---->', currentPlaceIdJson)
+  // }
   //CITI BIKE API CALLS
 
   async getCitiBikeData() {
@@ -587,7 +580,6 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
-      this.getCurrentLocationPlaceId()
     } catch (error) {
       console.error(error);
     }
@@ -949,6 +941,8 @@ export default class Map extends Component {
                   size={22}
                   style={styles.icon}
                   color={"#2452F9"}
+                  onPress={() => {                    
+                    this.getRouteDirections(null, this.state.destinationPlaceId, null, this.state.destination), this.setState({yourLocation: "", yourLocationPlaceId: null})}}
                 />
               </View>
               <View style={{ flex: 1 }}>
