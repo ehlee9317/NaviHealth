@@ -9,6 +9,7 @@ import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MainTabScreen from "./screens/MainTabScreen";
 import Directions from "./screens/Directions";
+import GetStarted from "./screens/GetStartedScreen"
 import {LogBox} from 'react-native'
 
 // LogBox.ignoreAllLogs();
@@ -52,6 +53,11 @@ export default function App() {
          <Stack.Screen
           name={"Directions"}
           component={Directions}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"GetStarted"}
+          component={GetStarted}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -8,7 +8,7 @@ import {
   ScrollView,
   Keyboard,
   SafeAreaView,
-  Alert, 
+  Alert,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { loggingOut } from "../api/firebaseMethods";
@@ -28,7 +28,7 @@ const SettingScreen = ({ navigation }) => {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
 
-  
+
   useEffect(() => {
     const unsubscribe = db
       .collection("users")
@@ -45,7 +45,7 @@ const SettingScreen = ({ navigation }) => {
           setEmail(dataObj.email);
           setPassword(dataObj.password);
         }
-       
+
       );
      return () => unsubscribe();
   }, []);
@@ -80,6 +80,11 @@ const SettingScreen = ({ navigation }) => {
     loggingOut();
     navigation.replace("Home");
   };
+
+  const handlePressGettingStarted = () => {
+    navigation.replace("GetStarted");
+  };
+
   const handleUpdate = () => {
     //  if (password !== confirmPassword) {
     //   Alert.alert("Password does not match!");
@@ -97,10 +102,15 @@ const SettingScreen = ({ navigation }) => {
       navigation.navigate("Profile");
       emptyState();
       // }
-    
+
   };
   return (
     <SafeAreaView style={styles.container}>
+
+      <TouchableOpacity style={styles.logOut} onPress={handlePressGettingStarted}>
+        <Text style={styles.logOutText}>Getting Started</Text>
+      </TouchableOpacity>
+
       <View style={styles.signUpBox}>
         <Text style={styles.title}>Edit Your Account </Text>
         <View style={styles.inputContainer} onBlur={Keyboard.dismiss}>
