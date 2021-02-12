@@ -1,3 +1,6 @@
+//Deprecated Directions Page (to delete)
+
+
 import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";

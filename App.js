@@ -8,7 +8,8 @@ import SignUp from "./screens/SignUp";
 import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MainTabScreen from "./screens/MainTabScreen";
-import Directions from "./screens/Directions";
+//Deprecated Directions Page 
+// import Directions from "./screens/Directions";
 import GetStarted from "./screens/GetStartedScreen"
 import {LogBox} from 'react-native'
 
@@ -50,11 +51,11 @@ export default function App() {
           component={MainTabScreen}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+         {/* <Stack.Screen
           name={"Directions"}
           component={Directions}
           options={{ headerShown: false }}
-        />
+        /> */}
         <Stack.Screen
           name={"GetStarted"}
           component={GetStarted}

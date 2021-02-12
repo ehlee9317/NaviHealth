@@ -372,7 +372,7 @@ export default class Map extends Component {
 
   //MOVE CAMERA BACK TO CURRENT LOCATION
   goToMyLocation() {
-    console.log("goToMyLocation is called");
+    // console.log("goToMyLocation is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         if (this.map) {
@@ -391,7 +391,7 @@ export default class Map extends Component {
 
   //NAVI BUTTON HELPERS
   stopNaviHelper() {
-    console.log("stopNaviHelper is called");
+    // console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         if (this.map) {
@@ -708,9 +708,7 @@ export default class Map extends Component {
            });
         }
         if (currDirection.steps) {
-          console.log('currDirection.steps--->', currDirection.steps)
           currDirection.steps.forEach((elem) => {
-            console.log('elem--', elem)
             let regexSanitizedCurrStepsDirection = elem
             .html_instructions.replace(/(<([^>]+)>)/gi, "");
             currDirectionCoordinates = {
