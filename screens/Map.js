@@ -89,6 +89,7 @@ export default class Map extends Component {
         7: "#B933AD",
       },
       citiBikeStationsData: [],
+      citiBikeDataRender: false,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -555,7 +556,10 @@ export default class Map extends Component {
       // console.log("destinationName in getRouteDirection---->", destinationName);
       const directionsArr = json.routes[0].legs[0].steps;
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+      console.log('estimatedDistance in walk ---> ', estimatedDistance)
+      
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
+      console.log('estimatedDuration--->', estimatedDuration)
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -636,7 +640,7 @@ export default class Map extends Component {
         animated: true,
       });
       //disable comment to enable
-      // this.getCitiBikeData()
+      this.getCitiBikeData()
     } catch (error) {
       console.error(error);
     }
@@ -894,7 +898,8 @@ export default class Map extends Component {
           ) : (
             ""
           )}
-          {this.state.citiBikeStationsData.map((elem) => {
+          {this.state.citiBikeDataRender ?
+          this.state.citiBikeStationsData.map((elem) => {
             return (
               <Marker
                 key={elem.name}
@@ -903,7 +908,9 @@ export default class Map extends Component {
                 description={`${String(elem.bikesAvailable)} bikes available!`}
               ></Marker>
             );
-          })}
+          }) : 
+          <Text></Text>
+        }
           {marker}
           {locationMarker}
         </MapView>
@@ -921,12 +928,69 @@ export default class Map extends Component {
             }}
           />
         ) : (
-          <View style={styles.mainSearchContainer}>
-            <View style={styles.searchContainerTop}>
-              <SafeAreaView style={styles.inputContainer}>
-                <TouchableHighlight
+          <View style={styles.searchContainer}>
+            <SafeAreaView style={styles.inputContainer}>
+              <TouchableHighlight
+                onPress={() => {
+                  console.log("back button clicked");
+                  this.setState({
+                    displayMainSearchBar: !this.state.displayMainSearchBar,
+                  });
+                }}
+                style={styles.backIcon}
+              >
+                <Icon name="ios-chevron-back" size={30} color={"black"} />
+              </TouchableHighlight>
+              <View style={{ flex: 1 }}>
+                <Icon
+                  name="ios-location"
+                  size={22}
+                  style={styles.icon}
+                  color={"#2452F9"}
                   onPress={() => {
-                    console.log("back button clicked");
+                    this.getRouteDirections(
+                      null,
+                      this.state.destinationPlaceId,
+                      null,
+                      this.state.destination
+                    ),
+                      this.setState({
+                        yourLocation: "",
+                        yourLocationPlaceId: null,
+                      });
+                  }}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  placeholder="Your location"
+                  style={styles.yourLocationInput}
+                  value={this.state.yourLocation}
+                  clearButtonMode="always"
+                  onChangeText={(yourLocation) => {
+                    this.setState({ yourLocation });
+                    this.onChangeYourLocationDebounced(yourLocation);
+                  }}
+                />
+              </View>
+            </SafeAreaView>
+            <SafeAreaView style={styles.destinationInputContainer}>
+              <View style={{ flex: 1 }}>
+                <Icon
+                  name="ios-location"
+                  size={22}
+                  style={styles.icon}
+                  color={"#EA484E"}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  placeholder="Enter destination..."
+                  style={styles.destinationChangeInput}
+                  value={this.state.destination}
+                  clearButtonMode="always"
+                  onChangeText={(destination) => {
+                    // console.log(destination);
                     this.setState({
                       displayMainSearchBar: !this.state.displayMainSearchBar,
                     });
@@ -1140,82 +1204,173 @@ export default class Map extends Component {
 
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
-            <View style={styles.searchContainerBottom}>
-              <View width="40%">
-                <TouchableOpacity
-                  style={styles.stopButtonContainer}
-                  onPress={() => {
-                    this.stopNaviHandler();
-                  }}
-                >
-                  <View style={styles.stopIconContainer}>
-                    <Icon
-                      name="ios-close-circle-outline"
-                      size={25}
-                      color="white"
-                    />
-                    <Text style={styles.stopButtonText}>Stop</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View width="40%">
-                <TouchableOpacity
-                  style={styles.directionButtonContainer}
-                  onPress={() => {
-                    console.log("Button pressed");
-                    this.props.navigation.navigate("Directions", {
-                      directions: this.state.directions,
-                    });
-                  }}
-                >
-                  <View style={styles.directionIconContainer}>
-                    <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                    <Text style={styles.directionButtonText}>Directions</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
+            <View>
+              <TouchableOpacity
+                style={styles.stopButtonContainer}
+                onPress={() => {
+                  this.stopNaviHandler();
+                }}
+              >
+                <View style={styles.stopIconContainer}>
+                  <Icon
+                    name="ios-close-circle-outline"
+                    size={25}
+                    color="white"
+                  />
+                  <Text style={styles.stopButtonText}>Stop</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.yourLocationButtonContainer}
+                onPress={() => this.goToMyLocation()}
+              >
+                <View style={styles.yourLocationIconContainer}>
+                  <Icon
+                    name="ios-radio-button-on-outline"
+                    size={22}
+                    color="white"
+                  />
+                  <Text style={styles.yourLocationButtonText}>
+                    Your Location
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           ) : (
-            <View style={styles.searchContainerBottom}>
-              <View width="40%">
-                <TouchableOpacity
-                  style={styles.startButtonContainer}
-                  onPress={() => {
-                    this.startNaviHandler();
-                  }}
-                >
-                  <View style={styles.iconContainer}>
-                    <Icon
-                      style={styles.locateIcon}
-                      name="ios-navigate"
-                      size={22}
-                    />
-                    <Text style={styles.startButtonText}>Start</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View width="40%">
-                <TouchableOpacity
-                  style={styles.directionButtonContainer}
-                  onPress={() => {
-                    console.log("Button pressed");
-                    this.props.navigation.navigate("Directions", {
-                      directions: this.state.directions,
-                    });
-                  }}
-                >
-                  <View style={styles.directionIconContainer}>
-                    <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                    <Text style={styles.directionButtonText}>Directions</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
+            <View>
+              <TouchableOpacity
+                style={styles.startButtonContainer}
+                onPress={() => {
+                  this.startNaviHandler();
+                }}
+              >
+                <View style={styles.iconContainer}>
+                  <Icon
+                    style={styles.locateIcon}
+                    name="ios-navigate"
+                    size={22}
+                  />
+                  <Text style={styles.startButtonText}>Start</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.yourLocationButtonContainer}
+                onPress={() => this.goToMyLocation()}
+              >
+                <View style={styles.yourLocationIconContainer}>
+                  <Icon
+                    name="ios-radio-button-on-outline"
+                    size={22}
+                    color="white"
+                  />
+                  <Text style={styles.yourLocationButtonText}>
+                    Your Location
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+              {this.state.navigationMode === "bike" ? 
+              <TouchableOpacity
+                style={styles.yourLocationButtonContainer}
+                onPress={
+                  () =>
+                  this.state.citiBikeDataRender === true ?
+                this.setState({
+                  citiBikeDataRender: false 
+                }) : this.setState({
+                  citiBikeDataRender: true
+                })
+              }
+              >
+                <View style={styles.yourLocationIconContainer}>
+                  <Icon
+                    name="ios-radio-button-on-outline"
+                    size={22}
+                    color="white"
+                  />
+                  <Text style={styles.yourLocationButtonText}>
+                    Citi Bikes
+                  </Text>
+                </View>
+              </TouchableOpacity> : 
+              <Text></Text>
+            }
             </View>
           )
         ) : (
           <Text></Text>
         )}
-
+        {/* <View>
+          <TouchableOpacity
+            style={styles.yourLocationButtonContainer}
+            onPress={() => this.goToMyLocation()}
+          >
+            <View style={styles.yourLocationIconContainer}>
+              <Icon
+                name="ios-radio-button-on-outline"
+                size={22}
+                color="white"
+              />
+              <Text style={styles.yourLocationButtonText}>Your Location</Text>
+            </View>
+          </TouchableOpacity> */}
         {/* <View style={styles.locateIconContainer}>
           <TouchableOpacity
             // style={styles.locateIconContainer}
@@ -1233,6 +1388,7 @@ export default class Map extends Component {
             <Icon name="ios-radio-button-on-outline" size={40} color={"#49BEAA"} />
           </TouchableOpacity>
         </View> */}
+        {/* </View> */}
       </View>
     );
   }
