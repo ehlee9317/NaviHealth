@@ -1187,7 +1187,7 @@ export default class Map extends Component {
               <TouchableOpacity
                 style={styles.stopButtonContainer}
                 onPress={() => {
-                  this.stopNaviHandler;
+                  this.stopNaviHandler();
                 }}
               >
                 <View style={styles.stopIconContainer}>
