@@ -98,6 +98,7 @@ export default class Map extends Component {
       },
       citiBikeStationsData: [],
       citiBikeDataRender: false,
+      directionsMarkerArr: [],
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -741,7 +742,10 @@ export default class Map extends Component {
       let currDirection = directions[i];
       if (currDirection.html_instructions && !currDirection.steps) {
         // console.log('currDirection---->',currDirection)
-        currDirectionCoordinates = currDirection.start_location
+        currDirectionCoordinates = {
+          latitude: currDirection.start_location.lat,
+          longitude: currDirection.start_location.lng,
+        };
         let regexSanitizedCurrDirection = currDirection.html_instructions.replace(/(<([^>]+)>)/gi, "");
         if (regexSanitizedCurrDirection.indexOf("(") !== -1) {
           // finalDirectionsArr.push(
@@ -779,13 +783,17 @@ export default class Map extends Component {
         // }
       }
       // console.log("finalDirectionsArr--->", finalDirectionsArr);
-      console.log('currDirectionDescription', currDirectionDescription)
+      finalDirectionsArr.push({
+        description: currDirectionDescription,
+        coordinates: currDirectionCoordinates
+      })
+      // console.log('currDirectionDescription', currDirectionDescription)
+      // console.log("finalDirectionsArr", finalDirectionsArr);
     }
-    return (
-      <View>
-        <Marker coordinate={currDirectionCoordinates}></Marker>
-      </View>
-    );
+    this.setState({
+      directionsMarkerArr: finalDirectionsArr,
+    });
+    console.log('this.state.directionsMarkerArr--->', this.state.directionsMarkerArr)
   }
 
   render() {
@@ -877,7 +885,7 @@ export default class Map extends Component {
         </TouchableHighlight>
       )
     );
-
+    
     return (
       <View style={styles.container}>
         <MapView
@@ -1215,6 +1223,9 @@ export default class Map extends Component {
         )}
         {predictions}
         {yourLocationPredictions}
+        {this.state.directionsMarkerArr.map((elem) => {
+          console.log('elem.description--->', elem.description)
+        })}
 
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
