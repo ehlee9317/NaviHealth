@@ -86,7 +86,7 @@ export default function ProfileStats({ navigation }) {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Your Daily Progress</Text>
         <Text style={styles.information}>
-          *based on a recommended daily total of 500
+          *recommended daily total of 500 cals
         </Text>
       </View>
       <View style={styles.chartContainer}>
@@ -132,11 +132,12 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "16%",
+    marginTop: "20%",
   },
   title: {
+    fontFamily: "HelveticaNeue",
     fontWeight: "bold",
-    fontSize: 22,
+    fontSize: 21,
   },
   information: {
     fontSize: 12,
