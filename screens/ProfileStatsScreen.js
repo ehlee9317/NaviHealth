@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, View, Text, Button, StyleSheet } from 'react-native';
 import {
   VictoryBar,
   VictoryChart,
@@ -11,18 +11,18 @@ import {
   VictoryLegend,
   VictoryVoronoiContainer,
   VictoryPie,
-} from "victory-native";
-import * as firebase from "firebase";
+} from 'victory-native';
+import * as firebase from 'firebase';
 import {
   totalCalories,
   daysView,
   totalCaloriesWeekly,
-} from "../api/healthStatsMethods";
-import Icon from "react-native-vector-icons/Ionicons";
+} from '../api/healthStatsMethods';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const dummyData = [
-  { x: "Actual Calories", y: 500 / 100 },
-  { x: "Goal", y: 10 },
+  { x: 'Actual Calories', y: 500 / 100 },
+  { x: 'Goal', y: 10 },
 ];
 
 export default function ProfileStats({ navigation }) {
@@ -35,22 +35,22 @@ export default function ProfileStats({ navigation }) {
   // sets beginning date to current day at midnight:
   let beginningDate = new Date().setHours(0, 0, 0, 0);
   let beginningDateObject = new Date(beginningDate);
-  console.log("beginningDateObj----->", beginningDateObject);
+  console.log('beginningDateObj----->', beginningDateObject);
 
   // Pull estimates data:
   useEffect(() => {
     // Pulls data from firebase and converts format to Victory chart format:
     const unsubscribe = db
-      .collection("routes")
+      .collection('routes')
       .doc(currentUserUID)
-      .collection("sessions")
-      .where("created", ">=", beginningDateObject)
-      .orderBy("created", "asc")
+      .collection('sessions')
+      .where('created', '>=', beginningDateObject)
+      .orderBy('created', 'asc')
       .onSnapshot((querySnapshot) => {
         let actualCalories = [];
         querySnapshot.forEach((doc) => {
           const dataObj = doc.data();
-          console.log("dataobj=====>", dataObj);
+          console.log('dataobj=====>', dataObj);
           // convert to Victory chart format:
           actualCalories.push({
             date: dataObj.timeStamp,
@@ -60,16 +60,8 @@ export default function ProfileStats({ navigation }) {
         const dailyActualCalories = totalCalories(actualCalories);
 
         const pieChartData = [
-          {
-            x: "Actuals",
-            y: dailyActualCalories,
-            label: `Today's Burn:\n${dailyActualCalories} cals`,
-          },
-          {
-            x: "Goal",
-            y: 500 - dailyActualCalories,
-            label: `Remaining:\n${500 - dailyActualCalories} cals`,
-          },
+          { x: 'Actuals', y: dailyActualCalories, label: `Today's Burn:\n${dailyActualCalories} cals` },
+          { x: 'Goal', y: 500 - dailyActualCalories, label: `Remaining:\n${500 - dailyActualCalories} cals`},
         ];
         setPieChartData(pieChartData);
         setIsLoading(false);
@@ -83,39 +75,34 @@ export default function ProfileStats({ navigation }) {
     </SafeAreaView>
   ) : (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Your Daily Progress</Text>
-        <Text style={styles.information}>
-          *recommended daily total of 500 cals
-        </Text>
-      </View>
-      <View style={styles.chartContainer}>
+      <View style={styles.container}>
         <VictoryChart
-          // width={200}
-          height={330}
+          // width={400}
+          // height={400}
           theme={VictoryTheme.material}
+          // domainPadding={30}
         >
+          <VictoryLabel text={`Your Daily Progress\n\n*based on a recommended daily total of 500 calories`} x={225} y={30} textAnchor="middle" style={{fontSize: 15, fontWeight: "bold"}}/>
           <VictoryAxis
             style={{
-              axis: { stroke: "transparent" },
-              ticks: { stroke: "transparent" },
-              tickLabels: { fill: "transparent" },
+              axis: { stroke: 'transparent' },
+              ticks: { stroke: 'transparent' },
+              tickLabels: { fill: 'transparent' },
             }}
             dependentAxis
           />
           <VictoryAxis
             style={{
-              axis: { stroke: "transparent" },
-              ticks: { stroke: "transparent" },
-              tickLabels: { fill: "transparent" },
+              axis: { stroke: 'transparent' },
+              ticks: { stroke: 'transparent' },
+              tickLabels: { fill: 'transparent' },
             }}
           />
           <VictoryPie
             data={pieChartData}
-            colorScale={["#EF767A", "#456990"]}
-            innerRadius={75}
-            labelRadius={({ innerRadius }) => innerRadius + 45}
-            style={{ labels: { fontSize: 14, fontWeight: "bold" } }}
+            colorScale={["#EF767A","#456990" ]}
+            innerRadius={100}
+            style={{ labels: { fontSize: 15, fontWeight: "bold"} }}
           />
         </VictoryChart>
       </View>
@@ -126,25 +113,7 @@ export default function ProfileStats({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  titleContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: "20%",
-  },
-  title: {
-    fontFamily: "HelveticaNeue",
-    fontWeight: "bold",
-    fontSize: 21,
-  },
-  information: {
-    fontSize: 12,
-  },
-  chartContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    // marginTop: "10%"
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
