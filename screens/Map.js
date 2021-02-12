@@ -88,8 +88,12 @@ export default class Map extends Component {
         "6X": "#00933C",
         7: "#B933AD",
       },
+<<<<<<< HEAD
       citiBikeStationsData: [],
       citiBikeDataRender: false,
+=======
+      citiBikeStationsData: []
+>>>>>>> 8ed25805f63d8ea77b8b9155c31127ac7aba5991
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -899,6 +903,7 @@ export default class Map extends Component {
           ) : (
             ""
           )}
+<<<<<<< HEAD
           {this.state.citiBikeDataRender ?
           this.state.citiBikeStationsData.map((elem) => {
             return (
@@ -912,6 +917,18 @@ export default class Map extends Component {
           }) : 
           <Text></Text>
         }
+=======
+          {this.state.citiBikeStationsData.map((elem) => {
+              return (
+                <Marker
+                  key={elem.name}
+                  coordinate={elem.location}
+                  title={`Station ${elem.name}`}
+                  description={`${String(elem.bikesAvailable)} bikes available!`}
+                ></Marker>
+              );
+          })}
+>>>>>>> 8ed25805f63d8ea77b8b9155c31127ac7aba5991
           {marker}
           {locationMarker}
         </MapView>
@@ -948,6 +965,7 @@ export default class Map extends Component {
                   size={22}
                   style={styles.icon}
                   color={"#2452F9"}
+<<<<<<< HEAD
                   onPress={() => {
                     this.getRouteDirections(
                       null,
@@ -960,6 +978,10 @@ export default class Map extends Component {
                         yourLocationPlaceId: null,
                       });
                   }}
+=======
+                  onPress={() => {                    
+                    this.getRouteDirections(null, this.state.destinationPlaceId, null, this.state.destination), this.setState({yourLocation: "", yourLocationPlaceId: null})}}
+>>>>>>> 8ed25805f63d8ea77b8b9155c31127ac7aba5991
                 />
               </View>
               <View style={{ flex: 1 }}>
@@ -1025,6 +1047,7 @@ export default class Map extends Component {
                     this.state.destination
                   )
                 )}
+<<<<<<< HEAD
               >
                 <Icon
                   name="ios-subway-outline"
@@ -1294,6 +1317,190 @@ export default class Map extends Component {
               <Text style={styles.yourLocationButtonText}>Your Location</Text>
             </View>
           </TouchableOpacity> */}
+=======
+              >
+                <Icon
+                  name="ios-subway-outline"
+                  size={18}
+                  style={
+                    this.state.navigationMode === "subway"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "subway"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  subway
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={
+                  this.state.navigationMode === "walk"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "walk",
+                  }),
+                  this.walkModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-walk-outline"
+                  size={18}
+                  style={
+                    this.state.navigationMode === "walk"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "walk"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  walk
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={
+                  this.state.navigationMode === "bike"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "bike",
+                  }),
+                  this.bikeModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-bicycle-outline"
+                  size={18}
+                  style={
+                    this.state.navigationMode === "bike"
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
+                  }
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "bike"
+                      ? styles.clickedChipText
+                      : ""
+                  }
+                >
+                  bike
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        )}
+        {predictions}
+        {yourLocationPredictions}
+
+        {this.state.estimatedDistance > 0 ? (
+          this.state.routingMode === true ? (
+            <View>
+              <TouchableOpacity
+                style={styles.stopButtonContainer}
+                onPress={() => {
+                  this.stopNaviHandler();
+                }}
+              >
+                <View style={styles.stopIconContainer}>
+                  <Icon
+                    name="ios-close-circle-outline"
+                    size={25}
+                    color="white"
+                  />
+                  <Text style={styles.stopButtonText}>Stop</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View>
+              <TouchableOpacity
+                style={styles.startButtonContainer}
+                onPress={() => {
+                  this.startNaviHandler();
+                }}
+              >
+                <View style={styles.iconContainer}>
+                  <Icon
+                    style={styles.locateIcon}
+                    name="ios-navigate"
+                    size={22}
+                  />
+                  <Text style={styles.startButtonText}>Start</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )
+        ) : (
+          <Text></Text>
+        )}
+
+        <TouchableOpacity
+          style={styles.yourLocationButtonContainer}
+          onPress={() => this.goToMyLocation()}
+        >
+          <View style={styles.yourLocationIconContainer}>
+            <Icon name="ios-radio-button-on-outline" size={22} color="white" />
+            <Text style={styles.yourLocationButtonText}>Your Location</Text>
+          </View>
+        </TouchableOpacity>
+
+>>>>>>> 8ed25805f63d8ea77b8b9155c31127ac7aba5991
         {/* <View style={styles.locateIconContainer}>
           <TouchableOpacity
             // style={styles.locateIconContainer}
