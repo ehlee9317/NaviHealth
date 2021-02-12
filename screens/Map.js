@@ -738,14 +738,18 @@ export default class Map extends Component {
     let finalDirectionsArr = [];
     let currDirectionDescription = ""
     let currDirectionCoordinates = {}
+    let currDirectionManeuver = null
     for (let i = 0; i < directions.length; i++) {
       let currDirection = directions[i];
       if (currDirection.html_instructions && !currDirection.steps) {
-        // console.log('currDirection---->',currDirection)
+        console.log('currDirection---->',currDirection)
         currDirectionCoordinates = {
           latitude: currDirection.start_location.lat,
           longitude: currDirection.start_location.lng,
         };
+        if (currDirection.maneuver) {
+          currDirectionManeuver = currDirection.maneuver
+        }
         let regexSanitizedCurrDirection = currDirection.html_instructions.replace(/(<([^>]+)>)/gi, "");
         if (regexSanitizedCurrDirection.indexOf("(") !== -1) {
           // finalDirectionsArr.push(
@@ -785,7 +789,8 @@ export default class Map extends Component {
       // console.log("finalDirectionsArr--->", finalDirectionsArr);
       finalDirectionsArr.push({
         description: currDirectionDescription,
-        coordinates: currDirectionCoordinates
+        coordinates: currDirectionCoordinates,
+        maneuver: currDirectionManeuver
       })
       // console.log('currDirectionDescription', currDirectionDescription)
       // console.log("finalDirectionsArr", finalDirectionsArr);
@@ -1016,6 +1021,7 @@ export default class Map extends Component {
           {this.state.directionsMarkerArr.map((elem, index) => {
               return(<Marker
                 key = {index}
+                title={elem.maneuver ? elem.maneuver : ""}
                 coordinate={elem.coordinates}
                 description={elem.description}
               ></Marker>)
