@@ -64,8 +64,8 @@ export default function GetStarted({ navigation }) {
               style={styles.icon}
             />
             <View style={styles.text_container}>
-              {item.content.map((instructions) => (
-                <Text style={styles.instructions}>{instructions} </Text>
+              {item.content.map((instructions, idx) => (
+                <Text key={idx} style={styles.instructions}>{instructions}</Text>
               ))}
             </View>
           </View>
