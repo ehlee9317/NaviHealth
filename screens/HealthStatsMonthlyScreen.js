@@ -115,7 +115,8 @@ export default function MonthlyHealthStatsScreen({ navigation }) {
             gutter={20}
             style={{ border: { stroke: "black" } }}
             colorScale={["#456990", "#EF767A"]}
-            data={[{ name: "Estimated" }, { name: "Actuals" }]}
+            data={[{ name: "Potential Calories Burned Per Route" }, { name: "Actual Calories Burned Per Route" }]}
+            itemsPerRow={1}
           />
           <VictoryAxis
             style={{
