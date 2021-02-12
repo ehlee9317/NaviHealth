@@ -738,6 +738,9 @@ export default class Map extends Component {
     });
   }
   pointByPointDirectionHandler() {
+    this.setState({
+      directionsMarkerArr: []
+    })
     const directions = this.state.directions;
     // console.log("Directions in screen-->", directions);
     // console.log("directions steps ---->", directions.steps)
@@ -749,7 +752,7 @@ export default class Map extends Component {
     for (let i = 0; i < directions.length; i++) {
       let currDirection = directions[i];
       if (currDirection.html_instructions && !currDirection.steps) {
-        console.log('currDirection---->',currDirection)
+        // console.log('currDirection---->',currDirection)
         currDirectionCoordinates = {
           latitude: currDirection.start_location.lat,
           longitude: currDirection.start_location.lng,
@@ -769,44 +772,65 @@ export default class Map extends Component {
             )
           // );
         } else {
+          
           currDirectionDescription = regexSanitizedCurrDirection
         }
       } else if (currDirection.html_instructions && currDirection.steps) {
-        for (let j = 0; j < currDirection.steps.length; j++) {
-          // let regexSanitizedCurrStepsDirection = currDirection.steps[j].replace(/(<([^>]+)>)/gi, "");
-          // finalDirectionsArr.push(regexSanitizedCurrStepsDirection)
-          let currStepsDirection = currDirection.steps[j];
-          console.log('currDirection.steps[j]---->', currStepsDirection)
+        // console.log('currDirection in steps--->', currDirection)
+        if (currDirection.html_instructions) {
+          currDirectionDescription = currDirection.html_instructions.replace(
+            /(<([^>]+)>)/gi,
+            ""
+          );
           currDirectionCoordinates = {
-            latitude: currStepsDirection.start_location.lat,
-            longitude: currStepsDirection.start_location.lng,
+            latitude: currDirection.start_location.lat,
+            longitude: currDirection.start_location.lng,
           };
-          if (currStepsDirection.html_instructions) {
-            let regexSanitizedCurrStepsDirection = currStepsDirection.html_instructions.replace(
-              /<[^>]*>?/gm,
-              ""
-            );
-            // console.log('regexSanitizedCurrStepsDirection---->', regexSanitizedCurrStepsDirection)
-            if (regexSanitizedCurrStepsDirection.indexOf("(") !== -1) {
+           finalDirectionsArr.push({
+             description: currDirectionDescription,
+             coordinates: currDirectionCoordinates,
+             maneuver: currDirectionManeuver,
+             headsign: currDirectionHeadSign,
+           });
+        }
+        if (currDirection.steps) {
+          console.log('currDirection.steps--->', currDirection.steps)
+          currDirection.steps.forEach((elem) => {
+            console.log('elem--', elem)
+            let regexSanitizedCurrStepsDirection = elem
+            .html_instructions.replace(/(<([^>]+)>)/gi, "");
+            currDirectionCoordinates = {
+              latitude: elem.start_location.lat,
+              longitude: elem.start_location.lng,
+            };
+            if (elem.maneuver) {
+            currDirectionManeuver = elem.maneuver;
+          }
+          if (regexSanitizedCurrStepsDirection.indexOf("(") !== -1) {
               currDirectionDescription = regexSanitizedCurrStepsDirection.slice(
                 0,
                 regexSanitizedCurrStepsDirection.indexOf("(")
               );
-            } else {
+            }
+            else {
               currDirectionDescription = regexSanitizedCurrStepsDirection;
             }
-          }
+            finalDirectionsArr.push({
+              description: currDirectionDescription,
+              coordinates: currDirectionCoordinates,
+              maneuver: currDirectionManeuver,
+              headsign: currDirectionHeadSign,
+            });
+          })
         }
       }
-      // console.log("finalDirectionsArr--->", finalDirectionsArr);
       finalDirectionsArr.push({
         description: currDirectionDescription,
         coordinates: currDirectionCoordinates,
         maneuver: currDirectionManeuver,
         headsign: currDirectionHeadSign
       })
-      // console.log('currDirectionDescription', currDirectionDescription)
-      // console.log("finalDirectionsArr", finalDirectionsArr);
+
     }
     this.setState({
       directionsMarkerArr: finalDirectionsArr,
