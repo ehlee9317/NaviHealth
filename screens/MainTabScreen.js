@@ -9,6 +9,7 @@ import Profile from "./Profile";
 import Map from "./Map";
 import SettingScreen from "./SettingScreen";
 import HealthStatsScreen from "./HealthStatsScreenMain";
+// import GetStarted from "./GetStartedScreen"
 
 const HomeStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
