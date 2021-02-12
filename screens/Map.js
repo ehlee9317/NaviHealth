@@ -19,7 +19,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { google } from "google-maps";
+import { google } from 'google-maps'
 
 export default class Map extends Component {
   constructor(props) {
@@ -89,6 +89,7 @@ export default class Map extends Component {
         7: "#B933AD",
       },
       citiBikeStationsData: [],
+      citiBikeDataRender: false,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -338,10 +339,10 @@ export default class Map extends Component {
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
-      // console.log(
-      //   "json onchangeYourLocation---->",
-      //   json
-      // );
+            // console.log(
+            //   "json onchangeYourLocation---->",
+            //   json
+            // );
       this.setState({
         yourLocationPredictions: json.predictions,
       });
@@ -362,41 +363,39 @@ export default class Map extends Component {
   //CITI BIKE API CALLS
 
   async getCitiBikeData() {
-    const stationLocationUrl =
-      "https://gbfs.citibikenyc.com/gbfs/en/station_information.json";
-    const stationStatusUrl =
-      "https://gbfs.citibikenyc.com/gbfs/en/station_status.json";
+    const stationLocationUrl = 'https://gbfs.citibikenyc.com/gbfs/en/station_information.json'
+    const stationStatusUrl = 'https://gbfs.citibikenyc.com/gbfs/en/station_status.json'
     try {
-      const locationResult = await fetch(stationLocationUrl);
+      const locationResult = await fetch(stationLocationUrl)
       const statusResult = await fetch(stationStatusUrl);
       const locationJson = await locationResult.json();
       const statusJson = await statusResult.json();
-      const locationResponse = locationJson.data.stations;
+      const locationResponse = locationJson.data.stations
       const statusResponse = statusJson.data.stations;
-      let result = [];
+      let result = []
       locationResponse.map((elem) => {
         for (let key in statusResponse) {
-          let currObj = statusResponse[key];
+          let currObj = statusResponse[key]
           if (currObj["legacy_id"] === elem.legacy_id) {
             result.push({
               location: {
                 latitude: elem.lat,
-                longitude: elem.lon,
+                longitude: elem.lon
               },
               name: elem.name,
-              bikesAvailable: currObj.num_bikes_available,
-            });
+              bikesAvailable: currObj.num_bikes_available
+            })
           }
         }
-      });
+      })
       this.setState({
-        citiBikeStationsData: result,
-      });
+        citiBikeStationsData: result
+      })
       // console.log('citiBikeStationsData---->', this.state.citiBikeStationsData)
       // console.log('Locationresponse---->', locationResponse)
       // console.log("Statusresponse---->", statusResponse);
     } catch (err) {
-      console.err(err);
+      console.err(err)
     }
   }
 
@@ -555,7 +554,10 @@ export default class Map extends Component {
       // console.log("destinationName in getRouteDirection---->", destinationName);
       const directionsArr = json.routes[0].legs[0].steps;
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
+      console.log('estimatedDistance in walk ---> ', estimatedDistance)
+      
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
+      console.log('estimatedDuration--->', estimatedDuration)
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -636,7 +638,7 @@ export default class Map extends Component {
         animated: true,
       });
       //disable comment to enable
-      // this.getCitiBikeData()
+      this.getCitiBikeData()
     } catch (error) {
       console.error(error);
     }
@@ -788,6 +790,9 @@ export default class Map extends Component {
       )
     );
 
+    
+
+
     return (
       <View style={styles.container}>
         <MapView
@@ -894,7 +899,8 @@ export default class Map extends Component {
           ) : (
             ""
           )}
-          {this.state.citiBikeStationsData.map((elem) => {
+          {this.state.citiBikeDataRender ?
+          this.state.citiBikeStationsData.map((elem) => {
             return (
               <Marker
                 key={elem.name}
@@ -903,7 +909,9 @@ export default class Map extends Component {
                 description={`${String(elem.bikesAvailable)} bikes available!`}
               ></Marker>
             );
-          })}
+          }) : 
+          <Text></Text>
+        }
           {marker}
           {locationMarker}
         </MapView>
@@ -921,208 +929,358 @@ export default class Map extends Component {
             }}
           />
         ) : (
-          <View style={styles.mainSearchContainer}>
-            <View style={styles.searchContainerTop}>
-              <SafeAreaView style={styles.inputContainer}>
-                <TouchableHighlight
-                  onPress={() => {
-                    console.log("back button clicked");
-                    this.setState({
-                      displayMainSearchBar: !this.state.displayMainSearchBar,
-                    });
-                  }}
-                  style={styles.backIcon}
-                >
-                  <Icon name="ios-chevron-back" size={30} color={"black"} />
-                </TouchableHighlight>
-                <View style={{ flex: 1 }}>
-                  <Icon
-                    name="ios-location"
-                    size={22}
-                    style={styles.icon}
-                    color={"#2452F9"}
-                    onPress={() => {
-                      this.getRouteDirections(
-                        null,
-                        this.state.destinationPlaceId,
-                        null,
-                        this.state.destination
-                      ),
-                        this.setState({
-                          yourLocation: "",
-                          yourLocationPlaceId: null,
-                        });
-                    }}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TextInput
-                    placeholder="Your location"
-                    style={styles.yourLocationInput}
-                    value={this.state.yourLocation}
-                    clearButtonMode="always"
-                    onChangeText={(yourLocation) => {
-                      this.setState({ yourLocation });
-                      this.onChangeYourLocationDebounced(yourLocation);
-                    }}
-                  />
-                </View>
-              </SafeAreaView>
-              <SafeAreaView style={styles.destinationInputContainer}>
-                <View style={{ flex: 1 }}>
-                  <Icon
-                    name="ios-location"
-                    size={22}
-                    style={styles.icon}
-                    color={"#EA484E"}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TextInput
-                    placeholder="Enter destination..."
-                    style={styles.destinationChangeInput}
-                    value={this.state.destination}
-                    clearButtonMode="always"
-                    onChangeText={(destination) => {
-                      // console.log(destination);
-                      this.setState({
-                        destination,
-                      });
-                      this.onChangeDestinationDebounced(destination);
-                    }}
-                  />
-                </View>
-              </SafeAreaView>
-              <ScrollView
-                horizontal
-                scrollEventThrottle={1}
-                showsHorizontalScrollIndicator={false}
-                height={100}
-                style={styles.chipsScrollView}
+          <View style={styles.searchContainer}>
+            <SafeAreaView style={styles.inputContainer}>
+              <TouchableHighlight
+                onPress={() => {
+                  console.log("back button clicked");
+                  this.setState({
+                    displayMainSearchBar: !this.state.displayMainSearchBar,
+                  });
+                }}
+                style={styles.backIcon}
               >
-                {/* {toggleCategories.map((category, index) => */}
-                <TouchableOpacity
+                <Icon name="ios-chevron-back" size={30} color={"black"} />
+              </TouchableHighlight>
+              <View style={{ flex: 1 }}>
+                <Icon
+                  name="ios-location"
+                  size={22}
+                  style={styles.icon}
+                  color={"#2452F9"}
+                  onPress={() => {
+                    this.getRouteDirections(
+                      null,
+                      this.state.destinationPlaceId,
+                      null,
+                      this.state.destination
+                    ),
+                      this.setState({
+                        yourLocation: "",
+                        yourLocationPlaceId: null,
+                      });
+                  }}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  placeholder="Your location"
+                  style={styles.yourLocationInput}
+                  value={this.state.yourLocation}
+                  clearButtonMode="always"
+                  onChangeText={(yourLocation) => {
+                    this.setState({ yourLocation });
+                    this.onChangeYourLocationDebounced(yourLocation);
+                  }}
+                />
+              </View>
+            </SafeAreaView>
+            <SafeAreaView style={styles.destinationInputContainer}>
+              <View style={{ flex: 1 }}>
+                <Icon
+                  name="ios-location"
+                  size={22}
+                  style={styles.icon}
+                  color={"#EA484E"}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  placeholder="Enter destination..."
+                  style={styles.destinationChangeInput}
+                  value={this.state.destination}
+                  clearButtonMode="always"
+                  onChangeText={(destination) => {
+                    // console.log(destination);
+                    this.setState({
+                      destination,
+                    });
+                    this.onChangeDestinationDebounced(destination);
+                  }}
+                />
+              </View>
+            </SafeAreaView>
+            <ScrollView
+              horizontal
+              scrollEventThrottle={1}
+              showsHorizontalScrollIndicator={false}
+              height={100}
+              style={styles.chipsScrollView}
+            >
+              {/* {toggleCategories.map((category, index) => */}
+              <TouchableOpacity
+                style={
+                  this.state.navigationMode === "subway"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "subway",
+                  }),
+                  this.subwayModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-subway-outline"
+                  size={18}
                   style={
                     this.state.navigationMode === "subway"
-                      ? styles.clickedChipsItem
-                      : styles.chipsItem
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
                   }
-                  onPress={() => (
-                    this.setState({
-                      navigationMode: "subway",
-                    }),
-                    this.subwayModeHandler(
-                      this.state.yourLocationPlaceId,
-                      this.state.destinationPlaceId,
-                      this.state.yourLocation,
-                      this.state.destination
-                    )
-                  )}
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "subway"
+                      ? styles.clickedChipText
+                      : ""
+                  }
                 >
-                  <Icon
-                    name="ios-subway-outline"
-                    size={18}
-                    style={
-                      this.state.navigationMode === "subway"
-                        ? styles.clickedChipsIcon
-                        : styles.chipsIcon
-                    }
-                  />
-                  <Text
-                    style={
-                      this.state.navigationMode === "subway"
-                        ? styles.clickedChipText
-                        : ""
-                    }
-                  >
-                    subway
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                  subway
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={
+                  this.state.navigationMode === "walk"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "walk",
+                  }),
+                  this.walkModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-walk-outline"
+                  size={18}
                   style={
                     this.state.navigationMode === "walk"
-                      ? styles.clickedChipsItem
-                      : styles.chipsItem
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
                   }
-                  onPress={() => (
-                    this.setState({
-                      navigationMode: "walk",
-                    }),
-                    this.walkModeHandler(
-                      this.state.yourLocationPlaceId,
-                      this.state.destinationPlaceId,
-                      this.state.yourLocation,
-                      this.state.destination
-                    )
-                  )}
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "walk"
+                      ? styles.clickedChipText
+                      : ""
+                  }
                 >
-                  <Icon
-                    name="ios-walk-outline"
-                    size={18}
-                    style={
-                      this.state.navigationMode === "walk"
-                        ? styles.clickedChipsIcon
-                        : styles.chipsIcon
-                    }
-                  />
-                  <Text
-                    style={
-                      this.state.navigationMode === "walk"
-                        ? styles.clickedChipText
-                        : ""
-                    }
-                  >
-                    walk
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                  walk
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={
+                  this.state.navigationMode === "bike"
+                    ? styles.clickedChipsItem
+                    : styles.chipsItem
+                }
+                onPress={() => (
+                  this.setState({
+                    navigationMode: "bike",
+                  }),
+                  this.bikeModeHandler(
+                    this.state.yourLocationPlaceId,
+                    this.state.destinationPlaceId,
+                    this.state.yourLocation,
+                    this.state.destination
+                  )
+                )}
+              >
+                <Icon
+                  name="ios-bicycle-outline"
+                  size={18}
                   style={
                     this.state.navigationMode === "bike"
-                      ? styles.clickedChipsItem
-                      : styles.chipsItem
+                      ? styles.clickedChipsIcon
+                      : styles.chipsIcon
                   }
-                  onPress={() => (
-                    this.setState({
-                      navigationMode: "bike",
-                    }),
-                    this.bikeModeHandler(
-                      this.state.yourLocationPlaceId,
-                      this.state.destinationPlaceId,
-                      this.state.yourLocation,
-                      this.state.destination
-                    )
-                  )}
+                />
+                <Text
+                  style={
+                    this.state.navigationMode === "bike"
+                      ? styles.clickedChipText
+                      : ""
+                  }
                 >
-                  <Icon
-                    name="ios-bicycle-outline"
-                    size={18}
-                    style={
-                      this.state.navigationMode === "bike"
-                        ? styles.clickedChipsIcon
-                        : styles.chipsIcon
-                    }
-                  />
-                  <Text
-                    style={
-                      this.state.navigationMode === "bike"
-                        ? styles.clickedChipText
-                        : ""
-                    }
-                  >
-                    bike
-                  </Text>
-                </TouchableOpacity>
-              </ScrollView>
-            </View>
-
-            {/* <View style={styles.searchContainerBottom}>
-              <Text>Testing</Text>
-            </View> */}
+                  bike
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
         )}
         {predictions}
         {yourLocationPredictions}
-        <View width="40%">
+
+        {this.state.estimatedDistance > 0 ? (
+          this.state.routingMode === true ? (
+            <View>
+              <TouchableOpacity
+                style={styles.stopButtonContainer}
+                onPress={() => {
+                  this.stopNaviHandler();
+                }}
+              >
+                <View style={styles.stopIconContainer}>
+                  <Icon
+                    name="ios-close-circle-outline"
+                    size={25}
+                    color="white"
+                  />
+                  <Text style={styles.stopButtonText}>Stop</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.yourLocationButtonContainer}
+                onPress={() => this.goToMyLocation()}
+              >
+                <View style={styles.yourLocationIconContainer}>
+                  <Icon
+                    name="ios-radio-button-on-outline"
+                    size={22}
+                    color="white"
+                  />
+                  <Text style={styles.yourLocationButtonText}>
+                    Your Location
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View>
+              <TouchableOpacity
+                style={styles.startButtonContainer}
+                onPress={() => {
+                  this.startNaviHandler();
+                }}
+              >
+                <View style={styles.iconContainer}>
+                  <Icon
+                    style={styles.locateIcon}
+                    name="ios-navigate"
+                    size={22}
+                  />
+                  <Text style={styles.startButtonText}>Start</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.yourLocationButtonContainer}
+                onPress={() => this.goToMyLocation()}
+              >
+                <View style={styles.yourLocationIconContainer}>
+                  <Icon
+                    name="ios-radio-button-on-outline"
+                    size={22}
+                    color="white"
+                  />
+                  <Text style={styles.yourLocationButtonText}>
+                    Your Location
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.directionButtonContainer}
+                onPress={() => {
+                  console.log("Button pressed");
+                  this.props.navigation.navigate("Directions", {
+                    directions: this.state.directions,
+                  });
+                }}
+              >
+                <View style={styles.directionIconContainer}>
+                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                  <Text style={styles.directionButtonText}>Directions</Text>
+                </View>
+              </TouchableOpacity>
+              {this.state.navigationMode === "bike" ? 
+              <TouchableOpacity
+                style={styles.yourLocationButtonContainer}
+                onPress={
+                  () =>
+                  this.state.citiBikeDataRender === true ?
+                this.setState({
+                  citiBikeDataRender: false 
+                }) : this.setState({
+                  citiBikeDataRender: true
+                })
+              }
+              >
+                <View style={styles.yourLocationIconContainer}>
+                  <Icon
+                    name="ios-radio-button-on-outline"
+                    size={22}
+                    color="white"
+                  />
+                  <Text style={styles.yourLocationButtonText}>
+                    Citi Bikes
+                  </Text>
+                </View>
+              </TouchableOpacity> : 
+              <Text></Text>
+            }
+            </View>
+          )
+        ) : (
+          <Text></Text>
+        )}
+        {/* <View>
           <TouchableOpacity
             style={styles.yourLocationButtonContainer}
             onPress={() => this.goToMyLocation()}
@@ -1135,87 +1293,7 @@ export default class Map extends Component {
               />
               <Text style={styles.yourLocationButtonText}>Your Location</Text>
             </View>
-          </TouchableOpacity>
-        </View>
-
-        {this.state.estimatedDistance > 0 ? (
-          this.state.routingMode === true ? (
-            <View style={styles.searchContainerBottom}>
-              <View width="40%">
-                <TouchableOpacity
-                  style={styles.stopButtonContainer}
-                  onPress={() => {
-                    this.stopNaviHandler();
-                  }}
-                >
-                  <View style={styles.stopIconContainer}>
-                    <Icon
-                      name="ios-close-circle-outline"
-                      size={25}
-                      color="white"
-                    />
-                    <Text style={styles.stopButtonText}>Stop</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View width="40%">
-                <TouchableOpacity
-                  style={styles.directionButtonContainer}
-                  onPress={() => {
-                    console.log("Button pressed");
-                    this.props.navigation.navigate("Directions", {
-                      directions: this.state.directions,
-                    });
-                  }}
-                >
-                  <View style={styles.directionIconContainer}>
-                    <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                    <Text style={styles.directionButtonText}>Directions</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.searchContainerBottom}>
-              <View width="40%">
-                <TouchableOpacity
-                  style={styles.startButtonContainer}
-                  onPress={() => {
-                    this.startNaviHandler();
-                  }}
-                >
-                  <View style={styles.iconContainer}>
-                    <Icon
-                      style={styles.locateIcon}
-                      name="ios-navigate"
-                      size={22}
-                    />
-                    <Text style={styles.startButtonText}>Start</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View width="40%">
-                <TouchableOpacity
-                  style={styles.directionButtonContainer}
-                  onPress={() => {
-                    console.log("Button pressed");
-                    this.props.navigation.navigate("Directions", {
-                      directions: this.state.directions,
-                    });
-                  }}
-                >
-                  <View style={styles.directionIconContainer}>
-                    <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                    <Text style={styles.directionButtonText}>Directions</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )
-        ) : (
-          <Text></Text>
-        )}
-
+          </TouchableOpacity> */}
         {/* <View style={styles.locateIconContainer}>
           <TouchableOpacity
             // style={styles.locateIconContainer}
@@ -1233,6 +1311,7 @@ export default class Map extends Component {
             <Icon name="ios-radio-button-on-outline" size={40} color={"#49BEAA"} />
           </TouchableOpacity>
         </View> */}
+        {/* </View> */}
       </View>
     );
   }
@@ -1319,21 +1398,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: 310,
   },
-  mainSearchContainer: {
-    flex: 1,
-    // flexDirection: "row",
-  },
-  searchContainerTop: {
+  searchContainer: {
     backgroundColor: "white",
     paddingBottom: "15%",
-    // alignContent: "space-between",
-  },
-  searchContainerBottom: {
-    backgroundColor: "white",
-    paddingBottom: "15%",
-    // alignContent: "space-between",
-    // alignItems: "flex-end",
-    // alignContent: "flex-end"
   },
   backIcon: {
     marginLeft: "2%",
@@ -1371,7 +1438,7 @@ const styles = StyleSheet.create({
   },
   startButtonContainer: {
     backgroundColor: "#49BEAA",
-    // width: "40%",
+    width: "40%",
     height: 30,
     borderRadius: 100,
     margin: "1%",
@@ -1396,7 +1463,7 @@ const styles = StyleSheet.create({
   },
   stopButtonContainer: {
     backgroundColor: "red",
-    // width: "40%",
+    width: "40%",
     height: 30,
     borderRadius: 100,
     margin: "1%",
@@ -1416,7 +1483,7 @@ const styles = StyleSheet.create({
   },
   directionButtonContainer: {
     backgroundColor: "white",
-    // width: "40%",
+    width: "40%",
     height: 30,
     borderRadius: 100,
     borderWidth: 0.2,
@@ -1437,7 +1504,7 @@ const styles = StyleSheet.create({
   },
   yourLocationButtonContainer: {
     backgroundColor: "#49BEAA",
-    // width: 170,
+    width: "40%",
     height: 30,
     borderRadius: 100,
     borderWidth: 0.2,
