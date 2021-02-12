@@ -637,7 +637,6 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
-      //disable comment to enable
       this.getCitiBikeData()
     } catch (error) {
       console.error(error);
@@ -718,9 +717,12 @@ export default class Map extends Component {
       marker = (
         <Marker
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
+          
+          title={`Distance: ${this.state.estimatedDistance.toFixed(1)} Kilometers`}
+          
         >
           <Image
-            source={require("../assets/redmarker.png")}
+            source={require("../assets/redmarker.png")} 
             style={styles.markerImage}
           />
         </Marker>
