@@ -12,6 +12,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import * as firebase from "firebase";
 import { loggingOut } from "../api/firebaseMethods";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import ProfileStats from './ProfileStatsScreen'
+import { bmiCalculator, ageCalculator } from '../api/healthStatsMethods'
 
 export default function Profile({ navigation }) {
   const db = firebase.firestore();
@@ -21,26 +23,6 @@ export default function Profile({ navigation }) {
   const [weight, setWeight] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
 
-  // useEffect(() => {
-  //   async function getUserInfo() {
-  //     try {
-  //       let doc = await db.collection("users").doc(currentUserUID).get();
-
-  //       if (!doc.exists) {
-  //         Alert.alert("No user data found!");
-  //       } else {
-  //         let dataObj = doc.data();
-  //         setFirstName(dataObj.firstName);
-  //         setHeight(dataObj.height);
-  //         setWeight(dataObj.weight);
-  //         setDateOfBirth(dataObj.dateOfBirth);
-  //       }
-  //     } catch (error) {
-  //       console.log("something went wrong");
-  //     }
-  //   }
-  //   getUserInfo();
-  // }, []);
   useEffect(
     () => {
       const unsubscribe = db
@@ -54,56 +36,15 @@ export default function Profile({ navigation }) {
             setHeight(dataObj.height);
             setWeight(dataObj.weight);
             setDateOfBirth(dataObj.dateOfBirth);
-           
+
           },
-          // err => {
-          //   // setError(err)
-          // }
         )
 
       // returning the unsubscribe function will ensure that
       // we unsubscribe from document changes when our id
       // changes to a different value.
       return () => unsubscribe()
-    },
-    []
-  )
-
-  const handlePress = () => {
-    loggingOut();
-    navigation.replace("Home");
-  };
-
-  const bmiCalculator = (height, weight) => {
-    const weightKg = weight / 2.205;
-    const heightM = height / 100;
-    return (weightKg / heightM ** 2).toFixed(2);
-  };
-
-  const ageCalculator = (dateOfBirth) => {
-    //User Date of Birth
-    const dateOfBirthArray = dateOfBirth.split("-");
-    const userYear = dateOfBirthArray.pop();
-    const userMonth = parseInt(dateOfBirthArray.slice(0, 1));
-    const userDay = parseInt(dateOfBirthArray.slice(1, 2));
-
-    //Today's Date
-    const today = new Date();
-    const todayYear = today.getFullYear();
-    const todayMonth = today.getMonth() + 1;
-    const todayDay = today.getDate();
-
-    const age = todayYear - userYear;
-    const monthDifference = userMonth - todayMonth;
-    const dayDifference = userDay - todayDay;
-
-    if (monthDifference >= 1) {
-      return age - 1;
-    } else if (dayDifference >= 1) {
-      return age - 1;
-    }
-    return age;
-  };
+    },[])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -170,10 +111,9 @@ export default function Profile({ navigation }) {
           <Text style={[styles.text, styles.subText]}>Weight</Text>
         </View>
       </View>
-
-      <Button title="logout" style={styles.logOutButton} onPress={handlePress}>
-        <Text style={styles.logoutText}>Log Out</Text>
-      </Button>
+      <View style={styles.statsBox}>
+        {<ProfileStats />}
+      </View>
     </SafeAreaView>
   );
 }
@@ -251,4 +191,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
+  chartContainer: {
+    alignSelf: "center",
+    bottom: "2%"
+  }
 });
