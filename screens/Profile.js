@@ -69,7 +69,7 @@ export default function Profile({ navigation }) {
         </View>
       </View>
 
-      <View style={styles.nameContainer}>
+      <View style={styles.infoContainer}>
         <Text style={[styles.text, { fontWeight: "200", fontSize: 34 }]}>
           {firstName}
         </Text>
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: "center",
-    top: "3%",
+    top: "-25%",
   },
   profileImage: {
     width: 195,
@@ -168,10 +168,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  nameContainer: {
+  infoContainer: {
     alignSelf: "center",
     alignItems: "center",
-    top: "7%",
+    top: "-21%",
   },
   text: {
     fontFamily: "HelveticaNeue",
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: "row",
     alignSelf: "center",
-    top: "18%",
+    top: "-30%",
   },
   statsBox: {
     alignItems: "center",
