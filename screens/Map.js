@@ -840,9 +840,9 @@ export default class Map extends Component {
               coordinates={this.state.pointCoords}
               strokeWidth={4}
               strokeColor="#49BEAA"
-              onPress={() => {
-                console.log("hello");
-              }}
+              // onPress={() => {
+              //   console.log("hello");
+              // }}
             />
           ) : this.state.navigationMode === "subway" ? (
             this.state.directions.map((elem, index) => {
