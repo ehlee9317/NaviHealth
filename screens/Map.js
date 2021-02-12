@@ -99,6 +99,7 @@ export default class Map extends Component {
       citiBikeStationsData: [],
       citiBikeDataRender: false,
       directionsMarkerArr: [],
+      mapDirectionsMode: false,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -229,6 +230,7 @@ export default class Map extends Component {
           edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
           animated: true,
         });
+        this.pointByPointDirectionHandler();
       } catch (error) {
         console.error(error);
       }
@@ -279,6 +281,7 @@ export default class Map extends Component {
           edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
           animated: true,
         });
+        this.pointByPointDirectionHandler()
       } catch (error) {
         console.error(error);
       }
@@ -331,6 +334,7 @@ export default class Map extends Component {
           edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
           animated: true,
         });
+        this.pointByPointDirectionHandler()
       } catch (error) {
         console.error(error);
       }
@@ -552,6 +556,7 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
+      this.pointByPointDirectionHandler()
     } catch (error) {
       console.error(error);
     }
@@ -665,6 +670,7 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
+      this.pointByPointDirectionHandler();
       this.getCitiBikeData();
     } catch (error) {
       console.error(error);
@@ -739,6 +745,7 @@ export default class Map extends Component {
     let currDirectionDescription = ""
     let currDirectionCoordinates = {}
     let currDirectionManeuver = null
+    let currDirectionHeadSign = null
     for (let i = 0; i < directions.length; i++) {
       let currDirection = directions[i];
       if (currDirection.html_instructions && !currDirection.steps) {
@@ -747,6 +754,9 @@ export default class Map extends Component {
           latitude: currDirection.start_location.lat,
           longitude: currDirection.start_location.lng,
         };
+        if (currDirection.headsign) {
+          currDirectionHeadSign = currDirection.headsign
+        }
         if (currDirection.maneuver) {
           currDirectionManeuver = currDirection.maneuver
         }
@@ -762,35 +772,38 @@ export default class Map extends Component {
           currDirectionDescription = regexSanitizedCurrDirection
         }
       } else if (currDirection.html_instructions && currDirection.steps) {
-        // for (let j = 0; j < currDirection.steps.length; j++) {
-        //   // let regexSanitizedCurrStepsDirection = currDirection.steps[j].replace(/(<([^>]+)>)/gi, "");
-        //   // finalDirectionsArr.push(regexSanitizedCurrStepsDirection)
-        //   let currStepsDirection = currDirection.steps[j];
-        //   // console.log('currDirection.steps[j]---->', currStepsDirection)
-        //   if (currStepsDirection.html_instructions) {
-        //     let regexSanitizedCurrStepsDirection = currStepsDirection.html_instructions.replace(
-        //       /<[^>]*>?/gm,
-        //       ""
-        //     );
-        //     // console.log('regexSanitizedCurrStepsDirection---->', regexSanitizedCurrStepsDirection)
-        //     if (regexSanitizedCurrStepsDirection.indexOf("(") !== -1) {
-        //       finalDirectionsArr.push(
-        //         regexSanitizedCurrStepsDirection.slice(
-        //           0,
-        //           regexSanitizedCurrStepsDirection.indexOf("(")
-        //         )
-        //       );
-        //     } else {
-        //       finalDirectionsArr.push(regexSanitizedCurrStepsDirection);
-        //     }
-        //   }
-        // }
+        for (let j = 0; j < currDirection.steps.length; j++) {
+          // let regexSanitizedCurrStepsDirection = currDirection.steps[j].replace(/(<([^>]+)>)/gi, "");
+          // finalDirectionsArr.push(regexSanitizedCurrStepsDirection)
+          let currStepsDirection = currDirection.steps[j];
+          console.log('currDirection.steps[j]---->', currStepsDirection)
+          currDirectionCoordinates = {
+            latitude: currStepsDirection.start_location.lat,
+            longitude: currStepsDirection.start_location.lng,
+          };
+          if (currStepsDirection.html_instructions) {
+            let regexSanitizedCurrStepsDirection = currStepsDirection.html_instructions.replace(
+              /<[^>]*>?/gm,
+              ""
+            );
+            // console.log('regexSanitizedCurrStepsDirection---->', regexSanitizedCurrStepsDirection)
+            if (regexSanitizedCurrStepsDirection.indexOf("(") !== -1) {
+              currDirectionDescription = regexSanitizedCurrStepsDirection.slice(
+                0,
+                regexSanitizedCurrStepsDirection.indexOf("(")
+              );
+            } else {
+              currDirectionDescription = regexSanitizedCurrStepsDirection;
+            }
+          }
+        }
       }
       // console.log("finalDirectionsArr--->", finalDirectionsArr);
       finalDirectionsArr.push({
         description: currDirectionDescription,
         coordinates: currDirectionCoordinates,
-        maneuver: currDirectionManeuver
+        maneuver: currDirectionManeuver,
+        headsign: currDirectionHeadSign
       })
       // console.log('currDirectionDescription', currDirectionDescription)
       // console.log("finalDirectionsArr", finalDirectionsArr);
@@ -1001,7 +1014,7 @@ export default class Map extends Component {
           )}
           {this.state.citiBikeDataRender ? (
             this.state.citiBikeStationsData.map((elem) => {
-              console.log('citibike coor')
+              console.log("citibike coor");
               return (
                 <Marker
                   key={elem.name}
@@ -1018,14 +1031,26 @@ export default class Map extends Component {
           )}
           {marker}
           {locationMarker}
-          {this.state.directionsMarkerArr.map((elem, index) => {
-              return(<Marker
-                key = {index}
-                title={elem.maneuver ? elem.maneuver : ""}
-                coordinate={elem.coordinates}
-                description={elem.description}
-              ></Marker>)
-          })}
+          {this.state.mapDirectionsMode ? (
+            this.state.directionsMarkerArr.map((elem, index) => {
+              return (
+                <Marker
+                  key={index}
+                  title={
+                    elem.maneuver
+                      ? elem.maneuver
+                      : elem.headsign
+                      ? elem.headsign
+                      : ""
+                  }
+                  coordinate={elem.coordinates}
+                  description={elem.description}
+                ></Marker>
+              );
+            })
+          ) : (
+            <Text></Text>
+          )}
         </MapView>
 
         {/* Main Search Bar */}
@@ -1289,14 +1314,20 @@ export default class Map extends Component {
                 style={styles.directionButtonContainer}
                 onPress={() => {
                   console.log("Button pressed");
-                  this.props.navigation.navigate("Directions", {
-                    directions: this.state.directions,
-                  });
+                  this.state.mapDirectionsMode
+                    ? this.setState({
+                        mapDirectionsMode: false,
+                      })
+                    : this.setState({
+                        mapDirectionsMode: true,
+                      });
                 }}
               >
                 <View style={styles.directionIconContainer}>
                   <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                  <Text style={styles.directionButtonText}>Directions</Text>
+                  <Text style={styles.directionButtonText}>
+                    Directions Mode
+                  </Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -1351,14 +1382,20 @@ export default class Map extends Component {
                 style={styles.directionButtonContainer}
                 onPress={() => {
                   console.log("Button pressed");
-                  this.props.navigation.navigate("Directions", {
-                    directions: this.state.directions,
-                  });
+                  this.state.mapDirectionsMode
+                    ? this.setState({
+                        mapDirectionsMode: false,
+                      })
+                    : this.setState({
+                        mapDirectionsMode: true,
+                      });
                 }}
               >
                 <View style={styles.directionIconContainer}>
                   <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                  <Text style={styles.directionButtonText}>Directions</Text>
+                  <Text style={styles.directionButtonText}>
+                    Directions Mode
+                  </Text>
                 </View>
               </TouchableOpacity>
               {this.state.navigationMode === "bike" ? (
