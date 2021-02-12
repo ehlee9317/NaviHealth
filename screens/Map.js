@@ -793,7 +793,6 @@ export default class Map extends Component {
     this.setState({
       directionsMarkerArr: finalDirectionsArr,
     });
-    console.log('this.state.directionsMarkerArr--->', this.state.directionsMarkerArr)
   }
 
   render() {
@@ -997,6 +996,7 @@ export default class Map extends Component {
           )}
           {this.state.citiBikeDataRender ? (
             this.state.citiBikeStationsData.map((elem) => {
+              console.log('citibike coor')
               return (
                 <Marker
                   key={elem.name}
@@ -1013,6 +1013,13 @@ export default class Map extends Component {
           )}
           {marker}
           {locationMarker}
+          {this.state.directionsMarkerArr.map((elem, index) => {
+              return(<Marker
+                key = {index}
+                coordinate={elem.coordinates}
+                description={elem.description}
+              ></Marker>)
+          })}
         </MapView>
 
         {/* Main Search Bar */}
@@ -1223,9 +1230,6 @@ export default class Map extends Component {
         )}
         {predictions}
         {yourLocationPredictions}
-        {this.state.directionsMarkerArr.map((elem) => {
-          console.log('elem.description--->', elem.description)
-        })}
 
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
