@@ -96,8 +96,9 @@ export default class Map extends Component {
         "6X": "#00933C",
         7: "#B933AD",
       },
-      citiBikeStationsData: [],
-      citiBikeDataRender: false,
+      //CitiBike States
+      // citiBikeStationsData: [],
+      // citiBikeDataRender: false,
       directionsMarkerArr: [],
       mapDirectionsMode: false,
     };
@@ -130,7 +131,6 @@ export default class Map extends Component {
     );
     this.watchID = navigator.geolocation.watchPosition(
       (position) => {
-        // console.log("position.coords--->", position.coords);
         const newRecordedCoordinates = {
           latitude: this.state.recordedLatitude,
           longitude: this.state.recordedLongitude,
@@ -150,15 +150,7 @@ export default class Map extends Component {
                 this.calcDistance(newRecordedCoordinates),
               prevLatLng: newRecordedCoordinates,
             }
-            // console.log("watchPosition is Running"),
-            // console.log("recordedLatitude--->", this.state.recordedLatitude),
-            // console.log("recordedLongitude--->", this.state.recordedLongitude),
-            // console.log("recordedDistance--->", this.state.recordedDistance)
           );
-          // console.log(
-          //   "recordedCoordinates--->",
-          //   this.state.recordedCoordinates
-          // );
         }
       },
       (error) => console.error(error),
@@ -187,20 +179,10 @@ export default class Map extends Component {
         } else {
           apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
         }
-        // console.log("apiUrl----->", apiUrl);
         const response = await fetch(apiUrl);
         const json = await response.json();
-        // console.log('startingName in getRouteDirection---->', startingName)
-        // console.log("destinationName in getRouteDirection---->", destinationName);
-        // console.log(json.routes[0].legs[0].distance.value);
-        // console.log(json.routes[0].legs[0].duration.value);
-
         const directionsArr = json.routes[0].legs[0].steps;
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
-        console.log(
-          "estimatedDuration without edit--->",
-          json.routes[0].legs[0].duration.text
-        );
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const estimatedDurationText = json.routes[0].legs[0].duration.text;
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
@@ -223,8 +205,6 @@ export default class Map extends Component {
           : this.setState({
               yourLocation: startingName,
             });
-        //  console.log('destination in getRoute ---->', this.state.destination)
-        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
         Keyboard.dismiss();
         this.map.fitToCoordinates(pointCoords, {
           edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
@@ -242,14 +222,8 @@ export default class Map extends Component {
         } else {
           apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
         }
-        // console.log("apiUrl----->", apiUrl);
         const response = await fetch(apiUrl);
         const json = await response.json();
-        // console.log('startingName in getRouteDirection---->', startingName)
-        // console.log("destinationName in getRouteDirection---->", destinationName);
-        // console.log(json.routes[0].legs[0].distance.value);
-        // console.log(json.routes[0].legs[0].duration.value);
-        // console.log(json.routes[0].legs[0].steps);
         const directionsArr = json.routes[0].legs[0].steps;
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
@@ -274,8 +248,6 @@ export default class Map extends Component {
           : this.setState({
               yourLocation: startingName,
             });
-        //  console.log('destination in getRoute ---->', this.state.destination)
-        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
         Keyboard.dismiss();
         this.map.fitToCoordinates(pointCoords, {
           edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
@@ -293,17 +265,9 @@ export default class Map extends Component {
         } else {
           apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
         }
-        // console.log("apiUrl----->", apiUrl);
         const response = await fetch(apiUrl);
         const json = await response.json();
-        // console.log('startingName in getRouteDirection---->', startingName)
-        // console.log("destinationName in getRouteDirection---->", destinationName);
-        // console.log(json.routes[0].legs[0].distance.value);
-        // console.log(json.routes[0].legs[0].duration.value);
-
         const directionsArr = json.routes[0].legs[0].steps;
-        // console.log('bike mode--->', json.routes[0].legs[0].steps)
-        // console.log('this.state.navigationMode in bike--->', this.state.navigationMode)
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const estimatedDurationText = json.routes[0].legs[0].duration.text;
@@ -327,8 +291,6 @@ export default class Map extends Component {
           : this.setState({
               yourLocation: startingName,
             });
-        //  console.log('destination in getRoute ---->', this.state.destination)
-        //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
         Keyboard.dismiss();
         this.map.fitToCoordinates(pointCoords, {
           edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
@@ -362,10 +324,6 @@ export default class Map extends Component {
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
-      // console.log(
-      //   "json onchangeYourLocation---->",
-      //   json
-      // );
       this.setState({
         yourLocationPredictions: json.predictions,
       });
@@ -374,55 +332,43 @@ export default class Map extends Component {
     }
   }
 
-  //CURRENT LOCATION PLACES_ID REVERT
-
-  // async getCurrentLocationPlaceId() {
-  //   const currentPlaceIdUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude}, ${this.state.longitude}&destination=null, null&mode=walk&key=${GOOGLE_API_KEY}`
-  //   const currentPlaceIdResponse = await fetch(currentPlaceIdUrl)
-  //   const currentPlaceIdJson = await currentPlaceIdResponse.json();
-
-  //   console.log('currentPlaceIdJson---->', currentPlaceIdJson)
-  // }
   //CITI BIKE API CALLS
 
-  async getCitiBikeData() {
-    const stationLocationUrl =
-      "https://gbfs.citibikenyc.com/gbfs/en/station_information.json";
-    const stationStatusUrl =
-      "https://gbfs.citibikenyc.com/gbfs/en/station_status.json";
-    try {
-      const locationResult = await fetch(stationLocationUrl);
-      const statusResult = await fetch(stationStatusUrl);
-      const locationJson = await locationResult.json();
-      const statusJson = await statusResult.json();
-      const locationResponse = locationJson.data.stations;
-      const statusResponse = statusJson.data.stations;
-      let result = [];
-      locationResponse.map((elem) => {
-        for (let key in statusResponse) {
-          let currObj = statusResponse[key];
-          if (currObj["legacy_id"] === elem.legacy_id) {
-            result.push({
-              location: {
-                latitude: elem.lat,
-                longitude: elem.lon,
-              },
-              name: elem.name,
-              bikesAvailable: currObj.num_bikes_available,
-            });
-          }
-        }
-      });
-      this.setState({
-        citiBikeStationsData: result,
-      });
-      // console.log('citiBikeStationsData---->', this.state.citiBikeStationsData)
-      // console.log('Locationresponse---->', locationResponse)
-      // console.log("Statusresponse---->", statusResponse);
-    } catch (err) {
-      console.err(err);
-    }
-  }
+  // async getCitiBikeData() {
+  //   const stationLocationUrl =
+  //     "https://gbfs.citibikenyc.com/gbfs/en/station_information.json";
+  //   const stationStatusUrl =
+  //     "https://gbfs.citibikenyc.com/gbfs/en/station_status.json";
+  //   try {
+  //     const locationResult = await fetch(stationLocationUrl);
+  //     const statusResult = await fetch(stationStatusUrl);
+  //     const locationJson = await locationResult.json();
+  //     const statusJson = await statusResult.json();
+  //     const locationResponse = locationJson.data.stations;
+  //     const statusResponse = statusJson.data.stations;
+  //     let result = [];
+  //     locationResponse.map((elem) => {
+  //       for (let key in statusResponse) {
+  //         let currObj = statusResponse[key];
+  //         if (currObj["legacy_id"] === elem.legacy_id) {
+  //           result.push({
+  //             location: {
+  //               latitude: elem.lat,
+  //               longitude: elem.lon,
+  //             },
+  //             name: elem.name,
+  //             bikesAvailable: currObj.num_bikes_available,
+  //           });
+  //         }
+  //       }
+  //     });
+  //     this.setState({
+  //       citiBikeStationsData: result,
+  //     });
+  //   } catch (err) {
+  //     console.err(err);
+  //   }
+  // }
 
   //MOVE CAMERA BACK TO CURRENT LOCATION
   goToMyLocation() {
@@ -517,14 +463,8 @@ export default class Map extends Component {
       } else {
         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=transit&transit_mode=subway&key=${GOOGLE_API_KEY}`;
       }
-      // console.log("apiUrl----->", apiUrl);
       const response = await fetch(apiUrl);
       const json = await response.json();
-      // console.log('startingName in getRouteDirection---->', startingName)
-      // console.log("destinationName in getRouteDirection---->", destinationName);
-      // console.log(json.routes[0].legs[0].distance.value);
-      // console.log(json.routes[0].legs[0].duration.value);
-      // console.log(json.routes[0].legs[0].steps);
       const directionsArr = json.routes[0].legs[0].steps;
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
@@ -549,8 +489,6 @@ export default class Map extends Component {
         : this.setState({
             yourLocation: startingName,
           });
-      //  console.log('destination in getRoute ---->', this.state.destination)
-      //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords, {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
@@ -575,18 +513,12 @@ export default class Map extends Component {
       } else {
         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=walking&key=${GOOGLE_API_KEY}`;
       }
-      // console.log("apiUrl----->", apiUrl);
       const response = await fetch(apiUrl);
       const json = await response.json();
-      // console.log('startingName in getRouteDirection---->', startingName)
-      // console.log("destinationName in getRouteDirection---->", destinationName);
       const directionsArr = json.routes[0].legs[0].steps;
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
-      console.log("estimatedDistance in walk ---> ", estimatedDistance);
-
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
-      console.log("estimatedDuration--->", estimatedDuration);
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -607,8 +539,6 @@ export default class Map extends Component {
         : this.setState({
             yourLocation: startingName,
           });
-      //  console.log('destination in getRoute ---->', this.state.destination)
-      //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords, {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
@@ -633,13 +563,9 @@ export default class Map extends Component {
       } else {
         apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.latitude},${this.state.longitude}&destination=place_id:${destinationPlaceId}&mode=bicycling&key=${GOOGLE_API_KEY}`;
       }
-      // console.log("apiUrl----->", apiUrl);
       const response = await fetch(apiUrl);
       const json = await response.json();
-      // console.log('startingName in getRouteDirection---->', startingName)
-      // console.log("destinationName in getRouteDirection---->", destinationName);
       const directionsArr = json.routes[0].legs[0].steps;
-      // console.log('directionsArr in bike--->', directionsArr)
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
@@ -663,15 +589,13 @@ export default class Map extends Component {
         : this.setState({
             yourLocation: startingName,
           });
-      //  console.log('destination in getRoute ---->', this.state.destination)
-      //  console.log('yourLocation in getRoute ---->', this.state.yourLocation)
       Keyboard.dismiss();
       this.map.fitToCoordinates(pointCoords, {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
       this.pointByPointDirectionHandler();
-      this.getCitiBikeData();
+      // this.getCitiBikeData();
     } catch (error) {
       console.error(error);
     }
@@ -714,10 +638,6 @@ export default class Map extends Component {
         }`,
         recordedDuration: `${hour} : ${minute} : ${second}`,
       });
-      // console.log(
-      //   "recordedDurationMin--->",
-      //   this.state.recordedDurationMin
-      // );
     }, 0);
     this.setState({
       timer,
@@ -742,8 +662,6 @@ export default class Map extends Component {
       directionsMarkerArr: []
     })
     const directions = this.state.directions;
-    // console.log("Directions in screen-->", directions);
-    // console.log("directions steps ---->", directions.steps)
     let finalDirectionsArr = [];
     let currDirectionDescription = ""
     let currDirectionCoordinates = {}
@@ -752,7 +670,6 @@ export default class Map extends Component {
     for (let i = 0; i < directions.length; i++) {
       let currDirection = directions[i];
       if (currDirection.html_instructions && !currDirection.steps) {
-        // console.log('currDirection---->',currDirection)
         currDirectionCoordinates = {
           latitude: currDirection.start_location.lat,
           longitude: currDirection.start_location.lng,
@@ -765,18 +682,15 @@ export default class Map extends Component {
         }
         let regexSanitizedCurrDirection = currDirection.html_instructions.replace(/(<([^>]+)>)/gi, "");
         if (regexSanitizedCurrDirection.indexOf("(") !== -1) {
-          // finalDirectionsArr.push(
             currDirectionDescription = regexSanitizedCurrDirection.slice(
               0,
               regexSanitizedCurrDirection.indexOf("(")
             )
-          // );
         } else {
 
           currDirectionDescription = regexSanitizedCurrDirection
         }
       } else if (currDirection.html_instructions && currDirection.steps) {
-        // console.log('currDirection in steps--->', currDirection)
         if (currDirection.html_instructions) {
           currDirectionDescription = currDirection.html_instructions.replace(
             /(<([^>]+)>)/gi,
@@ -838,13 +752,6 @@ export default class Map extends Component {
   }
 
   render() {
-    // console.log("directions--->", this.state.directions);
-    // console.log("hours--->", this.state.hours);
-    // console.log("minutes--->", this.state.minutes);
-    // console.log("seconds--->", this.state.seconds);
-    // console.log("miliseconds--->", this.state.miliseconds);
-    // console.log('directions--->', this.state.directions)
-
     let marker = null;
     let locationMarker = null;
     if (this.state.pointCoords.length > 1) {
@@ -871,13 +778,6 @@ export default class Map extends Component {
         </Marker>
       );
     }
-
-    // if (this.state.citiBikeStationsData.length > 0) {
-    //   this.state.citiBikeStationsData.map((elem) => {
-    //     <Marker coordinate={elem.location}>
-    //     </Marker>
-    //   })
-    // }
     const predictions = this.state.predictions.map((prediction) => (
       <TouchableHighlight
         key={prediction.place_id}
@@ -934,12 +834,6 @@ export default class Map extends Component {
             this.map = map;
           }}
           style={styles.map}
-          // region={{
-          //   latitude: this.state.latitude,
-          //   longitude: this.state.longitude,
-          //   latitudeDelta: 0.01,
-          //   longitudeDelta: 0.0121,
-          // }}
           showsUserLocation={true}
           followsUserLocation={this.state.routingMode}
         >
@@ -954,15 +848,7 @@ export default class Map extends Component {
             />
           ) : this.state.navigationMode === "subway" ? (
             this.state.directions.map((elem, index) => {
-              // console.log('eelem--->', elem)
-              // console.log('elem.travel_mode--->',elem.travel_mode)
-              // console.log('elem start_location--->', elem.start_location)
               if (elem.travel_mode === "TRANSIT") {
-                // console.log("elem transit_details--->", elem.transit_details);
-                // console.log(
-                //   "elem transit_details.line.short_name--->",
-                //   elem.transit_details.line.short_name
-                // );
                 if (elem.transit_details.line.vehicle.type === "BUS") {
                   return (
                     <View key={index}>
@@ -1036,7 +922,8 @@ export default class Map extends Component {
           ) : (
             ""
           )}
-          {this.state.citiBikeDataRender ? (
+          {/* Citibike Render */}
+          {/* {this.state.citiBikeDataRender ? (
             this.state.citiBikeStationsData.map((elem) => {
               console.log("citibike coor");
               return (
@@ -1052,7 +939,7 @@ export default class Map extends Component {
             })
           ) : (
             <Text></Text>
-          )}
+          )} */}
           {marker}
           {locationMarker}
           {this.state.mapDirectionsMode ? (
@@ -1110,7 +997,17 @@ export default class Map extends Component {
                   style={styles.icon}
                   color={"#2452F9"}
                   onPress={() => {
-                    this.getRouteDirections(null, this.state.destinationPlaceId, null, this.state.destination), this.setState({yourLocation: "", yourLocationPlaceId: null})}}
+                    this.getRouteDirections(
+                      null,
+                      this.state.destinationPlaceId,
+                      null,
+                      this.state.destination
+                    ),
+                      this.setState({
+                        yourLocation: "",
+                        yourLocationPlaceId: null,
+                      });
+                  }}
                 />
               </View>
               <View style={{ flex: 1 }}>
@@ -1275,7 +1172,6 @@ export default class Map extends Component {
         )}
         {predictions}
         {yourLocationPredictions}
-
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
             <View>
@@ -1294,8 +1190,8 @@ export default class Map extends Component {
                   <Text style={styles.stopButtonText}>Stop</Text>
                 </View>
               </TouchableOpacity>
-
-              <TouchableOpacity
+              {/* Directions Button */}
+              {/* <TouchableOpacity
                 style={styles.directionButtonContainer}
                 onPress={() => {
                   console.log("Button pressed");
@@ -1308,22 +1204,7 @@ export default class Map extends Component {
                   <Icon name="ios-list-outline" size={25} color="#49BEAA" />
                   <Text style={styles.directionButtonText}>Directions</Text>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.yourLocationButtonContainer}
-                onPress={() => this.goToMyLocation()}
-              >
-                <View style={styles.yourLocationIconContainer}>
-                  <Icon
-                    name="ios-radio-button-on-outline"
-                    size={22}
-                    color="white"
-                  />
-                  <Text style={styles.yourLocationButtonText}>
-                    Your Location
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.directionButtonContainer}
                 onPress={() => {
@@ -1362,8 +1243,8 @@ export default class Map extends Component {
                   <Text style={styles.startButtonText}>Start</Text>
                 </View>
               </TouchableOpacity>
-
-              <TouchableOpacity
+              {/* Directions */}
+              {/* <TouchableOpacity
                 style={styles.directionButtonContainer}
                 onPress={() => {
                   console.log("Button pressed");
@@ -1376,22 +1257,7 @@ export default class Map extends Component {
                   <Icon name="ios-list-outline" size={25} color="#49BEAA" />
                   <Text style={styles.directionButtonText}>Directions</Text>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.yourLocationButtonContainer}
-                onPress={() => this.goToMyLocation()}
-              >
-                <View style={styles.yourLocationIconContainer}>
-                  <Icon
-                    name="ios-radio-button-on-outline"
-                    size={22}
-                    color="white"
-                  />
-                  <Text style={styles.yourLocationButtonText}>
-                    Your Location
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.directionButtonContainer}
                 onPress={() => {
@@ -1412,7 +1278,8 @@ export default class Map extends Component {
                   </Text>
                 </View>
               </TouchableOpacity>
-              {this.state.navigationMode === "bike" ? (
+              {/* CitiBike Button Trigger */}
+              {/* {this.state.navigationMode === "bike" ? (
                 <TouchableOpacity
                   style={styles.yourLocationButtonContainer}
                   onPress={() =>
@@ -1438,7 +1305,7 @@ export default class Map extends Component {
                 </TouchableOpacity>
               ) : (
                 <Text></Text>
-              )}
+              )} */}
             </View>
           )
         ) : (
@@ -1454,24 +1321,6 @@ export default class Map extends Component {
             <Text style={styles.yourLocationButtonText}>Your Location</Text>
           </View>
         </TouchableOpacity>
-
-        {/* <View style={styles.locateIconContainer}>
-          <TouchableOpacity
-            // style={styles.locateIconContainer}
-            onPress={() =>
-              this.goToMyLocation(
-                <Button
-                  title="End Navigation"
-                  onPress={() => {
-                    this.stopNaviHandler();
-                  }}
-                />
-              )
-            }
-          >
-            <Icon name="ios-radio-button-on-outline" size={40} color={"#49BEAA"} />
-          </TouchableOpacity>
-        </View> */}
       </View>
     );
   }
@@ -1488,7 +1337,6 @@ const styles = StyleSheet.create({
   },
   chipsScrollView: {
     position: "absolute",
-    // top:Platform.OS === 'ios' ? 190 : 80,
     marginTop: "35%",
     marginLeft: "10%",
     paddingHorizontal: 10,
