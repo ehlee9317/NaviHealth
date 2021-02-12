@@ -136,21 +136,19 @@ export default class Map extends Component {
           longitude: this.state.recordedLongitude,
         };
         if (this.state.routingMode) {
-          this.setState(
-            {
-              recordedLatitude: position.coords.latitude,
-              recordedLongitude: position.coords.longitude,
-              //speed converted to kilometers per hour
-              recordedSpeed: position.coords.speed * 3.6,
-              recordedCoordinates: this.state.recordedCoordinates.concat([
-                newRecordedCoordinates,
-              ]),
-              recordedDistance:
-                this.state.recordedDistance +
-                this.calcDistance(newRecordedCoordinates),
-              prevLatLng: newRecordedCoordinates,
-            }
-          );
+          this.setState({
+            recordedLatitude: position.coords.latitude,
+            recordedLongitude: position.coords.longitude,
+            //speed converted to kilometers per hour
+            recordedSpeed: position.coords.speed * 3.6,
+            recordedCoordinates: this.state.recordedCoordinates.concat([
+              newRecordedCoordinates,
+            ]),
+            recordedDistance:
+              this.state.recordedDistance +
+              this.calcDistance(newRecordedCoordinates),
+            prevLatLng: newRecordedCoordinates,
+          });
         }
       },
       (error) => console.error(error),
@@ -253,7 +251,7 @@ export default class Map extends Component {
           edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
           animated: true,
         });
-        this.pointByPointDirectionHandler()
+        this.pointByPointDirectionHandler();
       } catch (error) {
         console.error(error);
       }
@@ -296,7 +294,7 @@ export default class Map extends Component {
           edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
           animated: true,
         });
-        this.pointByPointDirectionHandler()
+        this.pointByPointDirectionHandler();
       } catch (error) {
         console.error(error);
       }
@@ -447,6 +445,14 @@ export default class Map extends Component {
     this.timerStop();
     this.timerClear();
   }
+  modeStopNaviHandler() {
+    this.setState({
+      routingMode: false,
+    });
+    // this.stopNaviHelper();
+    this.timerStop();
+    this.timerClear();
+  }
 
   //SUBWAY + WALK + BIKE MODE Handlers
 
@@ -494,7 +500,7 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
-      this.pointByPointDirectionHandler()
+      this.pointByPointDirectionHandler();
     } catch (error) {
       console.error(error);
     }
@@ -544,7 +550,7 @@ export default class Map extends Component {
         edgePadding: { top: 110, right: 110, bottom: 110, left: 110 },
         animated: true,
       });
-      this.pointByPointDirectionHandler()
+      this.pointByPointDirectionHandler();
     } catch (error) {
       console.error(error);
     }
@@ -659,14 +665,14 @@ export default class Map extends Component {
   }
   pointByPointDirectionHandler() {
     this.setState({
-      directionsMarkerArr: []
-    })
+      directionsMarkerArr: [],
+    });
     const directions = this.state.directions;
     let finalDirectionsArr = [];
-    let currDirectionDescription = ""
-    let currDirectionCoordinates = {}
-    let currDirectionManeuver = null
-    let currDirectionHeadSign = null
+    let currDirectionDescription = "";
+    let currDirectionCoordinates = {};
+    let currDirectionManeuver = null;
+    let currDirectionHeadSign = null;
     for (let i = 0; i < directions.length; i++) {
       let currDirection = directions[i];
       if (currDirection.html_instructions && !currDirection.steps) {
@@ -675,20 +681,22 @@ export default class Map extends Component {
           longitude: currDirection.start_location.lng,
         };
         if (currDirection.headsign) {
-          currDirectionHeadSign = currDirection.headsign
+          currDirectionHeadSign = currDirection.headsign;
         }
         if (currDirection.maneuver) {
-          currDirectionManeuver = currDirection.maneuver
+          currDirectionManeuver = currDirection.maneuver;
         }
-        let regexSanitizedCurrDirection = currDirection.html_instructions.replace(/(<([^>]+)>)/gi, "");
+        let regexSanitizedCurrDirection = currDirection.html_instructions.replace(
+          /(<([^>]+)>)/gi,
+          ""
+        );
         if (regexSanitizedCurrDirection.indexOf("(") !== -1) {
-            currDirectionDescription = regexSanitizedCurrDirection.slice(
-              0,
-              regexSanitizedCurrDirection.indexOf("(")
-            )
+          currDirectionDescription = regexSanitizedCurrDirection.slice(
+            0,
+            regexSanitizedCurrDirection.indexOf("(")
+          );
         } else {
-
-          currDirectionDescription = regexSanitizedCurrDirection
+          currDirectionDescription = regexSanitizedCurrDirection;
         }
       } else if (currDirection.html_instructions && currDirection.steps) {
         if (currDirection.html_instructions) {
@@ -700,31 +708,32 @@ export default class Map extends Component {
             latitude: currDirection.start_location.lat,
             longitude: currDirection.start_location.lng,
           };
-           finalDirectionsArr.push({
-             description: currDirectionDescription,
-             coordinates: currDirectionCoordinates,
-             maneuver: currDirectionManeuver,
-             headsign: currDirectionHeadSign,
-           });
+          finalDirectionsArr.push({
+            description: currDirectionDescription,
+            coordinates: currDirectionCoordinates,
+            maneuver: currDirectionManeuver,
+            headsign: currDirectionHeadSign,
+          });
         }
         if (currDirection.steps) {
           currDirection.steps.forEach((elem) => {
-            let regexSanitizedCurrStepsDirection = elem
-            .html_instructions.replace(/(<([^>]+)>)/gi, "");
+            let regexSanitizedCurrStepsDirection = elem.html_instructions.replace(
+              /(<([^>]+)>)/gi,
+              ""
+            );
             currDirectionCoordinates = {
               latitude: elem.start_location.lat,
               longitude: elem.start_location.lng,
             };
             if (elem.maneuver) {
-            currDirectionManeuver = elem.maneuver;
-          }
-          if (regexSanitizedCurrStepsDirection.indexOf("(") !== -1) {
+              currDirectionManeuver = elem.maneuver;
+            }
+            if (regexSanitizedCurrStepsDirection.indexOf("(") !== -1) {
               currDirectionDescription = regexSanitizedCurrStepsDirection.slice(
                 0,
                 regexSanitizedCurrStepsDirection.indexOf("(")
               );
-            }
-            else {
+            } else {
               currDirectionDescription = regexSanitizedCurrStepsDirection;
             }
             finalDirectionsArr.push({
@@ -733,16 +742,15 @@ export default class Map extends Component {
               maneuver: currDirectionManeuver,
               headsign: currDirectionHeadSign,
             });
-          })
+          });
         }
       }
       finalDirectionsArr.push({
         description: currDirectionDescription,
         coordinates: currDirectionCoordinates,
         maneuver: currDirectionManeuver,
-        headsign: currDirectionHeadSign
-      })
-
+        headsign: currDirectionHeadSign,
+      });
     }
     this.setState({
       directionsMarkerArr: finalDirectionsArr,
@@ -1061,6 +1069,7 @@ export default class Map extends Component {
                     : styles.chipsItem
                 }
                 onPress={() => (
+                  this.modeStopNaviHandler(),
                   this.setState({
                     navigationMode: "subway",
                   }),
@@ -1098,6 +1107,7 @@ export default class Map extends Component {
                     : styles.chipsItem
                 }
                 onPress={() => (
+                  this.modeStopNaviHandler(),
                   this.setState({
                     navigationMode: "walk",
                   }),
@@ -1135,6 +1145,7 @@ export default class Map extends Component {
                     : styles.chipsItem
                 }
                 onPress={() => (
+                  this.modeStopNaviHandler(),
                   this.setState({
                     navigationMode: "bike",
                   }),
@@ -1176,7 +1187,7 @@ export default class Map extends Component {
               <TouchableOpacity
                 style={styles.stopButtonContainer}
                 onPress={() => {
-                  this.stopNaviHandler();
+                  this.stopNaviHandler;
                 }}
               >
                 <View style={styles.stopIconContainer}>
