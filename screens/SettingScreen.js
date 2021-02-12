@@ -14,6 +14,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { loggingOut } from "../api/firebaseMethods";
 import * as firebase from "firebase";
 import { updateProfile } from "../api/firebaseMethods";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const SettingScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
@@ -28,26 +29,22 @@ const SettingScreen = ({ navigation }) => {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
 
-
   useEffect(() => {
     const unsubscribe = db
       .collection("users")
       .doc(currentUserUID)
-      .onSnapshot(
-        (doc) => {
-          console.log("doc data --->", doc.data());
-          let dataObj = doc.data();
-          setFirstName(dataObj.firstName);
-          setLastName(dataObj.lastName);
-          setHeight(dataObj.height);
-          setWeight(dataObj.weight);
-          setDateOfBirth(dataObj.dateOfBirth);
-          setEmail(dataObj.email);
-          setPassword(dataObj.password);
-        }
-
-      );
-     return () => unsubscribe();
+      .onSnapshot((doc) => {
+        console.log("doc data --->", doc.data());
+        let dataObj = doc.data();
+        setFirstName(dataObj.firstName);
+        setLastName(dataObj.lastName);
+        setHeight(dataObj.height);
+        setWeight(dataObj.weight);
+        setDateOfBirth(dataObj.dateOfBirth);
+        setEmail(dataObj.email);
+        setPassword(dataObj.password);
+      });
+    return () => unsubscribe();
   }, []);
 
   const emptyState = () => {
@@ -89,32 +86,34 @@ const SettingScreen = ({ navigation }) => {
     //  if (password !== confirmPassword) {
     //   Alert.alert("Password does not match!");
     // } else {
-      updateProfile(
-        email,
-        password,
-        lastName,
-        dateOfBirth,
-        firstName,
-        weight,
-        height
-      );
+    updateProfile(
+      email,
+      password,
+      lastName,
+      dateOfBirth,
+      firstName,
+      weight,
+      height
+    );
 
-      navigation.navigate("Profile");
-      emptyState();
-      // }
-
+    navigation.navigate("Profile");
+    emptyState();
+    // }
   };
   return (
     <SafeAreaView style={styles.container}>
-
-      <TouchableOpacity style={styles.logOut} onPress={handlePressGettingStarted}>
+      {/* <TouchableOpacity
+        style={styles.logOut}
+        onPress={handlePressGettingStarted}
+      >
         <Text style={styles.logOutText}>Getting Started</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-      <View style={styles.signUpBox}>
-        <Text style={styles.title}>Edit Your Account </Text>
+      <Text style={styles.title}>Edit Your Account </Text>
+      <View style={styles.editBox}>
         <View style={styles.inputContainer} onBlur={Keyboard.dismiss}>
-          <View style={{ padding: 10 }}>
+          <View style={styles.singleInputContainer}>
+            <Icon name="ios-person-outline" style={styles.icon} />
             <TextInput
               style={styles.input}
               placeholder="First Name"
@@ -122,7 +121,8 @@ const SettingScreen = ({ navigation }) => {
               onChangeText={(name) => setFirstName(name)}
             />
           </View>
-          <View style={{ padding: 10 }}>
+          <View style={styles.singleInputContainer}>
+            <Icon name="ios-person-outline" style={styles.icon} />
             <TextInput
               style={styles.input}
               placeholder="Last Name"
@@ -130,7 +130,8 @@ const SettingScreen = ({ navigation }) => {
               onChangeText={(name) => setLastName(name)}
             />
           </View>
-          <View style={{ padding: 10 }}>
+          <View style={styles.singleInputContainer}>
+            <Icon name="ios-calendar-outline" style={styles.icon} />
             <TextInput
               style={styles.input}
               placeholder="Date of Birth (MM-DD-YYYY)"
@@ -144,7 +145,8 @@ const SettingScreen = ({ navigation }) => {
               keyboardType="numeric"
             />
           </View>
-          <View style={{ padding: 10 }}>
+          <View style={styles.singleInputContainer}>
+            <Icon name="ios-barbell-outline" style={styles.icon} />
             <TextInput
               style={styles.input}
               placeholder="Weight (lbs)"
@@ -153,7 +155,8 @@ const SettingScreen = ({ navigation }) => {
               keyboardType="numeric"
             />
           </View>
-          <View style={{ padding: 10 }}>
+          <View style={styles.singleInputContainer}>
+            <Icon name="ios-man-outline" style={styles.icon} />
             <TextInput
               style={styles.input}
               placeholder="Height (cm)"
@@ -162,7 +165,8 @@ const SettingScreen = ({ navigation }) => {
               keyboardType="numeric"
             />
           </View>
-          <View style={{ padding: 10 }}>
+          <View style={styles.singleInputContainer}>
+            <Icon name="ios-mail-outline" style={styles.icon} />
             <TextInput
               style={styles.input}
               placeholder="Email"
@@ -172,7 +176,8 @@ const SettingScreen = ({ navigation }) => {
               autoCapitalize="none"
             />
           </View>
-          <View style={{ padding: 10 }}>
+          <View style={styles.singleInputContainer}>
+            <Icon name="ios-lock-closed-outline" style={styles.icon} />
             <TextInput
               style={styles.input}
               placeholder="Password"
@@ -181,16 +186,14 @@ const SettingScreen = ({ navigation }) => {
               secureTextEntry={true}
             />
           </View>
-
-
-          <TouchableOpacity style={styles.signUpButton} onPress={handleUpdate}>
-            <Text style={styles.signUpText}>Update</Text>
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+          <Text style={styles.updateText}>Update</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePress} style={styles.signOutContainer}>
+          <Text style={styles.signOutText}>Change user? Sign Out</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.logOut} onPress={handlePress}>
-        <Text style={styles.logOutText}>Log Out</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -198,71 +201,96 @@ const SettingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#f7fff7",
-
     alignItems: "center",
+    alignContent: "center",
   },
-  signUpBox: {
-    backgroundColor: "#EEB868",
-    marginTop: "5%",
+  editBox: {
+    // backgroundColor: "white",
+    marginTop: "10%",
     padding: 5,
     borderRadius: 20,
     width: 280,
     height: 670,
+    // justifyContent: "center",
+    alignItems: "center",
   },
   title: {
-    padding: 30,
-    paddingTop: 20,
-    paddingBottom: 10,
-    fontSize: 22,
-    color: "#f7fff7",
+    // padding: 30,
+    // paddingTop: 20,
+    // paddingBottom: 10,
+    fontSize: 35,
+    // color: "black",
     fontWeight: "bold",
+    marginTop: "20%",
+    marginLeft: "-12%",
   },
-  inputContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+  // inputContainer: {
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
+  singleInputContainer: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    margin: ".5%",
+    borderRadius: 100,
+    // justifyContent: "center"
+    // alignItem: "center"
+  },
+  icon: {
+    fontSize: 35,
+    marginLeft: "5%",
+    marginTop: "2.2%",
+    marginRight: "2%",
   },
   input: {
     borderColor: "#456990",
     backgroundColor: "white",
-    width: 220,
-    height: 45,
-    borderRadius: 5,
+    width: 300,
+    height: 55,
+    fontSize: 18,
+    // // borderRadius: 5,
+
     paddingHorizontal: 12,
+    justifyContent: "center",
+    alignContent: "center",
   },
-  signUpButton: {
+  updateButton: {
     backgroundColor: "#456990",
     borderRadius: 5,
-    marginTop: "5%",
+    marginTop: "10%",
     // marginBottom: "-10%",
     justifyContent: "center",
-    width: 220,
-    height: 45,
+    width: 180,
+    height: 40,
+
     // paddingBottom: 30
   },
-  signUpText: {
+  updateText: {
     fontSize: 18,
     textAlign: "center",
     color: "white",
     fontWeight: "bold",
   },
-  logInText: {
-    fontSize: 12.5,
-    marginTop: "7%",
-    color: "white",
+  signOutContainer: {
+    marginTop: "10%"
+  },
+  signOutText: {
+    fontSize: 13,
+    marginTop: "3%",
+    color: "#818882",
     fontWeight: "bold",
   },
-  logOut: {
-    marginTop: "5%",
-    backgroundColor: "#EF767A",
-    padding: "3%",
-    borderRadius: 6,
-  },
-  logOutText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
+  // logOut: {
+  //   marginTop: "5%",
+  //   backgroundColor: "#EF767A",
+  //   padding: "3%",
+  //   borderRadius: 6,
+  // },
+  // logOutText: {
+  //   color: "white",
+  //   fontSize: 18,
+  //   fontWeight: "bold",
+  // },
 });
 
 export default SettingScreen;
