@@ -614,6 +614,9 @@ export default class Map extends Component {
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
+      console.log(this.state.estCaloriesBurnedPerMinuteBiking)
+      const bikeCalories = (this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration)
+      console.log("bike calories----->", bikeCalories)
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -626,6 +629,7 @@ export default class Map extends Component {
         estimatedDuration: estimatedDuration,
         estimatedDurationText: estimatedDurationText,
         directions: directionsArr,
+        estCaloriesBurned: bikeCalories,
         
       });
       destinationName

@@ -65,7 +65,7 @@ export async function stopNaviFirebaseHandler(actualDistance, actualDuration, ac
       actualDistanceKm: actualDistance.toFixed(2),
       actualDuration: actualDuration,
       actualDurationMin: actualDurationMin,
-      actualCaloriesBurned: Number(estCaloriesBurnedPerMinute * actualDurationMin + (estCaloriesBurnedPerMinuteBiking + actualDurationMin)).toFixed(2),
+      actualCaloriesBurned: Number(estCaloriesBurnedPerMinute * actualDurationMin + (estCaloriesBurnedPerMinuteBiking * actualDurationMin)).toFixed(2),
       estimatedDistanceKm: estimatedDistance.toFixed(2),
       estimatedDurationMin: estimatedDuration.toFixed(2),
       //to fix duration
