@@ -59,8 +59,8 @@ export async function stopNaviFirebaseHandler(actualDistance, actualDuration, ac
     const db = firebase.firestore();
     const userData = await (await db.collection("users").doc(currentUserUID).get()).data()
     console.log('userdata------>', userData)
-    const estCaloriesBurnedPerMinute = userData.estCaloriesBurnedPerMinute
-    const estCaloriesBurnedPerMinuteBiking = userData.estCaloriesBurnedPerMinuteBiking
+    const estCaloriesBurnedPerMinute = userData.estCaloriesBurnedPerMinute || 0
+    const estCaloriesBurnedPerMinuteBiking = userData.estCaloriesBurnedPerMinuteBiking || 0
     await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
       actualDistanceKm: actualDistance.toFixed(2),
       actualDuration: actualDuration,
@@ -86,11 +86,11 @@ export async function updateProfile(email, password, lastName, dateOfBirth, firs
     const currentUser = await firebase.auth().currentUser;
     console.log("password--->", password)
     if(password){
-      
+
      currentUser.updatePassword(password)
 
    }
-    
+
     const db = firebase.firestore();
     await db
       .collection("users")
