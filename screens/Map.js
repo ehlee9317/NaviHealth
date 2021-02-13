@@ -26,8 +26,6 @@ import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-
-
 export default class Map extends Component {
   constructor(props) {
     super(props);
@@ -1184,21 +1182,23 @@ export default class Map extends Component {
         {this.state.estimatedDistance > 0 ? (
           this.state.routingMode === true ? (
             <View>
-              <TouchableOpacity
-                style={styles.stopButtonContainer}
-                onPress={() => {
-                  this.stopNaviHandler();
-                }}
-              >
-                <View style={styles.stopIconContainer}>
-                  <Icon
-                    name="ios-close-circle-outline"
-                    size={25}
-                    color="white"
-                  />
-                  <Text style={styles.stopButtonText}>Stop</Text>
-                </View>
-              </TouchableOpacity>
+              <View width="40%">
+                <TouchableOpacity
+                  style={styles.stopButtonContainer}
+                  onPress={() => {
+                    this.stopNaviHandler();
+                  }}
+                >
+                  <View style={styles.stopIconContainer}>
+                    <Icon
+                      name="ios-close-circle-outline"
+                      size={25}
+                      color="white"
+                    />
+                    <Text style={styles.stopButtonText}>Stop</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
               {/* Directions Button */}
               {/* <TouchableOpacity
                 style={styles.directionButtonContainer}
@@ -1214,6 +1214,7 @@ export default class Map extends Component {
                   <Text style={styles.directionButtonText}>Directions</Text>
                 </View>
               </TouchableOpacity> */}
+              <View width="40%">
               <TouchableOpacity
                 style={styles.directionButtonContainer}
                 onPress={() => {
@@ -1230,13 +1231,15 @@ export default class Map extends Component {
                 <View style={styles.directionIconContainer}>
                   <Icon name="ios-list-outline" size={25} color="#49BEAA" />
                   <Text style={styles.directionButtonText}>
-                    Directions Mode
+                    Directions
                   </Text>
                 </View>
               </TouchableOpacity>
+              </View>
             </View>
           ) : (
             <View>
+              <View width="40%">
               <TouchableOpacity
                 style={styles.startButtonContainer}
                 onPress={() => {
@@ -1252,6 +1255,7 @@ export default class Map extends Component {
                   <Text style={styles.startButtonText}>Start</Text>
                 </View>
               </TouchableOpacity>
+              </View>
               {/* Directions */}
               {/* <TouchableOpacity
                 style={styles.directionButtonContainer}
@@ -1267,6 +1271,7 @@ export default class Map extends Component {
                   <Text style={styles.directionButtonText}>Directions</Text>
                 </View>
               </TouchableOpacity> */}
+              <View width="40%">
               <TouchableOpacity
                 style={styles.directionButtonContainer}
                 onPress={() => {
@@ -1283,10 +1288,11 @@ export default class Map extends Component {
                 <View style={styles.directionIconContainer}>
                   <Icon name="ios-list-outline" size={25} color="#49BEAA" />
                   <Text style={styles.directionButtonText}>
-                    Directions Mode
+                    Directions
                   </Text>
                 </View>
               </TouchableOpacity>
+              </View>
               {/* CitiBike Button Trigger */}
               {/* {this.state.navigationMode === "bike" ? (
                 <TouchableOpacity
@@ -1320,16 +1326,21 @@ export default class Map extends Component {
         ) : (
           <Text></Text>
         )}
-
-        <TouchableOpacity
-          style={styles.yourLocationButtonContainer}
-          onPress={() => this.goToMyLocation()}
-        >
-          <View style={styles.yourLocationIconContainer}>
-            <Icon name="ios-radio-button-on-outline" size={22} color="white" />
-            <Text style={styles.yourLocationButtonText}>Your Location</Text>
-          </View>
-        </TouchableOpacity>
+        <View width="40%">
+          <TouchableOpacity
+            style={styles.yourLocationButtonContainer}
+            onPress={() => this.goToMyLocation()}
+          >
+            <View style={styles.yourLocationIconContainer}>
+              <Icon
+                name="ios-radio-button-on-outline"
+                size={22}
+                color="white"
+              />
+              <Text style={styles.yourLocationButtonText}>Your Location</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -1455,7 +1466,7 @@ const styles = StyleSheet.create({
   },
   startButtonContainer: {
     backgroundColor: "#49BEAA",
-    width: "40%",
+    // width: "40%",
     height: 30,
     borderRadius: 100,
     margin: "1%",
@@ -1480,7 +1491,7 @@ const styles = StyleSheet.create({
   },
   stopButtonContainer: {
     backgroundColor: "red",
-    width: "40%",
+    // width: "40%",
     height: 30,
     borderRadius: 100,
     margin: "1%",
@@ -1500,7 +1511,7 @@ const styles = StyleSheet.create({
   },
   directionButtonContainer: {
     backgroundColor: "white",
-    width: "40%",
+    // width: "40%",
     height: 30,
     borderRadius: 100,
     borderWidth: 0.2,
@@ -1521,7 +1532,7 @@ const styles = StyleSheet.create({
   },
   yourLocationButtonContainer: {
     backgroundColor: "#49BEAA",
-    width: "40%",
+    // width: "40%",
     height: 30,
     borderRadius: 100,
     borderWidth: 0.2,
