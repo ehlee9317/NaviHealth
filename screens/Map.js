@@ -1231,7 +1231,7 @@ export default class Map extends Component {
                 <View style={styles.directionIconContainer}>
                   <Icon name="ios-list-outline" size={25} color="#49BEAA" />
                   <Text style={styles.directionButtonText}>
-                    Directions Mode
+                    Directions
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -1288,7 +1288,7 @@ export default class Map extends Component {
                 <View style={styles.directionIconContainer}>
                   <Icon name="ios-list-outline" size={25} color="#49BEAA" />
                   <Text style={styles.directionButtonText}>
-                    Directions Mode
+                    Directions
                   </Text>
                 </View>
               </TouchableOpacity>
