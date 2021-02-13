@@ -69,7 +69,7 @@ export async function stopNaviFirebaseHandler(actualDistance, actualDuration, ac
       estimatedDistanceKm: estimatedDistance.toFixed(2),
       estimatedDurationMin: estimatedDuration.toFixed(2),
       //to fix duration
-      estCaloriesBurned: (estCaloriesBurnedPerMinute * estimatedDuration + estCaloriesBurnedPerMinuteBiking + actualDurationMin).toFixed(2),
+      estCaloriesBurned: (estCaloriesBurnedPerMinute * estimatedDuration + estCaloriesBurnedPerMinuteBiking * estimatedDuration).toFixed(2),
       created: firebase.firestore.FieldValue.serverTimestamp(),
       date: new Date().toDateString(),
       timeStamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

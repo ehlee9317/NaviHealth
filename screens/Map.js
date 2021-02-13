@@ -103,6 +103,7 @@ export default class Map extends Component {
       // citiBikeDataRender: false,
       directionsMarkerArr: [],
       mapDirectionsMode: false,
+      estCaloriesBurned: null,
       //User Data
       firstName: null,
       lastName: null,
@@ -439,17 +440,15 @@ export default class Map extends Component {
       { enableHighAccuracy: true }
     );
 
-    if (this.state.navigationMode === "walk") {
+    this.state.navigationMode === "walk" || this.state.navigationMode === "bike" ? 
       stopNaviFirebaseHandler(
         this.state.recordedDistance,
         this.state.recordedDuration,
         this.state.recordedDurationMin,
         this.state.estimatedDistance,
         this.state.estimatedDuration
-      );
-    } else if (this.state.navigationMode === "subway") {
-      console.log("pending updates for subway mode");
-    }
+      ) : 
+      console.log('subwayMode firebasehandler not used')
   }
   startNaviHandler() {
     this.setState({
@@ -621,6 +620,7 @@ export default class Map extends Component {
         estimatedDuration: estimatedDuration,
         estimatedDurationText: estimatedDurationText,
         directions: directionsArr,
+        
       });
       destinationName
         ? this.setState({
