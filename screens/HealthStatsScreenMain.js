@@ -27,7 +27,7 @@ export default function HealthStatsScreen() {
       setButtonLabel("Day");
     }
   };
-  
+
   const displayButtons = () => {
     return (
       <View style={styles.buttonContainer}>
@@ -84,13 +84,14 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   titleContainer: {
-    marginTop: "12%",
-    marginLeft: "6%",
+    marginTop: "5%",
+    marginBottom: "2%",
+    marginLeft: "4%",
     // marginBottom: "2%",
     // alignItems: "flex-end"
   },
   title: {
-    fontSize: 35,
+    fontSize: 32,
     fontWeight: "bold",
   },
   buttonContainer: {

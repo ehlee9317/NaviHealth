@@ -102,13 +102,6 @@ const SettingScreen = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      {/* <TouchableOpacity
-        style={styles.logOut}
-        onPress={handlePressGettingStarted}
-      >
-        <Text style={styles.logOutText}>Getting Started</Text>
-      </TouchableOpacity> */}
-
       <Text style={styles.title}>Edit Your Account </Text>
       <View style={styles.editBox}>
         <View style={styles.inputContainer} onBlur={Keyboard.dismiss}>
@@ -190,8 +183,17 @@ const SettingScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
           <Text style={styles.updateText}>Update</Text>
         </TouchableOpacity>
+
         <TouchableOpacity onPress={handlePress} style={styles.signOutContainer}>
           <Text style={styles.signOutText}>Change user? Sign Out</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.startContainer}
+          // marginTop="10%"
+          onPress={handlePressGettingStarted}
+        >
+          <Text style={styles.signOutText}>Getting Started?</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -207,9 +209,9 @@ const styles = StyleSheet.create({
   editBox: {
     // backgroundColor: "white",
     marginTop: "10%",
-    padding: 5,
+    // padding: 10,
     borderRadius: 20,
-    width: 280,
+    width: 260,
     height: 670,
     // justifyContent: "center",
     alignItems: "center",
@@ -218,11 +220,11 @@ const styles = StyleSheet.create({
     // padding: 30,
     // paddingTop: 20,
     // paddingBottom: 10,
-    fontSize: 35,
+    fontSize: 32,
     // color: "black",
     fontWeight: "bold",
-    marginTop: "20%",
-    marginLeft: "-12%",
+    marginTop: "10%",
+    marginLeft: "-10%",
   },
   // inputContainer: {
   //   justifyContent: "center",
@@ -233,6 +235,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     margin: ".5%",
     borderRadius: 100,
+    marginRight: "3%",
+    // width: 200
     // justifyContent: "center"
     // alignItem: "center"
   },
@@ -245,7 +249,7 @@ const styles = StyleSheet.create({
   input: {
     borderColor: "#456990",
     backgroundColor: "white",
-    width: 300,
+    width: 260,
     height: 55,
     fontSize: 18,
     // // borderRadius: 5,
@@ -272,7 +276,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   signOutContainer: {
-    marginTop: "10%"
+    marginTop: "8%",
+  },
+  startContainer: {
+    marginTop: "5%",
   },
   signOutText: {
     fontSize: 13,

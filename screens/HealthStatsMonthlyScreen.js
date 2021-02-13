@@ -194,17 +194,18 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     borderRadius: 20,
-    width: 380,
+    width: 370,
     height: 390,
     padding: "2%",
     shadowColor: "#ccc",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
+    marginLeft: "1.2%"
   },
   statMainContainer: {
     backgroundColor: "white",
-    width: 380,
+    width: 370,
     height: 100,
     borderRadius: 20,
     padding: "5%",
@@ -213,6 +214,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 5,
     marginBottom: "10%",
+    marginLeft: "1.2%",
   },
   statContainer: {
     flexDirection: "row",
@@ -235,5 +237,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: "8%",
     marginBottom: "4%",
+    marginLeft: "2%"
   },
 });
