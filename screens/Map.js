@@ -970,16 +970,33 @@ export default class Map extends Component {
 
         {/* Main Search Bar */}
         {this.state.displayMainSearchBar ? (
-          <TextInput
-            placeholder="Enter destination..."
-            style={styles.destinationInput}
-            value={this.state.destination}
-            clearButtonMode="always"
-            onChangeText={(destination) => {
-              this.setState({ destination });
-              this.onChangeDestinationDebounced(destination);
-            }}
-          />
+          <View>
+            <TextInput
+              placeholder="Enter destination..."
+              style={styles.destinationInput}
+              value={this.state.destination}
+              clearButtonMode="always"
+              onChangeText={(destination) => {
+                this.setState({ destination });
+                this.onChangeDestinationDebounced(destination);
+              }}
+            />
+            <View width="35%" marginTop="2%">
+              <TouchableOpacity
+                style={styles.yourLocationButtonContainer}
+                onPress={() => this.goToMyLocation()}
+              >
+                <View style={styles.yourLocationIconContainer}>
+                  <Icon
+                    name="ios-radio-button-on-outline"
+                    size={22}
+                    color="white"
+                  />
+                  <Text style={styles.yourLocationButtonText}>Locate Me</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
         ) : (
           <View style={styles.searchContainer}>
             <SafeAreaView style={styles.inputContainer}>
@@ -995,11 +1012,9 @@ export default class Map extends Component {
                 <Icon name="ios-chevron-back" size={30} color={"black"} />
               </TouchableHighlight>
               <View style={{ flex: 1 }}>
-                <Icon
-                  name="ios-location"
-                  size={22}
-                  style={styles.icon}
-                  color={"#2452F9"}
+                <Image
+                  source={require("../assets/bluemarker.png")}
+                  style={styles.searchIcon}
                   onPress={() => {
                     this.getRouteDirections(
                       null,
@@ -1029,11 +1044,9 @@ export default class Map extends Component {
             </SafeAreaView>
             <SafeAreaView style={styles.destinationInputContainer}>
               <View style={{ flex: 1 }}>
-                <Icon
-                  name="ios-location"
-                  size={22}
-                  style={styles.icon}
-                  color={"#EA484E"}
+                <Image
+                  source={require("../assets/redmarker.png")}
+                  style={styles.searchIcon}
                 />
               </View>
               <View style={{ flex: 1 }}>
@@ -1190,9 +1203,11 @@ export default class Map extends Component {
         {predictions}
         {yourLocationPredictions}
         {this.state.estimatedDistance > 0 ? (
-          this.state.routingMode === true ? (
-            <View>
-              <View width="40%">
+          this.state.displayMainSearchBar === true ? (
+            <Text></Text>
+          ) : this.state.routingMode === true ? (
+            <View style={styles.sample}>
+              <View width="40%" marginRight="1.5%">
                 <TouchableOpacity
                   style={styles.stopButtonContainer}
                   onPress={() => {
@@ -1224,7 +1239,7 @@ export default class Map extends Component {
                   <Text style={styles.directionButtonText}>Directions</Text>
                 </View>
               </TouchableOpacity> */}
-              <View width="40%">
+              <View width="20%" marginRight="1.5%">
                 <TouchableOpacity
                   style={styles.directionButtonContainer}
                   onPress={() => {
@@ -1239,15 +1254,29 @@ export default class Map extends Component {
                   }}
                 >
                   <View style={styles.directionIconContainer}>
-                    <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                    <Text style={styles.directionButtonText}>Directions</Text>
+                    <Icon name="trail-sign-outline" size={25} color="#49BEAA" />
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <View width="20%">
+                <TouchableOpacity
+                  style={styles.yourLocationButtonContainer}
+                  onPress={() => this.goToMyLocation()}
+                >
+                  <View style={styles.yourLocationIconContainer}>
+                    <Icon
+                      name="ios-radio-button-on-outline"
+                      size={22}
+                      color="white"
+                    />
                   </View>
                 </TouchableOpacity>
               </View>
             </View>
           ) : (
-            <View>
-              <View width="40%">
+            <View style={styles.sample}>
+              <View width="40%" marginRight="1.5%">
                 <TouchableOpacity
                   style={styles.startButtonContainer}
                   onPress={() => {
@@ -1279,7 +1308,7 @@ export default class Map extends Component {
                   <Text style={styles.directionButtonText}>Directions</Text>
                 </View>
               </TouchableOpacity> */}
-              <View width="40%">
+              <View width="20%" marginRight="1.5%">
                 <TouchableOpacity
                   style={styles.directionButtonContainer}
                   onPress={() => {
@@ -1294,8 +1323,22 @@ export default class Map extends Component {
                   }}
                 >
                   <View style={styles.directionIconContainer}>
-                    <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                    <Text style={styles.directionButtonText}>Directions</Text>
+                    <Icon name="trail-sign-outline" size={25} color="#49BEAA" />
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <View width="20%">
+                <TouchableOpacity
+                  style={styles.yourLocationButtonContainer}
+                  onPress={() => this.goToMyLocation()}
+                >
+                  <View style={styles.yourLocationIconContainer}>
+                    <Icon
+                      name="ios-radio-button-on-outline"
+                      size={22}
+                      color="white"
+                    />
                   </View>
                 </TouchableOpacity>
               </View>
@@ -1332,27 +1375,17 @@ export default class Map extends Component {
         ) : (
           <Text></Text>
         )}
-        <View width="40%">
-          <TouchableOpacity
-            style={styles.yourLocationButtonContainer}
-            onPress={() => this.goToMyLocation()}
-          >
-            <View style={styles.yourLocationIconContainer}>
-              <Icon
-                name="ios-radio-button-on-outline"
-                size={22}
-                color="white"
-              />
-              <Text style={styles.yourLocationButtonText}>Your Location</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  sample: {
+    // backgroundColor: "white",
+    flexDirection: "row",
+    marginTop: "1.5%",
+  },
   suggestions: {
     backgroundColor: "white",
     padding: 5,
@@ -1363,8 +1396,8 @@ const styles = StyleSheet.create({
   },
   chipsScrollView: {
     position: "absolute",
-    marginTop: "35%",
-    marginLeft: "10%",
+    marginTop: "37.5%",
+    // marginLeft: "5%",
     paddingHorizontal: 10,
   },
   chipsIcon: {
@@ -1409,7 +1442,7 @@ const styles = StyleSheet.create({
   destinationInput: {
     height: 40,
     borderWidth: 0.5,
-    marginTop: 50,
+    marginTop: 80,
     marginLeft: 5,
     marginRight: 5,
     padding: 5,
@@ -1421,7 +1454,7 @@ const styles = StyleSheet.create({
     marginLeft: "-76%",
     padding: 5,
     backgroundColor: "white",
-    width: 310,
+    width: 290,
     justifyContent: "flex-end",
   },
   destinationChangeInput: {
@@ -1430,7 +1463,7 @@ const styles = StyleSheet.create({
     marginLeft: "-76%",
     padding: 5,
     backgroundColor: "white",
-    width: 310,
+    width: 290,
   },
   searchContainer: {
     backgroundColor: "white",
@@ -1440,14 +1473,17 @@ const styles = StyleSheet.create({
     marginLeft: "2%",
     marginTop: "1%",
   },
-  icon: {
+  searchIcon: {
     justifyContent: "flex-start",
     marginLeft: "4%",
     marginTop: "4%",
+    width: 18,
+    height: 29,
   },
+  icon: {},
   markerImage: {
-    width: 19,
-    height: 30,
+    width: 20,
+    height: 32,
     marginBottom: "8%",
   },
   inputContainer: {
@@ -1457,7 +1493,7 @@ const styles = StyleSheet.create({
   destinationInputContainer: {
     flexDirection: "row",
     marginTop: "2%",
-    marginLeft: "9%",
+    marginLeft: "9.8%",
   },
   locateIconContainer: {
     width: 52,
