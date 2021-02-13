@@ -25,6 +25,10 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as firebase from "firebase";
+
+
+
 
 export default class Map extends Component {
   constructor(props) {
@@ -99,6 +103,13 @@ export default class Map extends Component {
       // citiBikeDataRender: false,
       directionsMarkerArr: [],
       mapDirectionsMode: false,
+      //User Data
+      firstName: null,
+      lastName: null,
+      height: null,
+      weight: null,
+      estCaloriesBurnedPerMinute: null,
+      estCaloriesBurnedPerMinuteBiking: null,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -153,12 +164,37 @@ export default class Map extends Component {
       { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
     );
     this.goToMyLocation();
+    this.getUserData();
   }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
     clearInterval(this.state.timer);
   }
+
+  //FIREBASE Handler
+
+  async getUserData() {
+    try {
+      const currentUserUID = await firebase.auth().currentUser.uid;
+      const db = firebase.firestore();
+      const userData = await (
+        await db.collection("users").doc(currentUserUID).get()
+      ).data();
+      console.log('userData in Map--->', userData) 
+      this.setState({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        height: userData.height,
+        weight: userData.weight,
+        estCaloriesBurnedPerMinute: userData.estCaloriesBurnedPerMinute,
+        estCaloriesBurnedPerMinuteBiking: userData.estCaloriesBurnedPerMinuteBiking
+      })
+    } catch (err) {
+      Alert.alert("There is something wrong!!!!", err.message);
+    }
+  }
+
 
   // API DIRECTION CALLS
   async getRouteDirections(
