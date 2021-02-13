@@ -302,7 +302,7 @@ export default class Map extends Component {
   //GOOGLE PLACES PREDICTION CALLS
   async onChangeDestination(destination) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
-    &input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
+    &input=${destination}&location=${this.state.latitude},${this.state.longitude}&radius=1000`;
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
@@ -316,7 +316,7 @@ export default class Map extends Component {
 
   async onChangeYourLocation(yourLocation) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
-    &input=${yourLocation}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
+    &input=${yourLocation}&location=${this.state.latitude},${this.state.longitude}&radius=1000`;
     try {
       const result = await fetch(apiUrl);
       const json = await result.json();
@@ -949,22 +949,22 @@ export default class Map extends Component {
           {this.state.mapDirectionsMode ? (
             this.state.directionsMarkerArr.map((elem, index) => {
               return (
-                <Marker
-                  key={index}
-                  title={
-                    elem.maneuver
-                      ? elem.maneuver
-                      : elem.headsign
-                      ? elem.headsign
-                      : ""
-                  }
-                  coordinate={elem.coordinates}
-                  description={elem.description}
-                ></Marker>
+                <Marker key={index} coordinate={elem.coordinates}>
+                  <Callout>
+                    <Text>
+                      {elem.maneuver
+                        ? elem.maneuver.toUpperCase()
+                        : elem.headsign
+                        ? elem.headsign.toUpperCase()
+                        : ""}
+                    </Text>
+                    <Text>{elem.description}</Text>
+                  </Callout>
+                </Marker>
               );
             })
           ) : (
-            <Text></Text>
+            <View></View>
           )}
         </MapView>
 
@@ -1058,6 +1058,7 @@ export default class Map extends Component {
               showsHorizontalScrollIndicator={false}
               height={100}
               style={styles.chipsScrollView}
+              flex={1}
             >
               {/* {toggleCategories.map((category, index) => */}
               <TouchableOpacity
@@ -1070,6 +1071,7 @@ export default class Map extends Component {
                   this.modeStopNaviHandler(),
                   this.setState({
                     navigationMode: "subway",
+                    mapDirectionsMode: false,
                   }),
                   this.subwayModeHandler(
                     this.state.yourLocationPlaceId,
@@ -1095,7 +1097,9 @@ export default class Map extends Component {
                       : ""
                   }
                 >
-                  subway
+                  {this.state.navigationMode === "subway"
+                    ? `${this.state.estimatedDurationText}`
+                    : `subway`}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -1108,6 +1112,7 @@ export default class Map extends Component {
                   this.modeStopNaviHandler(),
                   this.setState({
                     navigationMode: "walk",
+                    mapDirectionsMode: false,
                   }),
                   this.walkModeHandler(
                     this.state.yourLocationPlaceId,
@@ -1133,7 +1138,9 @@ export default class Map extends Component {
                       : ""
                   }
                 >
-                  walk
+                  {this.state.navigationMode === "walk"
+                    ? `${this.state.estimatedDurationText}`
+                    : `walk`}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -1146,6 +1153,7 @@ export default class Map extends Component {
                   this.modeStopNaviHandler(),
                   this.setState({
                     navigationMode: "bike",
+                    mapDirectionsMode: false,
                   }),
                   this.bikeModeHandler(
                     this.state.yourLocationPlaceId,
@@ -1171,7 +1179,9 @@ export default class Map extends Component {
                       : ""
                   }
                 >
-                  bike
+                  {this.state.navigationMode === "bike"
+                    ? `${this.state.estimatedDurationText}`
+                    : `bike`}
                 </Text>
               </TouchableOpacity>
             </ScrollView>
@@ -1215,46 +1225,44 @@ export default class Map extends Component {
                 </View>
               </TouchableOpacity> */}
               <View width="40%">
-              <TouchableOpacity
-                style={styles.directionButtonContainer}
-                onPress={() => {
-                  console.log("Button pressed");
-                  this.state.mapDirectionsMode
-                    ? this.setState({
-                        mapDirectionsMode: false,
-                      })
-                    : this.setState({
-                        mapDirectionsMode: true,
-                      });
-                }}
-              >
-                <View style={styles.directionIconContainer}>
-                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                  <Text style={styles.directionButtonText}>
-                    Directions
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.directionButtonContainer}
+                  onPress={() => {
+                    console.log("Button pressed");
+                    this.state.mapDirectionsMode
+                      ? this.setState({
+                          mapDirectionsMode: false,
+                        })
+                      : this.setState({
+                          mapDirectionsMode: true,
+                        });
+                  }}
+                >
+                  <View style={styles.directionIconContainer}>
+                    <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                    <Text style={styles.directionButtonText}>Directions</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
             </View>
           ) : (
             <View>
               <View width="40%">
-              <TouchableOpacity
-                style={styles.startButtonContainer}
-                onPress={() => {
-                  this.startNaviHandler();
-                }}
-              >
-                <View style={styles.iconContainer}>
-                  <Icon
-                    style={styles.locateIcon}
-                    name="ios-navigate"
-                    size={22}
-                  />
-                  <Text style={styles.startButtonText}>Start</Text>
-                </View>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.startButtonContainer}
+                  onPress={() => {
+                    this.startNaviHandler();
+                  }}
+                >
+                  <View style={styles.iconContainer}>
+                    <Icon
+                      style={styles.locateIcon}
+                      name="ios-navigate"
+                      size={22}
+                    />
+                    <Text style={styles.startButtonText}>Start</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
               {/* Directions */}
               {/* <TouchableOpacity
@@ -1272,26 +1280,24 @@ export default class Map extends Component {
                 </View>
               </TouchableOpacity> */}
               <View width="40%">
-              <TouchableOpacity
-                style={styles.directionButtonContainer}
-                onPress={() => {
-                  console.log("Button pressed");
-                  this.state.mapDirectionsMode
-                    ? this.setState({
-                        mapDirectionsMode: false,
-                      })
-                    : this.setState({
-                        mapDirectionsMode: true,
-                      });
-                }}
-              >
-                <View style={styles.directionIconContainer}>
-                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                  <Text style={styles.directionButtonText}>
-                    Directions
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.directionButtonContainer}
+                  onPress={() => {
+                    console.log("Button pressed");
+                    this.state.mapDirectionsMode
+                      ? this.setState({
+                          mapDirectionsMode: false,
+                        })
+                      : this.setState({
+                          mapDirectionsMode: true,
+                        });
+                  }}
+                >
+                  <View style={styles.directionIconContainer}>
+                    <Icon name="ios-list-outline" size={25} color="#49BEAA" />
+                    <Text style={styles.directionButtonText}>Directions</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
               {/* CitiBike Button Trigger */}
               {/* {this.state.navigationMode === "bike" ? (
