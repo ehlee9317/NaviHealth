@@ -53,20 +53,20 @@ export default function Profile({ navigation }) {
       <View style={styles.imageContainer}>
         <View style={styles.profileImage}>
           <Image
-            source={require("../assets/defaultProfile.png")}
+            source={require("../assets/applogo-person.png")}
             style={styles.image}
             resizeMode="center"
           ></Image>
         </View>
-        <View style={styles.active}></View>
-        <View style={styles.camera}>
+        {/* <View style={styles.active}></View> */}
+        {/* <View style={styles.camera}>
           <Ionicons
             name="ios-camera"
             size={38}
             color="#DFD8C8"
             style={{ marginTop: 0.5, marginLeft: 1 }}
           ></Ionicons>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.nameContainer}>
@@ -135,11 +135,11 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignSelf: "center",
     top: "3%",
-  },
+   },
   profileImage: {
     width: 195,
     height: 195,
-    // borderRadius: 100,
+    borderRadius: 100,
     overflow: "hidden",
   },
   image: {
