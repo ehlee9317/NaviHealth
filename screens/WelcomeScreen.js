@@ -36,7 +36,7 @@ function WelcomeScreen({ navigation }) {
     <ImageBackground
       style={styles.background}
       // resizeMode="center"
-      source={require("../assets/navihealthLogo2.jpg")}
+      source={require("../assets/applogoNewColor.jpg")}
     >
       {/* // <Image resizeMode= "contain" style={styles.image} source={require("../assets/NaviHealthLogo2.jpg")}>
 
