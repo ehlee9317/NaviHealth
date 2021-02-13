@@ -2,6 +2,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import { Alert } from "react-native";
 import {caloriesBurnedPerMinute} from "../api/caloriesFunction"
+import { caloriesBurnedPerMinuteBiking } from "../api/caloriesFunction";
 
 export async function registration(email, password, lastName, dateOfBirth, firstName, weight, height) {
   let velocityMilesPerHour = 3
@@ -10,16 +11,26 @@ export async function registration(email, password, lastName, dateOfBirth, first
     const currentUser = firebase.auth().currentUser;
 
     const db = firebase.firestore();
-    await db.collection("users").doc(currentUser.uid).set({
-      email: currentUser.email,
-      lastName: lastName,
-      firstName: firstName,
-      dateOfBirth: dateOfBirth,
-      weight: weight,
-      height: height,
-      estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(weight, height, velocityMilesPerHour).toFixed(2),
-      created: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .set({
+        email: currentUser.email,
+        lastName: lastName,
+        firstName: firstName,
+        dateOfBirth: dateOfBirth,
+        weight: weight,
+        height: height,
+        estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(
+          weight,
+          height,
+          velocityMilesPerHour
+        ).toFixed(2),
+        estCaloriesBurnedPerMinuteBiking: caloriesBurnedPerMinuteBiking(
+          weight,
+        ).toFixed(2),
+        created: firebase.firestore.FieldValue.serverTimestamp(),
+      });
   } catch (err) {
     Alert.alert("There is something wrong!!!!", err.message);
   }
@@ -49,15 +60,16 @@ export async function stopNaviFirebaseHandler(actualDistance, actualDuration, ac
     const userData = await (await db.collection("users").doc(currentUserUID).get()).data()
     console.log('userdata------>', userData)
     const estCaloriesBurnedPerMinute = userData.estCaloriesBurnedPerMinute
+    const estCaloriesBurnedPerMinuteBiking = userData.estCaloriesBurnedPerMinuteBiking
     await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
       actualDistanceKm: actualDistance.toFixed(2),
       actualDuration: actualDuration,
       actualDurationMin: actualDurationMin,
-      actualCaloriesBurned: Number(estCaloriesBurnedPerMinute * actualDurationMin).toFixed(2),
+      actualCaloriesBurned: Number(estCaloriesBurnedPerMinute * actualDurationMin + (estCaloriesBurnedPerMinuteBiking + actualDurationMin)).toFixed(2),
       estimatedDistanceKm: estimatedDistance.toFixed(2),
       estimatedDurationMin: estimatedDuration.toFixed(2),
       //to fix duration
-      estCaloriesBurned: (estCaloriesBurnedPerMinute * estimatedDuration).toFixed(2),
+      estCaloriesBurned: (estCaloriesBurnedPerMinute * estimatedDuration + estCaloriesBurnedPerMinuteBiking + actualDurationMin).toFixed(2),
       created: firebase.firestore.FieldValue.serverTimestamp(),
       date: new Date().toDateString(),
       timeStamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -80,15 +92,25 @@ export async function updateProfile(email, password, lastName, dateOfBirth, firs
    }
     
     const db = firebase.firestore();
-    await db.collection("users").doc(currentUser.uid).update({
-      email:email,
-      lastName: lastName,
-      firstName: firstName,
-      dateOfBirth: dateOfBirth,
-      weight: weight,
-      height: height,
-      estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(weight, height, velocityMilesPerHour).toFixed(2),
-    });
+    await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .update({
+        email: email,
+        lastName: lastName,
+        firstName: firstName,
+        dateOfBirth: dateOfBirth,
+        weight: weight,
+        height: height,
+        estCaloriesBurnedPerMinute: caloriesBurnedPerMinute(
+          weight,
+          height,
+          velocityMilesPerHour
+        ).toFixed(2),
+        estCaloriesBurnedPerMinute: caloriesBurnedPerMinuteBiking(
+          weight,
+        ).toFixed(2),
+      });
   } catch (err) {
     Alert.alert("Update Failed!", err.message);
   }
