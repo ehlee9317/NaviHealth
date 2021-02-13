@@ -562,6 +562,8 @@ export default class Map extends Component {
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+      const calories = (this.state.estCaloriesBurnedPerMinute * estimatedDuration).toFixed(2)
+      console.log("calories------>", calories)
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
       });
@@ -573,6 +575,7 @@ export default class Map extends Component {
         estimatedDuration: estimatedDuration,
         estimatedDurationText: estimatedDurationText,
         directions: directionsArr,
+        estCaloriesBurned: calories,
       });
       destinationName
         ? this.setState({
@@ -804,7 +807,7 @@ export default class Map extends Component {
           title={`${this.state.estimatedDurationText}`}
           description={`Distance: ${this.state.estimatedDistance.toFixed(
             1
-          )} Kilometers`}
+          )} Kilometers, Calories: ${this.state.estCaloriesBurned}`}
         >
           <Image
             source={require("../assets/redmarker.png")}
