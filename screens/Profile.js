@@ -53,7 +53,7 @@ export default function Profile({ navigation }) {
       <View style={styles.imageContainer}>
         <View style={styles.profileImage}>
           <Image
-            source={require("../assets/defaultProfile.png")}
+            source={require("../assets/applogo-person.png")}
             style={styles.image}
             resizeMode="center"
           ></Image>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 195,
     height: 195,
-    // borderRadius: 100,
+    borderRadius: 100,
     overflow: "hidden",
   },
   image: {
