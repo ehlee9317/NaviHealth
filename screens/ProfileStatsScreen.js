@@ -92,7 +92,7 @@ export default function ProfileStats({ navigation }) {
       <View style={styles.chartContainer}>
         <VictoryChart
           // width={200}
-          height={330}
+          height={310}
           theme={VictoryTheme.material}
         >
           <VictoryAxis
@@ -113,8 +113,8 @@ export default function ProfileStats({ navigation }) {
           <VictoryPie
             data={pieChartData}
             colorScale={["#EF767A", "#456990"]}
-            innerRadius={75}
-            labelRadius={({ innerRadius }) => innerRadius + 45}
+            innerRadius={70}
+            labelRadius={({ innerRadius }) => innerRadius + 40}
             style={{ labels: { fontSize: 14, fontWeight: "bold" } }}
           />
         </VictoryChart>
@@ -137,10 +137,10 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "HelveticaNeue",
     fontWeight: "bold",
-    fontSize: 21,
+    fontSize: 20,
   },
   information: {
-    fontSize: 12,
+    fontSize: 11,
   },
   chartContainer: {
     alignItems: "center",

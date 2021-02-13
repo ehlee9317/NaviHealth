@@ -58,15 +58,6 @@ export default function Profile({ navigation }) {
             resizeMode="center"
           ></Image>
         </View>
-        <View style={styles.active}></View>
-        <View style={styles.camera}>
-          <Ionicons
-            name="ios-camera"
-            size={38}
-            color="#DFD8C8"
-            style={{ marginTop: 0.5, marginLeft: 1 }}
-          ></Ionicons>
-        </View>
       </View>
 
       <View style={styles.nameContainer}>
@@ -134,7 +125,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: "center",
-    top: "3%",
+    top: "2%",
   },
   profileImage: {
     width: 195,
@@ -147,31 +138,10 @@ const styles = StyleSheet.create({
     height: undefined,
     width: undefined,
   },
-  active: {
-    backgroundColor: "#34FFB9",
-    position: "absolute",
-    bottom: 28,
-    left: 10,
-    padding: 4,
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-  },
-  camera: {
-    backgroundColor: "#41444B",
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   nameContainer: {
     alignSelf: "center",
     alignItems: "center",
-    top: "7%",
+    top: "4%",
   },
   text: {
     fontFamily: "HelveticaNeue",
@@ -185,7 +155,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: "row",
     alignSelf: "center",
-    top: "18%",
+    top: "13%",
   },
   statsBox: {
     alignItems: "center",
