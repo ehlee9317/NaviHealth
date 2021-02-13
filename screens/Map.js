@@ -615,7 +615,7 @@ export default class Map extends Component {
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
       console.log(this.state.estCaloriesBurnedPerMinuteBiking)
-      const bikeCalories = (this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration)
+      const bikeCalories = (this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration).toFixed(2)
       console.log("bike calories----->", bikeCalories)
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
