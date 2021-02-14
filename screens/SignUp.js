@@ -76,7 +76,7 @@ export default function SignUp({ navigation }) {
         height
       );
 
-      navigation.navigate("Loading");
+      navigation.navigate("GetStarted");
       emptyState();
     }
   };
