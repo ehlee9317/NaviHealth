@@ -812,7 +812,7 @@ export default class Map extends Component {
       marker = (
         <Marker
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
-          title={`Est. Calories: ${Number(this.state.estCaloriesBurned).toFixed(1)}`}
+          title={`Est. Calories: ${Number(this.state.estCaloriesBurned).toFixed(0)}`}
           description={`Distance: ${this.state.estimatedDistance.toFixed(
             1
           )} Kilometers`}
@@ -1417,7 +1417,7 @@ export default class Map extends Component {
                 <Text></Text>
               )} */}
               </View>
-              {this.state.navigationMode === "bike" ||
+              {/* {this.state.navigationMode === "bike" ||
               this.state.navigationMode === "walk" ? (
                 <View marginLeft="2%" marginTop="3%">
                   <Text>
@@ -1427,7 +1427,7 @@ export default class Map extends Component {
                 </View>
               ) : (
                 <View></View>
-              )}
+              )} */}
             </View>
           )
         ) : (
@@ -1440,7 +1440,7 @@ export default class Map extends Component {
 
 const styles = StyleSheet.create({
   sample: {
-    // backgroundColor: "white",
+    backgroundColor: "white",
     flexDirection: "row",
     marginTop: "1.5%",
   },
