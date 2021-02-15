@@ -18,6 +18,7 @@ const instructions = [
     color: '#49BEAA',
     content: [
       'Use your map to find the best route to your destination',
+      'Pressing the destination marker shows the potential calories you can burn',
       "Select 'START' to begin your route",
       "Select 'STOP' once you've reached your destination",
     ],
@@ -51,7 +52,7 @@ export default function GetStarted({ navigation }) {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>GETTING STARTED</Text>
+      <Text style={styles.title}>WELCOME!</Text>
       <FlatList
         horizontal
         data={instructions}
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
   },
   card_template: {
     width: 320,
-    height: '40%',
+    height: '45%',
     marginLeft: 10,
     marginRight: 7,
     marginTop: '40%',
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   text_container: {
-    // position: 'relative',
+    position: 'relative',
     alignContent: 'center',
     width: '100%',
     height: '100%',
