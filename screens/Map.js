@@ -6,6 +6,7 @@ import {
   View,
   Keyboard,
   Image,
+  ImageBackground,
   TouchableHighlight,
   SafeAreaView,
   ScrollView,
@@ -26,9 +27,6 @@ import { stopNaviFirebaseHandler } from "../api/firebaseMethods";
 import haversine from "haversine";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as firebase from "firebase";
-
-
-
 
 export default class Map extends Component {
   constructor(props) {
@@ -183,20 +181,20 @@ export default class Map extends Component {
       const userData = await (
         await db.collection("users").doc(currentUserUID).get()
       ).data();
-      console.log('userData in Map--->', userData) 
+      console.log("userData in Map--->", userData);
       this.setState({
         firstName: userData.firstName,
         lastName: userData.lastName,
         height: userData.height,
         weight: userData.weight,
         estCaloriesBurnedPerMinute: userData.estCaloriesBurnedPerMinute,
-        estCaloriesBurnedPerMinuteBiking: userData.estCaloriesBurnedPerMinuteBiking
-      })
+        estCaloriesBurnedPerMinuteBiking:
+          userData.estCaloriesBurnedPerMinuteBiking,
+      });
     } catch (err) {
       Alert.alert("There is something wrong!!!!", err.message);
     }
   }
-
 
   // API DIRECTION CALLS
   async getRouteDirections(
@@ -219,8 +217,10 @@ export default class Map extends Component {
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const estimatedDurationText = json.routes[0].legs[0].duration.text;
-        const calories = (this.state.estCaloriesBurnedPerMinute * estimatedDuration).toFixed(2)
-        console.log("calories------>", calories)
+        const calories = (
+          this.state.estCaloriesBurnedPerMinute * estimatedDuration
+        ).toFixed(2);
+        console.log("calories------>", calories);
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -233,7 +233,7 @@ export default class Map extends Component {
           estimatedDuration: estimatedDuration,
           estimatedDurationText: estimatedDurationText,
           directions: directionsArr,
-          estCaloriesBurned: calories, 
+          estCaloriesBurned: calories,
         });
         destinationName
           ? this.setState({
@@ -447,15 +447,15 @@ export default class Map extends Component {
       { enableHighAccuracy: true }
     );
 
-    this.state.navigationMode === "walk" || this.state.navigationMode === "bike" ? 
-      stopNaviFirebaseHandler(
-        this.state.recordedDistance,
-        this.state.recordedDuration,
-        this.state.recordedDurationMin,
-        this.state.estimatedDistance,
-        this.state.estimatedDuration
-      ) : 
-      console.log('subwayMode firebasehandler not used')
+    this.state.navigationMode === "walk" || this.state.navigationMode === "bike"
+      ? stopNaviFirebaseHandler(
+          this.state.recordedDistance,
+          this.state.recordedDuration,
+          this.state.recordedDurationMin,
+          this.state.estimatedDistance,
+          this.state.estimatedDuration
+        )
+      : console.log("subwayMode firebasehandler not used");
   }
   startNaviHandler() {
     this.setState({
@@ -566,8 +566,10 @@ export default class Map extends Component {
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-      const calories = (this.state.estCaloriesBurnedPerMinute * estimatedDuration).toFixed(2)
-      console.log("calories------>", calories)
+      const calories = (
+        this.state.estCaloriesBurnedPerMinute * estimatedDuration
+      ).toFixed(2);
+      console.log("calories------>", calories);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
       });
@@ -618,9 +620,11 @@ export default class Map extends Component {
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
-      console.log(this.state.estCaloriesBurnedPerMinuteBiking)
-      const bikeCalories = (this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration).toFixed(2)
-      console.log("bike calories----->", bikeCalories)
+      console.log(this.state.estCaloriesBurnedPerMinuteBiking);
+      const bikeCalories = (
+        this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration
+      ).toFixed(2);
+      console.log("bike calories----->", bikeCalories);
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -634,7 +638,6 @@ export default class Map extends Component {
         estimatedDurationText: estimatedDurationText,
         directions: directionsArr,
         estCaloriesBurned: bikeCalories,
-        
       });
       destinationName
         ? this.setState({
@@ -1001,7 +1004,11 @@ export default class Map extends Component {
             this.state.directionsMarkerArr.map((elem, index) => {
               return (
                 <Marker key={index} coordinate={elem.coordinates}>
-                  <Callout>
+                  <Image
+                    source={require("../assets/yellowPin.png")}
+                    style={styles.directionMarkerImage}
+                  />
+                  <Callout style={styles.directionCallout}>
                     <Text>
                       {elem.maneuver
                         ? elem.maneuver.toUpperCase()
@@ -1036,7 +1043,7 @@ export default class Map extends Component {
         ) : (
           <View style={styles.searchContainer}>
             <SafeAreaView style={styles.inputContainer}>
-              <TouchableHighlight
+              <TouchableOpacity
                 onPress={() => {
                   console.log("back button clicked");
                   this.setState({
@@ -1046,7 +1053,7 @@ export default class Map extends Component {
                 style={styles.backIcon}
               >
                 <Icon name="ios-chevron-back" size={30} color={"black"} />
-              </TouchableHighlight>
+              </TouchableOpacity>
               <View style={{ flex: 1 }}>
                 <Image
                   source={require("../assets/bluemarker.png")}
@@ -1440,7 +1447,6 @@ export default class Map extends Component {
 
 const styles = StyleSheet.create({
   sample: {
-    backgroundColor: "white",
     flexDirection: "row",
     marginTop: "1.5%",
   },
@@ -1543,6 +1549,14 @@ const styles = StyleSheet.create({
     width: 20,
     height: 32,
     marginBottom: "8%",
+  },
+  directionMarkerImage: {
+    width: 14,
+    height: 22,
+    marginBottom: "4%",
+  },
+  directionCallout:{
+    width: 130
   },
   inputContainer: {
     flexDirection: "row",
