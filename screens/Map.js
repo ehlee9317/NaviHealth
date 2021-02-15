@@ -1030,21 +1030,6 @@ export default class Map extends Component {
                 this.onChangeDestinationDebounced(destination);
               }}
             />
-            <View width="35%" marginTop="2%">
-              <TouchableOpacity
-                style={styles.yourLocationButtonContainer}
-                onPress={() => this.goToMyLocation()}
-              >
-                <View style={styles.yourLocationIconContainer}>
-                  <Icon
-                    name="ios-radio-button-on-outline"
-                    size={22}
-                    color="white"
-                  />
-                  <Text style={styles.yourLocationButtonText}>Locate Me</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
           </View>
         ) : (
           <View style={styles.searchContainer}>
@@ -1422,7 +1407,21 @@ export default class Map extends Component {
             </View>
           )
         ) : (
-          <Text></Text>
+          <View width="35%" marginTop="2%">
+            <TouchableOpacity
+              style={styles.yourLocationButtonContainer}
+              onPress={() => this.goToMyLocation()}
+            >
+              <View style={styles.yourLocationIconContainer}>
+                <Icon
+                  name="ios-radio-button-on-outline"
+                  size={22}
+                  color="white"
+                />
+                <Text style={styles.yourLocationButtonText}>Locate Me</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     );
