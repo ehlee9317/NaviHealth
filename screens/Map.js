@@ -1447,7 +1447,6 @@ export default class Map extends Component {
 
 const styles = StyleSheet.create({
   sample: {
-    backgroundColor: "white",
     flexDirection: "row",
     marginTop: "1.5%",
   },
