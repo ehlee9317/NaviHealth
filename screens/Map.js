@@ -107,10 +107,10 @@ export default class Map extends Component {
       //User Data
       firstName: null,
       lastName: null,
-      height: null,
-      weight: null,
-      estCaloriesBurnedPerMinute: null,
-      estCaloriesBurnedPerMinuteBiking: null,
+      height: 0,
+      weight: 0,
+      estCaloriesBurnedPerMinute: 0,
+      estCaloriesBurnedPerMinuteBiking: 0,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -307,6 +307,8 @@ export default class Map extends Component {
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const estimatedDurationText = json.routes[0].legs[0].duration.text;
+        const bikeCalories = ( this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration).toFixed(2);
+        console.log('calories in bike--->', bikeCalories)
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -319,6 +321,7 @@ export default class Map extends Component {
           estimatedDuration: estimatedDuration,
           estimatedDurationText: estimatedDurationText,
           directions: directionsArr,
+          estCaloriesBurned: bikeCalories,
         });
         destinationName
           ? this.setState({
