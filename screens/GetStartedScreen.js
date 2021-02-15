@@ -73,7 +73,7 @@ export default function GetStarted({ navigation }) {
         )}
       />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.backButton} onPress={handlePress}>
+        <TouchableOpacity style={styles.backButton} onPress={()=>{handlePress()}}>
           <Text style={styles.backButton}>Get Started</Text>
         </TouchableOpacity>
       </View>

@@ -8,12 +8,10 @@ import SignUp from "./screens/SignUp";
 import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MainTabScreen from "./screens/MainTabScreen";
-//Deprecated Directions Page 
-// import Directions from "./screens/Directions";
 import GetStarted from "./screens/GetStartedScreen"
 import {LogBox} from 'react-native'
 
-// LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs();
 
 const Stack = createStackNavigator();
 
@@ -51,11 +49,6 @@ export default function App() {
           component={MainTabScreen}
           options={{ headerShown: false }}
         />
-         {/* <Stack.Screen
-          name={"Directions"}
-          component={Directions}
-          options={{ headerShown: false }}
-        /> */}
         <Stack.Screen
           name={"GetStarted"}
           component={GetStarted}
