@@ -107,7 +107,7 @@ export async function updateProfile(email, password, lastName, dateOfBirth, firs
           height,
           velocityMilesPerHour
         ).toFixed(2),
-        estCaloriesBurnedPerMinute: caloriesBurnedPerMinuteBiking(
+        estCaloriesBurnedPerMinuteBiking: caloriesBurnedPerMinuteBiking(
           weight,
         ).toFixed(2),
       });

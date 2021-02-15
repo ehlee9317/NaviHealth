@@ -105,10 +105,11 @@ export default class Map extends Component {
       //User Data
       firstName: null,
       lastName: null,
-      height: null,
-      weight: null,
-      estCaloriesBurnedPerMinute: null,
-      estCaloriesBurnedPerMinuteBiking: null,
+      height: 0,
+      weight: 0,
+      estCaloriesBurnedPerMinute: 0,
+      estCaloriesBurnedPerMinuteBiking: 0,
+      showEndpointInfo: true,
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -307,6 +308,8 @@ export default class Map extends Component {
         const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const estimatedDurationText = json.routes[0].legs[0].duration.text;
+        const bikeCalories = ( this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration).toFixed(2);
+        console.log('calories in bike--->', bikeCalories)
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -319,6 +322,7 @@ export default class Map extends Component {
           estimatedDuration: estimatedDuration,
           estimatedDurationText: estimatedDurationText,
           directions: directionsArr,
+          estCaloriesBurned: bikeCalories,
         });
         destinationName
           ? this.setState({
@@ -811,10 +815,10 @@ export default class Map extends Component {
       marker = (
         <Marker
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
-          title={`${this.state.estimatedDurationText}`}
+          title={`Est. Calories: ${Number(this.state.estCaloriesBurned).toFixed(0)}`}
           description={`Distance: ${this.state.estimatedDistance.toFixed(
             1
-          )} Kilometers, Calories: ${this.state.estCaloriesBurned}`}
+          )} Kilometers`}
         >
           <Image
             source={require("../assets/redmarker.png")}
@@ -993,6 +997,7 @@ export default class Map extends Component {
           ) : (
             <Text></Text>
           )} */}
+
           {marker}
           {locationMarker}
           {this.state.mapDirectionsMode ? (
@@ -1034,21 +1039,6 @@ export default class Map extends Component {
                 this.onChangeDestinationDebounced(destination);
               }}
             />
-            <View width="35%" marginTop="2%">
-              <TouchableOpacity
-                style={styles.yourLocationButtonContainer}
-                onPress={() => this.goToMyLocation()}
-              >
-                <View style={styles.yourLocationIconContainer}>
-                  <Icon
-                    name="ios-radio-button-on-outline"
-                    size={22}
-                    color="white"
-                  />
-                  <Text style={styles.yourLocationButtonText}>Locate Me</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
           </View>
         ) : (
           <View style={styles.searchContainer}>
@@ -1253,7 +1243,27 @@ export default class Map extends Component {
             </ScrollView>
           </View>
         )}
+
         {predictions}
+        {this.state.displayMainSearchBar ? (
+          <View width="35%" marginTop="2%">
+            <TouchableOpacity
+              style={styles.yourLocationButtonContainer}
+              onPress={() => this.goToMyLocation()}
+            >
+              <View style={styles.yourLocationIconContainer}>
+                <Icon
+                  name="ios-radio-button-on-outline"
+                  size={22}
+                  color="white"
+                />
+                <Text style={styles.yourLocationButtonText}>Locate Me</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View></View>
+        )}
         {yourLocationPredictions}
         {this.state.estimatedDistance > 0 ? (
           this.state.displayMainSearchBar === true ? (
@@ -1311,43 +1321,29 @@ export default class Map extends Component {
                   </View>
                 </TouchableOpacity>
               </View>
-
-              <View width="20%">
-                <TouchableOpacity
-                  style={styles.yourLocationButtonContainer}
-                  onPress={() => this.goToMyLocation()}
-                >
-                  <View style={styles.yourLocationIconContainer}>
-                    <Icon
-                      name="ios-radio-button-on-outline"
-                      size={22}
-                      color="white"
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
             </View>
           ) : (
-            <View style={styles.sample}>
-              <View width="40%" marginRight="1.5%">
-                <TouchableOpacity
-                  style={styles.startButtonContainer}
-                  onPress={() => {
-                    this.startNaviHandler();
-                  }}
-                >
-                  <View style={styles.iconContainer}>
-                    <Icon
-                      style={styles.locateIcon}
-                      name="ios-navigate"
-                      size={22}
-                    />
-                    <Text style={styles.startButtonText}>Start</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              {/* Directions */}
-              {/* <TouchableOpacity
+            <View>
+              <View style={styles.sample}>
+                <View width="40%" marginRight="1.5%">
+                  <TouchableOpacity
+                    style={styles.startButtonContainer}
+                    onPress={() => {
+                      this.startNaviHandler();
+                    }}
+                  >
+                    <View style={styles.iconContainer}>
+                      <Icon
+                        style={styles.locateIcon}
+                        name="ios-navigate"
+                        size={22}
+                      />
+                      <Text style={styles.startButtonText}>Start</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                {/* Directions */}
+                {/* <TouchableOpacity
                 style={styles.directionButtonContainer}
                 onPress={() => {
                   console.log("Button pressed");
@@ -1361,42 +1357,46 @@ export default class Map extends Component {
                   <Text style={styles.directionButtonText}>Directions</Text>
                 </View>
               </TouchableOpacity> */}
-              <View width="20%" marginRight="1.5%">
-                <TouchableOpacity
-                  style={styles.directionButtonContainer}
-                  onPress={() => {
-                    console.log("Button pressed");
-                    this.state.mapDirectionsMode
-                      ? this.setState({
-                          mapDirectionsMode: false,
-                        })
-                      : this.setState({
-                          mapDirectionsMode: true,
-                        });
-                  }}
-                >
-                  <View style={styles.directionIconContainer}>
-                    <Icon name="trail-sign-outline" size={25} color="#49BEAA" />
-                  </View>
-                </TouchableOpacity>
-              </View>
+                <View width="20%" marginRight="1.5%">
+                  <TouchableOpacity
+                    style={styles.directionButtonContainer}
+                    onPress={() => {
+                      console.log("Button pressed");
+                      this.state.mapDirectionsMode
+                        ? this.setState({
+                            mapDirectionsMode: false,
+                          })
+                        : this.setState({
+                            mapDirectionsMode: true,
+                          });
+                    }}
+                  >
+                    <View style={styles.directionIconContainer}>
+                      <Icon
+                        name="trail-sign-outline"
+                        size={25}
+                        color="#49BEAA"
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
 
-              <View width="20%">
-                <TouchableOpacity
-                  style={styles.yourLocationButtonContainer}
-                  onPress={() => this.goToMyLocation()}
-                >
-                  <View style={styles.yourLocationIconContainer}>
-                    <Icon
-                      name="ios-radio-button-on-outline"
-                      size={22}
-                      color="white"
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
-              {/* CitiBike Button Trigger */}
-              {/* {this.state.navigationMode === "bike" ? (
+                <View width="20%">
+                  <TouchableOpacity
+                    style={styles.yourLocationButtonContainer}
+                    onPress={() => this.goToMyLocation()}
+                  >
+                    <View style={styles.yourLocationIconContainer}>
+                      <Icon
+                        name="ios-radio-button-on-outline"
+                        size={22}
+                        color="white"
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                {/* CitiBike Button Trigger */}
+                {/* {this.state.navigationMode === "bike" ? (
                 <TouchableOpacity
                   style={styles.yourLocationButtonContainer}
                   onPress={() =>
@@ -1420,13 +1420,25 @@ export default class Map extends Component {
                     </Text>
                   </View>
                 </TouchableOpacity>
-              ) : (
+              ) : (f
                 <Text></Text>
+              )} */}
+              </View>
+              {/* {this.state.navigationMode === "bike" ||
+              this.state.navigationMode === "walk" ? (
+                <View marginLeft="2%" marginTop="3%">
+                  <Text>
+                    Est. Calories:{" "}
+                    {Number(this.state.estCaloriesBurned).toFixed(0)}
+                  </Text>
+                </View>
+              ) : (
+                <View></View>
               )} */}
             </View>
           )
         ) : (
-          <Text></Text>
+          <View></View>
         )}
       </View>
     );
@@ -1435,7 +1447,7 @@ export default class Map extends Component {
 
 const styles = StyleSheet.create({
   sample: {
-    // backgroundColor: "white",
+    backgroundColor: "white",
     flexDirection: "row",
     marginTop: "1.5%",
   },
