@@ -52,7 +52,7 @@ export default function GetStarted({ navigation }) {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>WELCOME TO NAVIHEALTH!</Text>
+      <Text style={styles.title}>WELCOME!</Text>
       <FlatList
         horizontal
         data={instructions}
