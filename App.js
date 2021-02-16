@@ -12,7 +12,7 @@ import GetStarted from "./screens/GetStartedScreen"
 import {LogBox} from 'react-native'
 
 //Unpseudocode to enable ignore errors
-// LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs();
 
 const Stack = createStackNavigator();
 

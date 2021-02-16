@@ -979,9 +979,7 @@ export default class Map extends Component {
                 <Icon name="ios-chevron-back" size={30} color={"black"} />
               </TouchableOpacity>
               <View style={{ flex: 1 }}>
-                <Image
-                  source={require("../assets/bluemarker.png")}
-                  style={styles.searchIcon}
+                <TouchableOpacity
                   onPress={() => {
                     this.getRouteDirections(
                       null,
@@ -994,7 +992,12 @@ export default class Map extends Component {
                         yourLocationPlaceId: null,
                       });
                   }}
-                />
+                >
+                  <Image
+                    source={require("../assets/bluemarker.png")}
+                    style={styles.searchIcon}
+                  />
+                </TouchableOpacity>
               </View>
               <View style={{ flex: 1 }}>
                 <TextInput
