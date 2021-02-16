@@ -9,7 +9,7 @@ import Profile from "./Profile";
 import Map from "./Map";
 import SettingScreen from "./SettingScreen";
 import HealthStatsScreen from "./HealthStatsScreenMain";
-// import GetStarted from "./GetStartedScreen"
+
 
 const HomeStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -65,32 +65,4 @@ const MainTabScreen = () => (
 
 export default MainTabScreen;
 
-// const ProfileStackScreen = ({ navigation }) => (
-//   <HomeStack.Navigator
-//     screenOptions={{
-//       headerStyle: {
-//         backgroundColor: "#EF767A",
-//       },
-//       headerTintColor: "#fff",
-//       headerTitleStyle: {
-//         fontWeight: "bold",
-//       },
-//     }}
-//   >
-//     <HomeStack.Screen
-//       name="Profile"
-//       component={Profile}
-//       options={{
-//         title: "PROFILE",
-//         headerLeft: () => (
-//           <Icon.Button
-//             name="ios-menu"
-//             size={25}
-//             backgroundColor="#EF767A"
-//             onPress={() => navigation.openDrawer()}
-//           ></Icon.Button>
-//         ),
-//       }}
-//     />
-//   </HomeStack.Navigator>
-// );
+
