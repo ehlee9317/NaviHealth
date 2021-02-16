@@ -4,8 +4,6 @@ import {
   Text,
   TextInput,
   Alert,
-  ScrollView,
-  Label,
   Keyboard,
   StyleSheet,
   SafeAreaView,
@@ -42,18 +40,6 @@ export default function SignUp({ navigation }) {
       Alert.alert("Email field is required.");
     } else if (!dateOfBirth) {
       Alert.alert("Date of Birth field is required.");
-    // } else if (dateOfBirth.length === 10) {
-    //   const dateArray = dateOfBirth.split("-");
-    //   const month = dateArray[0];
-    //   const day = dateArray[1];
-
-    //   if (Number(month) > 12 || Number(month) === 0) {
-    //     Alert.alert("Invalid Month");
-    //   }
-
-    //   if (Number(day) === 0 || Number(day) > 31) {
-    //     Alert.alert("Invalid day");
-    //   }
     } else if (!weight) {
       Alert.alert("Weight is required.");
     } else if (!height) {
@@ -87,7 +73,6 @@ export default function SignUp({ navigation }) {
 
     if (temp.length === 2 && nativeEventKey !== "Backspace") {
       temp += "-";
-      console.log("##### temp", temp);
     } else if (temp.length === 5 && nativeEventKey !== "Backspace") {
       temp += "-";
     }
@@ -169,7 +154,6 @@ export default function SignUp({ navigation }) {
               secureTextEntry={true}
             />
           </View>
-
           <View style={{ padding: 10 }}>
             <TextInput
               style={styles.input}
@@ -179,7 +163,6 @@ export default function SignUp({ navigation }) {
               secureTextEntry={true}
             />
           </View>
-
           <TouchableOpacity style={styles.signUpButton} onPress={handlePress}>
             <Text style={styles.signUpText}>Sign Up</Text>
           </TouchableOpacity>
@@ -229,11 +212,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#456990",
     borderRadius: 5,
     marginTop: "5%",
-    // marginBottom: "-10%",
     justifyContent: "center",
     width: 220,
     height: 45,
-    // paddingBottom: 30
   },
   signUpText: {
     fontSize: 14,

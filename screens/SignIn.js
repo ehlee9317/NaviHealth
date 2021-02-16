@@ -6,10 +6,8 @@ import {
   StyleSheet,
   Alert,
   SafeAreaView,
-  Image,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { DarkTheme } from "react-native-paper";
 import { signIn } from "../api/firebaseMethods";
 
 export default function SignIn({ navigation }) {
@@ -33,11 +31,6 @@ export default function SignIn({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Image
-            source={require("../assets/applogo.jpg")}
-            style={styles.image}
-            resizeMode="center"
-          ></Image> */}
       <View style={styles.loginBox}>
         <Text style={styles.title}>Login to your Account</Text>
         <View style={styles.inputContainer}>
@@ -85,6 +78,7 @@ export default function SignIn({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+
       <TouchableOpacity onPress={() => navigation.navigate("Sign Up")}>
         <Text style={styles.registerText}>Don't have an account? Register</Text>
       </TouchableOpacity>
@@ -99,7 +93,6 @@ const styles = StyleSheet.create({
   },
   loginBox: {
     backgroundColor: "#EAE9EC",
-    // flex: 1,
     marginTop: "30%",
     padding: 5,
     borderRadius: 5,
@@ -116,28 +109,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    // borderBottomWidth:2,
-    // borderWidth: 1,
     borderColor: "#456990",
     backgroundColor: "white",
     width: 220,
     height: 45,
-    // fontSize: 20
   },
-  // image: {
-  //   width: 250,
-  //   height: 250,
-  //   padding: 20,
-  // },
   loginButton: {
     backgroundColor: "#456990",
     borderRadius: 5,
     marginTop: "14%",
-    // marginBottom: "-10%",
     justifyContent: "center",
     width: 220,
     height: 45,
-    // paddingBottom: 30
   },
   loginText: {
     fontSize: 14,

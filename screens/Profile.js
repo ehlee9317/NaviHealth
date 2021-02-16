@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  Image,
-  Button,
-} from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { SafeAreaView, View, Text, StyleSheet, Image } from "react-native";
 import * as firebase from "firebase";
-import { loggingOut } from "../api/firebaseMethods";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import ProfileStats from './ProfileStatsScreen'
-import { bmiCalculator, ageCalculator } from '../api/healthStatsMethods'
+import ProfileStats from "./ProfileStatsScreen";
+import { bmiCalculator, ageCalculator } from "../api/healthStatsMethods";
 
-export default function Profile({ navigation }) {
+export default function Profile() {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [firstName, setFirstName] = useState("");
@@ -23,33 +12,25 @@ export default function Profile({ navigation }) {
   const [weight, setWeight] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
 
-  useEffect(
-    () => {
-      const unsubscribe = db
-        .collection('users')
-        .doc(currentUserUID)
-        .onSnapshot(
-          doc => {
-            console.log("doc data --->", doc.data())
-            let dataObj = doc.data();
-            setFirstName(dataObj.firstName);
-            setHeight(dataObj.height);
-            setWeight(dataObj.weight);
-            setDateOfBirth(dataObj.dateOfBirth);
+  useEffect(() => {
+    const unsubscribe = db
+      .collection("users")
+      .doc(currentUserUID)
+      .onSnapshot((doc) => {
+        let dataObj = doc.data();
+        setFirstName(dataObj.firstName);
+        setHeight(dataObj.height);
+        setWeight(dataObj.weight);
+        setDateOfBirth(dataObj.dateOfBirth);
+      });
 
-          },
-        )
-
-      // returning the unsubscribe function will ensure that
-      // we unsubscribe from document changes when our id
-      // changes to a different value.
-      return () => unsubscribe()
-    },[])
+    // returning the unsubscribe function will ensure that
+    // we unsubscribe from document changes when our id changes to a different value.
+    return () => unsubscribe();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Text>Profile</Text> */}
-
       <View style={styles.imageContainer}>
         <View style={styles.profileImage}>
           <Image
@@ -102,9 +83,8 @@ export default function Profile({ navigation }) {
           <Text style={[styles.text, styles.subText]}>Weight</Text>
         </View>
       </View>
-      <View style={styles.statsBox}>
-        {<ProfileStats />}
-      </View>
+
+      <View style={styles.statsBox}>{<ProfileStats />}</View>
     </SafeAreaView>
   );
 }
@@ -114,11 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  logOutButton: {
-    // fontSize: 20,
-    // right: "-38%",
-    // top: "-2400%",
   },
   logoutText: {
     fontSize: 16,
@@ -163,6 +138,6 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     alignSelf: "center",
-    bottom: "2%"
-  }
+    bottom: "2%",
+  },
 });
