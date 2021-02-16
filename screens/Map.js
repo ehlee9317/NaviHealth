@@ -6,7 +6,6 @@ import {
   View,
   Keyboard,
   Image,
-  ImageBackground,
   TouchableHighlight,
   SafeAreaView,
   ScrollView,
@@ -17,7 +16,6 @@ import MapView, {
   Marker,
   PROVIDER_GOOGLE,
   Callout,
-  CalloutSubview,
 } from "react-native-maps";
 import { GOOGLE_API_KEY } from "../config/keys";
 import _ from "lodash";
@@ -96,9 +94,6 @@ export default class Map extends Component {
         "6X": "#00933C",
         7: "#B933AD",
       },
-      //CitiBike States
-      // citiBikeStationsData: [],
-      // citiBikeDataRender: false,
       directionsMarkerArr: [],
       mapDirectionsMode: false,
       estCaloriesBurned: null,
@@ -132,7 +127,6 @@ export default class Map extends Component {
             recordedLatitude: position.coords.latitude,
             recordedLongitude: position.coords.longitude,
           },
-          console.log("getCurrentPosition is Running")
         );
       },
       (error) => console.error(error),
@@ -181,7 +175,6 @@ export default class Map extends Component {
       const userData = await (
         await db.collection("users").doc(currentUserUID).get()
       ).data();
-      console.log("userData in Map--->", userData);
       this.setState({
         firstName: userData.firstName,
         lastName: userData.lastName,
@@ -220,7 +213,6 @@ export default class Map extends Component {
         const calories = (
           this.state.estCaloriesBurnedPerMinute * estimatedDuration
         ).toFixed(2);
-        console.log("calories------>", calories);
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -309,7 +301,6 @@ export default class Map extends Component {
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const estimatedDurationText = json.routes[0].legs[0].duration.text;
         const bikeCalories = ( this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration).toFixed(2);
-        console.log('calories in bike--->', bikeCalories)
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -372,47 +363,8 @@ export default class Map extends Component {
     }
   }
 
-  //CITI BIKE API CALLS
-
-  // async getCitiBikeData() {
-  //   const stationLocationUrl =
-  //     "https://gbfs.citibikenyc.com/gbfs/en/station_information.json";
-  //   const stationStatusUrl =
-  //     "https://gbfs.citibikenyc.com/gbfs/en/station_status.json";
-  //   try {
-  //     const locationResult = await fetch(stationLocationUrl);
-  //     const statusResult = await fetch(stationStatusUrl);
-  //     const locationJson = await locationResult.json();
-  //     const statusJson = await statusResult.json();
-  //     const locationResponse = locationJson.data.stations;
-  //     const statusResponse = statusJson.data.stations;
-  //     let result = [];
-  //     locationResponse.map((elem) => {
-  //       for (let key in statusResponse) {
-  //         let currObj = statusResponse[key];
-  //         if (currObj["legacy_id"] === elem.legacy_id) {
-  //           result.push({
-  //             location: {
-  //               latitude: elem.lat,
-  //               longitude: elem.lon,
-  //             },
-  //             name: elem.name,
-  //             bikesAvailable: currObj.num_bikes_available,
-  //           });
-  //         }
-  //       }
-  //     });
-  //     this.setState({
-  //       citiBikeStationsData: result,
-  //     });
-  //   } catch (err) {
-  //     console.err(err);
-  //   }
-  // }
-
   //MOVE CAMERA BACK TO CURRENT LOCATION
   goToMyLocation() {
-    // console.log("goToMyLocation is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         if (this.map) {
@@ -431,7 +383,6 @@ export default class Map extends Component {
 
   //NAVI BUTTON HELPERS
   stopNaviHelper() {
-    // console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         if (this.map) {
@@ -455,7 +406,7 @@ export default class Map extends Component {
           this.state.estimatedDistance,
           this.state.estimatedDuration
         )
-      : console.log("subwayMode firebasehandler not used");
+      : ("")
   }
   startNaviHandler() {
     this.setState({
@@ -489,6 +440,7 @@ export default class Map extends Component {
     this.setState({
       routingMode: false,
     });
+    //Keep just in case error in mode switch
     // this.stopNaviHelper();
     this.timerStop();
     this.timerClear();
@@ -569,7 +521,6 @@ export default class Map extends Component {
       const calories = (
         this.state.estCaloriesBurnedPerMinute * estimatedDuration
       ).toFixed(2);
-      console.log("calories------>", calories);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
       });
@@ -620,11 +571,9 @@ export default class Map extends Component {
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
-      console.log(this.state.estCaloriesBurnedPerMinuteBiking);
       const bikeCalories = (
         this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration
       ).toFixed(2);
-      console.log("bike calories----->", bikeCalories);
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -652,7 +601,6 @@ export default class Map extends Component {
         animated: true,
       });
       this.pointByPointDirectionHandler();
-      // this.getCitiBikeData();
     } catch (error) {
       console.error(error);
     }
@@ -849,7 +797,6 @@ export default class Map extends Component {
           this.setState({
             displayMainSearchBar: false,
             destinationPlaceId: prediction.place_id,
-            // destination:  prediction.structured_formatting.main_text,
           });
         }}
       >
@@ -899,9 +846,6 @@ export default class Map extends Component {
               coordinates={this.state.pointCoords}
               strokeWidth={4}
               strokeColor="#49BEAA"
-              // onPress={() => {
-              //   console.log("hello");
-              // }}
             />
           ) : this.state.navigationMode === "subway" ? (
             this.state.directions.map((elem, index) => {
@@ -979,25 +923,6 @@ export default class Map extends Component {
           ) : (
             ""
           )}
-          {/* Citibike Render */}
-          {/* {this.state.citiBikeDataRender ? (
-            this.state.citiBikeStationsData.map((elem) => {
-              console.log("citibike coor");
-              return (
-                <Marker
-                  key={elem.name}
-                  coordinate={elem.location}
-                  title={`Station ${elem.name}`}
-                  description={`${String(
-                    elem.bikesAvailable
-                  )} bikes available!`}
-                ></Marker>
-              );
-            })
-          ) : (
-            <Text></Text>
-          )} */}
-
           {marker}
           {locationMarker}
           {this.state.mapDirectionsMode ? (
@@ -1045,7 +970,6 @@ export default class Map extends Component {
             <SafeAreaView style={styles.inputContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  console.log("back button clicked");
                   this.setState({
                     displayMainSearchBar: !this.state.displayMainSearchBar,
                   });
@@ -1055,9 +979,7 @@ export default class Map extends Component {
                 <Icon name="ios-chevron-back" size={30} color={"black"} />
               </TouchableOpacity>
               <View style={{ flex: 1 }}>
-                <Image
-                  source={require("../assets/bluemarker.png")}
-                  style={styles.searchIcon}
+                <TouchableOpacity
                   onPress={() => {
                     this.getRouteDirections(
                       null,
@@ -1070,7 +992,12 @@ export default class Map extends Component {
                         yourLocationPlaceId: null,
                       });
                   }}
-                />
+                >
+                  <Image
+                    source={require("../assets/bluemarker.png")}
+                    style={styles.searchIcon}
+                  />
+                </TouchableOpacity>
               </View>
               <View style={{ flex: 1 }}>
                 <TextInput
@@ -1099,7 +1026,6 @@ export default class Map extends Component {
                   value={this.state.destination}
                   clearButtonMode="always"
                   onChangeText={(destination) => {
-                    // console.log(destination);
                     this.setState({
                       destination,
                     });
@@ -1116,7 +1042,6 @@ export default class Map extends Component {
               style={styles.chipsScrollView}
               flex={1}
             >
-              {/* {toggleCategories.map((category, index) => */}
               <TouchableOpacity
                 style={
                   this.state.navigationMode === "subway"
@@ -1287,26 +1212,10 @@ export default class Map extends Component {
                   </View>
                 </TouchableOpacity>
               </View>
-              {/* Directions Button */}
-              {/* <TouchableOpacity
-                style={styles.directionButtonContainer}
-                onPress={() => {
-                  console.log("Button pressed");
-                  this.props.navigation.navigate("Directions", {
-                    directions: this.state.directions,
-                  });
-                }}
-              >
-                <View style={styles.directionIconContainer}>
-                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                  <Text style={styles.directionButtonText}>Directions</Text>
-                </View>
-              </TouchableOpacity> */}
               <View width="20%" marginRight="1.5%">
                 <TouchableOpacity
                   style={styles.directionButtonContainer}
                   onPress={() => {
-                    console.log("Button pressed");
                     this.state.mapDirectionsMode
                       ? this.setState({
                           mapDirectionsMode: false,
@@ -1342,26 +1251,10 @@ export default class Map extends Component {
                     </View>
                   </TouchableOpacity>
                 </View>
-                {/* Directions */}
-                {/* <TouchableOpacity
-                style={styles.directionButtonContainer}
-                onPress={() => {
-                  console.log("Button pressed");
-                  this.props.navigation.navigate("Directions", {
-                    directions: this.state.directions,
-                  });
-                }}
-              >
-                <View style={styles.directionIconContainer}>
-                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                  <Text style={styles.directionButtonText}>Directions</Text>
-                </View>
-              </TouchableOpacity> */}
                 <View width="20%" marginRight="1.5%">
                   <TouchableOpacity
                     style={styles.directionButtonContainer}
                     onPress={() => {
-                      console.log("Button pressed");
                       this.state.mapDirectionsMode
                         ? this.setState({
                             mapDirectionsMode: false,
@@ -1395,46 +1288,7 @@ export default class Map extends Component {
                     </View>
                   </TouchableOpacity>
                 </View>
-                {/* CitiBike Button Trigger */}
-                {/* {this.state.navigationMode === "bike" ? (
-                <TouchableOpacity
-                  style={styles.yourLocationButtonContainer}
-                  onPress={() =>
-                    this.state.citiBikeDataRender === true
-                      ? this.setState({
-                          citiBikeDataRender: false,
-                        })
-                      : this.setState({
-                          citiBikeDataRender: true,
-                        })
-                  }
-                >
-                  <View style={styles.yourLocationIconContainer}>
-                    <Icon
-                      name="ios-radio-button-on-outline"
-                      size={22}
-                      color="white"
-                    />
-                    <Text style={styles.yourLocationButtonText}>
-                      Citi Bikes
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ) : (f
-                <Text></Text>
-              )} */}
               </View>
-              {/* {this.state.navigationMode === "bike" ||
-              this.state.navigationMode === "walk" ? (
-                <View marginLeft="2%" marginTop="3%">
-                  <Text>
-                    Est. Calories:{" "}
-                    {Number(this.state.estCaloriesBurned).toFixed(0)}
-                  </Text>
-                </View>
-              ) : (
-                <View></View>
-              )} */}
             </View>
           )
         ) : (
@@ -1461,7 +1315,6 @@ const styles = StyleSheet.create({
   chipsScrollView: {
     position: "absolute",
     marginTop: "37.5%",
-    // marginLeft: "5%",
     paddingHorizontal: 10,
   },
   chipsIcon: {

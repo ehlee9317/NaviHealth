@@ -58,7 +58,6 @@ export async function stopNaviFirebaseHandler(actualDistance, actualDuration, ac
     const currentUserUID = await firebase.auth().currentUser.uid;
     const db = firebase.firestore();
     const userData = await (await db.collection("users").doc(currentUserUID).get()).data()
-    console.log('userdata------>', userData)
     const estCaloriesBurnedPerMinute = userData.estCaloriesBurnedPerMinute || 0
     const estCaloriesBurnedPerMinuteBiking = userData.estCaloriesBurnedPerMinuteBiking || 0
     await db.collection("routes").doc(currentUserUID).collection("sessions").doc().set({
@@ -74,7 +73,6 @@ export async function stopNaviFirebaseHandler(actualDistance, actualDuration, ac
       date: new Date().toDateString(),
       timeStamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     })
-   //  console.log('estCaloriesBurnedPerMinute ------->', estCaloriesBurnedPerMinute)
   } catch (err) {
     Alert.alert("There is something wrong!!!!", err.message);
   }
@@ -84,11 +82,8 @@ export async function updateProfile(email, password, lastName, dateOfBirth, firs
   let velocityMilesPerHour = 3
   try {
     const currentUser = await firebase.auth().currentUser;
-    console.log("password--->", password)
     if(password){
-
      currentUser.updatePassword(password)
-
    }
 
     const db = firebase.firestore();

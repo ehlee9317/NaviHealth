@@ -11,6 +11,7 @@ import MainTabScreen from "./screens/MainTabScreen";
 import GetStarted from "./screens/GetStartedScreen"
 import {LogBox} from 'react-native'
 
+//Unpseudocode to enable ignore errors
 LogBox.ignoreAllLogs();
 
 const Stack = createStackNavigator();
