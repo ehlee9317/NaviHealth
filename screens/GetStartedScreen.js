@@ -4,7 +4,6 @@ import {
   View,
   StyleSheet,
   FlatList,
-  Image,
   SafeAreaView,
 } from 'react-native';
 import Constants from 'expo-constants';

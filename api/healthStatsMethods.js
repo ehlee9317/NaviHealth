@@ -1,5 +1,6 @@
-// DAILY VIEW METHODS:
+// HEALTH STATS METHODS:
 
+// Aggregate total calories for a given day:
 export const totalCalories = (calorieData) => {
   return calorieData.reduce((acc, currentVal) => {
     const routeCalories = currentVal.calories
@@ -7,31 +8,7 @@ export const totalCalories = (calorieData) => {
   }, 0)
 }
 
-export const daysView = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <View style={{ flexDirection: "row" }}>
-          <Button title="Day"/>
-          <Button title="Week"
-            // onPress={()}
-          />
-          <Button title="Month"/>
-        </View>
-        <Text>TOTAL CALORIES BURNED: {totalCalories(calorieData)}</Text>
-        <VictoryChart width={350} theme={VictoryTheme.material} domainPadding={30} scale={{ x: "time" }}>
-          <VictoryBar data={calorieData} x='day' y='calories' labels={(d)=>{return d.datum.calories}} />
-
-        </VictoryChart>
-      </View>
-
-      <Button title='Go back' onPress={() => navigation.goBack()} />
-    </SafeAreaView>
-  )
-}
-
-// WEEKLY VIEW METHODS:
-// creates an object with total day's calorie count for the week - this needs to be converted to chart data via convertWeekToChart:
+// Creates an object with total day's calorie count for the week - this needs to be converted to chart data via convertWeekToChart:
 export const totalCaloriesWeekly = (calorieData) => {
   let allDaysTotals = []
   let totalByDate = {}
@@ -47,7 +24,7 @@ export const totalCaloriesWeekly = (calorieData) => {
   return totalByDate
 }
 
-// converts week totals into format victory chart needs:
+// Converts week totals into format victory chart needs:
 export const convertWeekToChart = (caloriesByWeek) => {
   let data = []
   for (let date in caloriesByWeek) {
@@ -56,12 +33,11 @@ export const convertWeekToChart = (caloriesByWeek) => {
     totalsByDate.calories = caloriesByWeek[date]
     data.push(totalsByDate)
   }
-  console.log('data---->', data)
   return data
 }
 
 
-// PROFILE PAGE METHODS:
+// PROFILE PAGE HEALTH STATS METHODS:
 export const bmiCalculator = (height, weight) => {
   const weightKg = weight / 2.205;
   const heightM = height / 100;
@@ -69,13 +45,13 @@ export const bmiCalculator = (height, weight) => {
 };
 
 export const ageCalculator = (dateOfBirth) => {
-  //User Date of Birth
+  // User Date of Birth:
   const dateOfBirthArray = dateOfBirth.split("-");
   const userYear = dateOfBirthArray.pop();
   const userMonth = parseInt(dateOfBirthArray.slice(0, 1));
   const userDay = parseInt(dateOfBirthArray.slice(1, 2));
 
-  //Today's Date
+  // Today's Date:
   const today = new Date();
   const todayYear = today.getFullYear();
   const todayMonth = today.getMonth() + 1;
