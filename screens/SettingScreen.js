@@ -95,7 +95,6 @@ const SettingScreen = ({ navigation }) => {
 
     navigation.navigate("Profile");
     emptyState();
-    
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -216,13 +215,12 @@ const styles = StyleSheet.create({
     marginTop: "10%",
     marginLeft: "-10%",
   },
- singleInputContainer: {
+  singleInputContainer: {
     backgroundColor: "white",
     flexDirection: "row",
     margin: ".5%",
     borderRadius: 100,
     marginRight: "3%",
-    
   },
   icon: {
     fontSize: 35,
@@ -236,7 +234,6 @@ const styles = StyleSheet.create({
     width: 260,
     height: 55,
     fontSize: 18,
-    
 
     paddingHorizontal: 12,
     justifyContent: "center",

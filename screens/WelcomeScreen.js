@@ -6,7 +6,7 @@ function WelcomeScreen({ navigation }) {
   return (
     <ImageBackground
       style={styles.background}
-     source={require("../assets/applogoNewColor.jpg")}
+      source={require("../assets/applogoNewColor.jpg")}
     >
       <View style={styles.titleContainer}>
         <Text style={styles.title}>NAVI</Text>
@@ -35,9 +35,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
-    
+
     width: "100%",
-   
   },
   image: {
     width: "50%",
@@ -55,7 +54,6 @@ const styles = StyleSheet.create({
     top: "40%",
     color: "white",
 
-   
     textShadowColor: "rgba(0, 0, 0, 0.9)",
     textShadowOffset: { width: -2, height: 3 },
     textShadowRadius: 10,
@@ -72,26 +70,24 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0, 0, 0, 0.75)",
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 1,
-    
   },
   signInButton: {
     width: 300,
     height: 50,
-    
+
     backgroundColor: "#f7fff7",
-   
+
     justifyContent: "center",
     alignItems: "center",
   },
   signUpButton: {
     width: 300,
     height: 50,
-    
+
     backgroundColor: "#7598BD",
     bottom: "30%",
     justifyContent: "center",
     alignItems: "center",
-   
   },
   signUpText: {
     fontSize: 18,
@@ -106,7 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 1,
-  }
+  },
 });
 
 export default WelcomeScreen;
