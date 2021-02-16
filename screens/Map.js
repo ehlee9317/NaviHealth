@@ -6,7 +6,6 @@ import {
   View,
   Keyboard,
   Image,
-  ImageBackground,
   TouchableHighlight,
   SafeAreaView,
   ScrollView,
@@ -17,7 +16,6 @@ import MapView, {
   Marker,
   PROVIDER_GOOGLE,
   Callout,
-  CalloutSubview,
 } from "react-native-maps";
 import { GOOGLE_API_KEY } from "../config/keys";
 import _ from "lodash";
@@ -132,7 +130,6 @@ export default class Map extends Component {
             recordedLatitude: position.coords.latitude,
             recordedLongitude: position.coords.longitude,
           },
-          console.log("getCurrentPosition is Running")
         );
       },
       (error) => console.error(error),
@@ -181,7 +178,6 @@ export default class Map extends Component {
       const userData = await (
         await db.collection("users").doc(currentUserUID).get()
       ).data();
-      console.log("userData in Map--->", userData);
       this.setState({
         firstName: userData.firstName,
         lastName: userData.lastName,
@@ -220,7 +216,6 @@ export default class Map extends Component {
         const calories = (
           this.state.estCaloriesBurnedPerMinute * estimatedDuration
         ).toFixed(2);
-        console.log("calories------>", calories);
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -309,7 +304,6 @@ export default class Map extends Component {
         const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
         const estimatedDurationText = json.routes[0].legs[0].duration.text;
         const bikeCalories = ( this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration).toFixed(2);
-        console.log('calories in bike--->', bikeCalories)
         const points = PolyLine.decode(json.routes[0].overview_polyline.points);
         const pointCoords = points.map((point) => {
           return { latitude: point[0], longitude: point[1] };
@@ -412,7 +406,6 @@ export default class Map extends Component {
 
   //MOVE CAMERA BACK TO CURRENT LOCATION
   goToMyLocation() {
-    // console.log("goToMyLocation is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         if (this.map) {
@@ -431,7 +424,6 @@ export default class Map extends Component {
 
   //NAVI BUTTON HELPERS
   stopNaviHelper() {
-    // console.log("stopNaviHelper is called");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         if (this.map) {
@@ -455,7 +447,7 @@ export default class Map extends Component {
           this.state.estimatedDistance,
           this.state.estimatedDuration
         )
-      : console.log("subwayMode firebasehandler not used");
+      : ("")
   }
   startNaviHandler() {
     this.setState({
@@ -569,7 +561,6 @@ export default class Map extends Component {
       const calories = (
         this.state.estCaloriesBurnedPerMinute * estimatedDuration
       ).toFixed(2);
-      console.log("calories------>", calories);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
       });
@@ -620,11 +611,9 @@ export default class Map extends Component {
       const estimatedDistance = json.routes[0].legs[0].distance.value / 1000;
       const estimatedDuration = json.routes[0].legs[0].duration.value / 60;
       const estimatedDurationText = json.routes[0].legs[0].duration.text;
-      console.log(this.state.estCaloriesBurnedPerMinuteBiking);
       const bikeCalories = (
         this.state.estCaloriesBurnedPerMinuteBiking * estimatedDuration
       ).toFixed(2);
-      console.log("bike calories----->", bikeCalories);
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
@@ -899,9 +888,6 @@ export default class Map extends Component {
               coordinates={this.state.pointCoords}
               strokeWidth={4}
               strokeColor="#49BEAA"
-              // onPress={() => {
-              //   console.log("hello");
-              // }}
             />
           ) : this.state.navigationMode === "subway" ? (
             this.state.directions.map((elem, index) => {
@@ -1045,7 +1031,6 @@ export default class Map extends Component {
             <SafeAreaView style={styles.inputContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  console.log("back button clicked");
                   this.setState({
                     displayMainSearchBar: !this.state.displayMainSearchBar,
                   });
@@ -1099,7 +1084,6 @@ export default class Map extends Component {
                   value={this.state.destination}
                   clearButtonMode="always"
                   onChangeText={(destination) => {
-                    // console.log(destination);
                     this.setState({
                       destination,
                     });
@@ -1306,7 +1290,6 @@ export default class Map extends Component {
                 <TouchableOpacity
                   style={styles.directionButtonContainer}
                   onPress={() => {
-                    console.log("Button pressed");
                     this.state.mapDirectionsMode
                       ? this.setState({
                           mapDirectionsMode: false,
@@ -1361,7 +1344,6 @@ export default class Map extends Component {
                   <TouchableOpacity
                     style={styles.directionButtonContainer}
                     onPress={() => {
-                      console.log("Button pressed");
                       this.state.mapDirectionsMode
                         ? this.setState({
                             mapDirectionsMode: false,
