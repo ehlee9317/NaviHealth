@@ -83,9 +83,6 @@ const SettingScreen = ({ navigation }) => {
   };
 
   const handleUpdate = () => {
-    //  if (password !== confirmPassword) {
-    //   Alert.alert("Password does not match!");
-    // } else {
     updateProfile(
       email,
       password,
@@ -98,7 +95,7 @@ const SettingScreen = ({ navigation }) => {
 
     navigation.navigate("Profile");
     emptyState();
-    // }
+    
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -207,38 +204,25 @@ const styles = StyleSheet.create({
     alignContent: "center",
   },
   editBox: {
-    // backgroundColor: "white",
     marginTop: "10%",
-    // padding: 10,
     borderRadius: 20,
     width: 260,
     height: 670,
-    // justifyContent: "center",
     alignItems: "center",
   },
   title: {
-    // padding: 30,
-    // paddingTop: 20,
-    // paddingBottom: 10,
     fontSize: 32,
-    // color: "black",
     fontWeight: "bold",
     marginTop: "10%",
     marginLeft: "-10%",
   },
-  // inputContainer: {
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
-  singleInputContainer: {
+ singleInputContainer: {
     backgroundColor: "white",
     flexDirection: "row",
     margin: ".5%",
     borderRadius: 100,
     marginRight: "3%",
-    // width: 200
-    // justifyContent: "center"
-    // alignItem: "center"
+    
   },
   icon: {
     fontSize: 35,
@@ -252,7 +236,7 @@ const styles = StyleSheet.create({
     width: 260,
     height: 55,
     fontSize: 18,
-    // // borderRadius: 5,
+    
 
     paddingHorizontal: 12,
     justifyContent: "center",
@@ -262,12 +246,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#456990",
     borderRadius: 5,
     marginTop: "10%",
-    // marginBottom: "-10%",
     justifyContent: "center",
     width: 180,
     height: 40,
-
-    // paddingBottom: 30
   },
   updateText: {
     fontSize: 18,
@@ -287,17 +268,6 @@ const styles = StyleSheet.create({
     color: "#818882",
     fontWeight: "bold",
   },
-  // logOut: {
-  //   marginTop: "5%",
-  //   backgroundColor: "#EF767A",
-  //   padding: "3%",
-  //   borderRadius: 6,
-  // },
-  // logOutText: {
-  //   color: "white",
-  //   fontSize: 18,
-  //   fontWeight: "bold",
-  // },
 });
 
 export default SettingScreen;
