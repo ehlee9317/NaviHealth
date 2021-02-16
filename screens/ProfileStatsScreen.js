@@ -1,32 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import {
-  VictoryBar,
   VictoryChart,
-  VictoryLabel,
   VictoryTheme,
   VictoryAxis,
-  VictoryTooltip,
-  VictoryGroup,
-  VictoryLegend,
-  VictoryVoronoiContainer,
   VictoryPie,
 } from "victory-native";
 import * as firebase from "firebase";
-import {
-  totalCalories,
-  daysView,
-  totalCaloriesWeekly,
-} from "../api/healthStatsMethods";
-import Icon from "react-native-vector-icons/Ionicons";
+import { totalCalories } from "../api/healthStatsMethods";
 
-const dummyData = [
-  { x: "Actual Calories", y: 500 / 100 },
-  { x: "Goal", y: 10 },
-];
-
-export default function ProfileStats({ navigation }) {
-  const avgCalorieGoal = 500;
+export default function ProfileStats() {
   const db = firebase.firestore();
   let currentUserUID = firebase.auth().currentUser.uid;
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +18,6 @@ export default function ProfileStats({ navigation }) {
   // sets beginning date to current day at midnight:
   let beginningDate = new Date().setHours(0, 0, 0, 0);
   let beginningDateObject = new Date(beginningDate);
-  console.log("beginningDateObj----->", beginningDateObject);
 
   // Pull estimates data:
   useEffect(() => {
@@ -50,7 +32,6 @@ export default function ProfileStats({ navigation }) {
         let actualCalories = [];
         querySnapshot.forEach((doc) => {
           const dataObj = doc.data();
-          console.log("dataobj=====>", dataObj);
           // convert to Victory chart format:
           actualCalories.push({
             date: dataObj.timeStamp,
@@ -90,11 +71,7 @@ export default function ProfileStats({ navigation }) {
         </Text>
       </View>
       <View style={styles.chartContainer}>
-        <VictoryChart
-          // width={200}
-          height={310}
-          theme={VictoryTheme.material}
-        >
+        <VictoryChart height={310} theme={VictoryTheme.material}>
           <VictoryAxis
             style={{
               axis: { stroke: "transparent" },
@@ -145,6 +122,5 @@ const styles = StyleSheet.create({
   chartContainer: {
     alignItems: "center",
     justifyContent: "center",
-    // marginTop: "10%"
   },
 });
