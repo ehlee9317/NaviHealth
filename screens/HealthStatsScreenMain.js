@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   View,
   Text,
-  Button,
   StyleSheet,
   TouchableOpacity,
-  TouchableHighlight,
-} from "react-native";
+} from 'react-native';
 
-import DailyHealthStatsScreen from "./HealthStatsScreenDaily";
-import WeeklyHealthStatsScreen from "./HealthStatsWeeklyScreen";
-import MonthlyHealthStatsScreen from "./HealthStatsMonthlyScreen";
+import DailyHealthStatsScreen from './HealthStatsScreenDaily';
+import WeeklyHealthStatsScreen from './HealthStatsWeeklyScreen';
+import MonthlyHealthStatsScreen from './HealthStatsMonthlyScreen';
 
 export default function HealthStatsScreen() {
   const [buttonLabel, setButtonLabel] = useState({});
-  const buttonNames = ["Day", "Week", "Month"];
+  const buttonNames = ['Day', 'Week', 'Month'];
 
   const rangeClickHandler = (buttonName) => {
-    console.log("button clicked!");
-    if (buttonName === "Week") {
-      setButtonLabel("Week");
-    } else if (buttonName === "Month") {
-      setButtonLabel("Month");
+    if (buttonName === 'Week') {
+      setButtonLabel('Week');
+    } else if (buttonName === 'Month') {
+      setButtonLabel('Month');
     } else {
-      setButtonLabel("Day");
+      setButtonLabel('Day');
     }
   };
 
@@ -32,27 +29,26 @@ export default function HealthStatsScreen() {
     return (
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={buttonLabel === "Day" ? styles.buttonLine : styles.button}
-          onPress={() => rangeClickHandler("Day")}
+          style={buttonLabel === 'Day' ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler('Day')}
         >
           <Text style={styles.buttonText}>Day</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={buttonLabel === "Week" ? styles.buttonLine : styles.button}
-          onPress={() => rangeClickHandler("Week")}
-
+          style={buttonLabel === 'Week' ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler('Week')}
         >
           <Text style={styles.buttonText}>Week</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={buttonLabel === "Month" ? styles.buttonLine : styles.button}
-          onPress={() => rangeClickHandler("Month")}
+          style={buttonLabel === 'Month' ? styles.buttonLine : styles.button}
+          onPress={() => rangeClickHandler('Month')}
         >
           <Text style={styles.buttonText}>Month</Text>
         </TouchableOpacity>
       </View>
     );
-    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
@@ -63,9 +59,9 @@ export default function HealthStatsScreen() {
           {displayButtons(buttonNames)}
         </View>
         <View>
-          {buttonLabel === "Week" ? (
+          {buttonLabel === 'Week' ? (
             <View>{<WeeklyHealthStatsScreen />}</View>
-          ) : buttonLabel === "Month" ? (
+          ) : buttonLabel === 'Month' ? (
             <View>{<MonthlyHealthStatsScreen />}</View>
           ) : (
             <View>{<DailyHealthStatsScreen />}</View>
@@ -76,77 +72,49 @@ export default function HealthStatsScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: "center",
-    // justifyContent: "center",
   },
   titleContainer: {
-    marginTop: "5%",
-    marginBottom: "2%",
-    marginLeft: "4%",
-    // marginBottom: "2%",
-    // alignItems: "flex-end"
+    marginTop: '5%',
+    marginBottom: '2%',
+    marginLeft: '4%',
   },
   title: {
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   buttonContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    // justifyContent: "space-around",
-    // display: "flex",
-    marginBottom: "1.5%",
-    marginLeft: "3%",
-    // padding: "5%",
-    justifyContent: "center",
-    // alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: '1.5%',
+    marginLeft: '3%',
+    justifyContent: 'center',
   },
   button: {
     borderBottomWidth: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: ".5%"
-    // justifyContent: "space-around",
-    // fontSize: 20
-    // color: "blue"
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '.5%',
   },
   buttonLine: {
     borderBottomWidth: 1.5,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: ".5%",
-    borderBottomColor: "#456990",
-    // justifyContent: "space-around",
-
-    // color: "black"
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '.5%',
+    borderBottomColor: '#456990',
   },
   buttonText: {
-    marginRight: "10%",
-    // fontWeight: "",
+    marginRight: '10%',
     fontSize: 18,
-    fontWeight: "600",
-    // marginLeft: "2%"
-    // width: 50,
-    // backgroundColor: "black"
-    // marginLeft: "2%"
-    // borderWidth: 1,
-    // borderBottomWidth: 1,
-    // borderBottomColor: "red",
-    marginBottom: "3%",
-    marginLeft: "5%",
-    // padding: "5%"
+    fontWeight: '600',
+    marginBottom: '3%',
+    marginLeft: '5%',
   },
   dashboardContainer: {
-    // backgroundColor: "white",
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    // marginLeft: "2%",
-    // width: 350,
-    // height: 500
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

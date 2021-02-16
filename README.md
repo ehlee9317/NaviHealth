@@ -1,20 +1,33 @@
 # NAVIHEALTH
-NaviHealth is an iOS based mobile app for the everyday health conscientious person. It uses Apple Maps for a map render, Google Places and Directions API to set up convenient routes for walking, biking and public transit. For the purposes of health tracking, NaviHealth utilizes a Victory.js based data visualization to render out clean charts for users to keep track of calories burned over day, week and month time frames. All backend functions such as creating an account, logging into an account, and recording calories is done through Firebase. 
+NAVIHEALTH is an iOS based mobile app designed to help you track and meet your fitness goals while on the go. Along with a navigational map functionality, NAVIHEALTH stores the calories you can burn when you're trying to get from point A to point B and renders them onto beautiful charts to display daily, weekly, monthly progress.
 
-# MY ANATOMY 
-Entry point is for NaviHealth is at the root of the directory in App.js with a React Native setup 
-App.js also houses the primary screen navigation for the app 
-/screens holds all the individual screens for the app 
-/api holds all firebase, calorie calculating functions 
-/assets hold all logos, pictures and markers that are displayed 
+NAVIHEALTH leverages Apple Maps, Google Places and Google Directions APIs to set up convenient routes for walking, biking and public transit. NAVIHEALTH utilizes Victory, a data visualization library to render out clean charts for users to keep track of calorie data across their routes. All data for users, maps, and calorie management / tracking is handled through Google Firebase.
+
+Youtube Link:
+
+# GETTING STARTED
+- npm install (installs all project dependencies)
+- cd ios pod install (installs CocoaPods in order to download map functionality)
+- Entry point is at the root of the directory in App.js with a React Native setup
+- App.js also houses the primary screen navigation for the app
+- /screens holds all the individual screens for the app
+- /api holds all methods and calculations for app including Firebase methods, calorie calculating functions, health stats calculations
+- /assets hold all logos, pictures, static assets rendered on app
 
 
-# How to Expo
-Installing Expo 
+# HOW TO EXPO
+- NAVIHEALTH is deployed through Expo
+https://expo.io/@navihealth/projects/navihealth
+- Download the Expo app onto your iPhone (Android not available at this time)
+- Login to the app using the following credentials:
+Username: navihealth
+PW: navihealthrocks
+- Launch the app and explore!
 
 # CONTRIBUTORS
-Eun Hyuk Lee 
-Kathryn Choi 
-John Ahn 
-Stephen Ro 
+- Eun Hyuk Lee (linkedin.com/in/eunhyuklee/)
+- Kathryn Choi (linkedin.com/in/kathryn-choi/)
+- John Ahn (linkedin.com/in/john-yo-ahn/)
+- Stephen Ro (linkedin.com/in/stephen-ro)
 
+Thank you for journeying with us!
