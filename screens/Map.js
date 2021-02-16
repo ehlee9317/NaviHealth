@@ -94,9 +94,6 @@ export default class Map extends Component {
         "6X": "#00933C",
         7: "#B933AD",
       },
-      //CitiBike States
-      // citiBikeStationsData: [],
-      // citiBikeDataRender: false,
       directionsMarkerArr: [],
       mapDirectionsMode: false,
       estCaloriesBurned: null,
@@ -366,44 +363,6 @@ export default class Map extends Component {
     }
   }
 
-  //CITI BIKE API CALLS
-
-  // async getCitiBikeData() {
-  //   const stationLocationUrl =
-  //     "https://gbfs.citibikenyc.com/gbfs/en/station_information.json";
-  //   const stationStatusUrl =
-  //     "https://gbfs.citibikenyc.com/gbfs/en/station_status.json";
-  //   try {
-  //     const locationResult = await fetch(stationLocationUrl);
-  //     const statusResult = await fetch(stationStatusUrl);
-  //     const locationJson = await locationResult.json();
-  //     const statusJson = await statusResult.json();
-  //     const locationResponse = locationJson.data.stations;
-  //     const statusResponse = statusJson.data.stations;
-  //     let result = [];
-  //     locationResponse.map((elem) => {
-  //       for (let key in statusResponse) {
-  //         let currObj = statusResponse[key];
-  //         if (currObj["legacy_id"] === elem.legacy_id) {
-  //           result.push({
-  //             location: {
-  //               latitude: elem.lat,
-  //               longitude: elem.lon,
-  //             },
-  //             name: elem.name,
-  //             bikesAvailable: currObj.num_bikes_available,
-  //           });
-  //         }
-  //       }
-  //     });
-  //     this.setState({
-  //       citiBikeStationsData: result,
-  //     });
-  //   } catch (err) {
-  //     console.err(err);
-  //   }
-  // }
-
   //MOVE CAMERA BACK TO CURRENT LOCATION
   goToMyLocation() {
     navigator.geolocation.getCurrentPosition(
@@ -481,6 +440,7 @@ export default class Map extends Component {
     this.setState({
       routingMode: false,
     });
+    //Keep just in case error in mode switch
     // this.stopNaviHelper();
     this.timerStop();
     this.timerClear();
@@ -641,7 +601,6 @@ export default class Map extends Component {
         animated: true,
       });
       this.pointByPointDirectionHandler();
-      // this.getCitiBikeData();
     } catch (error) {
       console.error(error);
     }
@@ -838,7 +797,6 @@ export default class Map extends Component {
           this.setState({
             displayMainSearchBar: false,
             destinationPlaceId: prediction.place_id,
-            // destination:  prediction.structured_formatting.main_text,
           });
         }}
       >
@@ -965,25 +923,6 @@ export default class Map extends Component {
           ) : (
             ""
           )}
-          {/* Citibike Render */}
-          {/* {this.state.citiBikeDataRender ? (
-            this.state.citiBikeStationsData.map((elem) => {
-              console.log("citibike coor");
-              return (
-                <Marker
-                  key={elem.name}
-                  coordinate={elem.location}
-                  title={`Station ${elem.name}`}
-                  description={`${String(
-                    elem.bikesAvailable
-                  )} bikes available!`}
-                ></Marker>
-              );
-            })
-          ) : (
-            <Text></Text>
-          )} */}
-
           {marker}
           {locationMarker}
           {this.state.mapDirectionsMode ? (
@@ -1100,7 +1039,6 @@ export default class Map extends Component {
               style={styles.chipsScrollView}
               flex={1}
             >
-              {/* {toggleCategories.map((category, index) => */}
               <TouchableOpacity
                 style={
                   this.state.navigationMode === "subway"
@@ -1271,21 +1209,6 @@ export default class Map extends Component {
                   </View>
                 </TouchableOpacity>
               </View>
-              {/* Directions Button */}
-              {/* <TouchableOpacity
-                style={styles.directionButtonContainer}
-                onPress={() => {
-                  console.log("Button pressed");
-                  this.props.navigation.navigate("Directions", {
-                    directions: this.state.directions,
-                  });
-                }}
-              >
-                <View style={styles.directionIconContainer}>
-                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                  <Text style={styles.directionButtonText}>Directions</Text>
-                </View>
-              </TouchableOpacity> */}
               <View width="20%" marginRight="1.5%">
                 <TouchableOpacity
                   style={styles.directionButtonContainer}
@@ -1325,21 +1248,6 @@ export default class Map extends Component {
                     </View>
                   </TouchableOpacity>
                 </View>
-                {/* Directions */}
-                {/* <TouchableOpacity
-                style={styles.directionButtonContainer}
-                onPress={() => {
-                  console.log("Button pressed");
-                  this.props.navigation.navigate("Directions", {
-                    directions: this.state.directions,
-                  });
-                }}
-              >
-                <View style={styles.directionIconContainer}>
-                  <Icon name="ios-list-outline" size={25} color="#49BEAA" />
-                  <Text style={styles.directionButtonText}>Directions</Text>
-                </View>
-              </TouchableOpacity> */}
                 <View width="20%" marginRight="1.5%">
                   <TouchableOpacity
                     style={styles.directionButtonContainer}
@@ -1377,46 +1285,7 @@ export default class Map extends Component {
                     </View>
                   </TouchableOpacity>
                 </View>
-                {/* CitiBike Button Trigger */}
-                {/* {this.state.navigationMode === "bike" ? (
-                <TouchableOpacity
-                  style={styles.yourLocationButtonContainer}
-                  onPress={() =>
-                    this.state.citiBikeDataRender === true
-                      ? this.setState({
-                          citiBikeDataRender: false,
-                        })
-                      : this.setState({
-                          citiBikeDataRender: true,
-                        })
-                  }
-                >
-                  <View style={styles.yourLocationIconContainer}>
-                    <Icon
-                      name="ios-radio-button-on-outline"
-                      size={22}
-                      color="white"
-                    />
-                    <Text style={styles.yourLocationButtonText}>
-                      Citi Bikes
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ) : (f
-                <Text></Text>
-              )} */}
               </View>
-              {/* {this.state.navigationMode === "bike" ||
-              this.state.navigationMode === "walk" ? (
-                <View marginLeft="2%" marginTop="3%">
-                  <Text>
-                    Est. Calories:{" "}
-                    {Number(this.state.estCaloriesBurned).toFixed(0)}
-                  </Text>
-                </View>
-              ) : (
-                <View></View>
-              )} */}
             </View>
           )
         ) : (
@@ -1443,7 +1312,6 @@ const styles = StyleSheet.create({
   chipsScrollView: {
     position: "absolute",
     marginTop: "37.5%",
-    // marginLeft: "5%",
     paddingHorizontal: 10,
   },
   chipsIcon: {
