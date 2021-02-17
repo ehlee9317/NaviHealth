@@ -25,7 +25,7 @@ Password: navihealthrocks
 - Launch the app and explore!
 
 # CONTRIBUTORS
-[Eun Hyuk Lee](linkedin.com/in/eunhyuklee/) | [Kathryn Choi](linkedin.com/in/kathryn-choi/) | [John Ahn](linkedin.com/in/john-yo-ahn/) | [Stephen Ro](linkedin.com/in/stephen-ro)
+[Eun Hyuk Lee](https://www.linkedin.com/in/eunhyuklee/) | [Kathryn Choi](https://www.linkedin.com/in/kathryn-choi/) | [John Ahn](https://www.linkedin.com/in/john-yo-ahn/) | [Stephen Ro](https://www.linkedin.com/in/stephen-ro)
 
 Thank you for journeying with us!
 
