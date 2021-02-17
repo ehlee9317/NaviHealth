@@ -31,6 +31,6 @@ Thank you for journeying with us!
 
 # OUR APP
 ![alt text](./assets/welcomeScreenshots.jpeg)
-![alt text](./assets/mapSreenshots.jpeg)
+![alt text](./assets/mapScreenshots.jpeg)
 ![alt text](./assets/profileScreenshots.jpeg)
 
