@@ -1,5 +1,7 @@
+NAVIHEALTH Video: https://www.youtube.com/watch?v=bR2w7rBVe04 
+
 # NAVIHEALTH
-NAVIHEALTH is an iOS based mobile app designed to help you track and meet your fitness goals while on the go. Along with a navigational map functionality, NAVIHEALTH stores the calories you can burn when you're trying to get from point A to point B and renders them onto beautiful charts to display daily, weekly, monthly progress.
+NAVIHEALTH is an iOS based  app designed to help you track and meet your fitness goals while on the go. Along with a navigational map functionality, NAVIHEALTH stores the calories you can burn when you're trying to get from point A to point B and renders them onto beautiful charts to display daily, weekly, monthly progress.
 
 # TECH STACK
 NAVIHEALTH was written with React Native and powered by Expo-cli. NAVIHEALTH leverages Apple Maps, Google Places and Google Directions APIs to set up convenient routes for walking, biking and public transit. For data visualization NAVIHEALTH utilizes Victory to render out clean charts for users to keep track of calorie data across their routes. All data for users and user authentication, maps and routing, and user calorie management / tracking is managed through Google Firebase.
@@ -7,11 +9,11 @@ NAVIHEALTH was written with React Native and powered by Expo-cli. NAVIHEALTH lev
 # GETTING STARTED
 - git clone https://github.com/FSA-CS-Taurus/NaviHealth.git
 - npm install (installs all project dependencies)
-- cd ios pod install (installs CocoaPods in order to download map functionality)
+- cd ios pod install (installs CocoaPods in  to download map functionality)
 - Entry point is at the root of the directory in App.js with a React Native setup
 - App.js also houses the primary screen navigation for the app
 - /screens holds all the individual screens for the app
-- /api holds all methods and calculations for app including Firebase methods, calorie calculating functions, health stats calculations
+- /api holds all methods and calculations for app including Firebase methods, calorie calculating functions,  stats calculations
 - /assets hold all logos, pictures, static assets rendered on app
 
 
