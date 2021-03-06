@@ -7,7 +7,7 @@ NAVIHEALTH is an iOS based  app designed to help you track and meet your fitness
 NAVIHEALTH was written with React Native and powered by Expo-cli. NAVIHEALTH leverages Apple Maps, Google Places and Google Directions APIs to set up convenient routes for walking, biking and public transit. For data visualization NAVIHEALTH utilizes Victory to render out clean charts for users to keep track of calorie data across their routes. All data for users and user authentication, maps and routing, and user calorie management / tracking is managed through Google Firebase.
 
 # GETTING STARTED
-- git clone https://github.com/FSA-CS-Taurus/NaviHealth.git
+- git clone https://github.com/ehlee9317/NaviHealth.git
 - npm install (installs all project dependencies)
 - cd ios pod install (installs CocoaPods in  to download map functionality)
 - Entry point is at the root of the directory in App.js with a React Native setup
